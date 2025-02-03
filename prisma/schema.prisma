@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  name        String?  @db.VarChar(100)
+  email       String   @unique @db.VarChar(320)
+  image       String?  @db.Text
+  provider    String   @db.VarChar(50)
+  provider_id String   @unique @db.Text
+  createdAt   DateTime @default(now())
+
+  accounts Account[] // User와 Account 관계 (1:N)
+  posts    Post[] // User와 Post 관계 (1:N)
+  comments Comment[] // User와 Comment 관계 (1:N)
+}
+
+model Account {
+  id                Int       @id @default(autoincrement())
+  userId            Int
+  provider          String    @db.VarChar(50)
+  providerAccountId String    @db.Text
+  accessToken       String?   @db.Text
+  refreshToken      String?   @db.Text
+  expiresAt         DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId]) // OAuth 제공자별 고유 사용자 ID 보장
+}
+
+enum CategoryType {
+  DEV
+  TRAVEL
+  OTHER
+}
+
+model Post {
+  id        Int          @id @default(autoincrement())
+  title     String       @db.VarChar(255)
+  subtitle  String?      @db.Text
+  content   String       @db.Text
+  createdAt DateTime     @default(now())
+  userId    Int
+  category  CategoryType // 카테고리 Enum 사용
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  userId    Int
+  postId    Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String   @db.Text
+  imageUrl    String?  @db.Text
+  githubUrl   String?  @db.Text
+  demoUrl     String?  @db.Text
+  createdAt   DateTime @default(now())
+}
