@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import AuthProvider from '@/lib/AuthProvider';
+import { NavBar } from '@/components/NavBar';
 
 export const metadata: Metadata = {
   title: 'Yooni Page',
@@ -15,7 +16,10 @@ export default function RootLayout({
   return (
     <html lang="kr">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <NavBar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
