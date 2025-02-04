@@ -74,3 +74,30 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.editor-container {
+  font-family: 'Arial, sans-serif';
+  max-width: none;
+  height: calc(100vh - 230px);
+}
+
+.editor-container > .tiptap {
+  padding: 20px;
+  height: inherit;
+  overflow-y: scroll;
+  border: 1px solid transparent;
+}
+
+.editor-container > .tiptap:focus {
+  outline: none;
+  height: inherit;
+  border-color: #dddddd;
+  border-radius: 6px;
+  box-sizing: content-box;
+}
+
+.editor-container > .tiptap > p {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}

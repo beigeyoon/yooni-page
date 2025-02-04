@@ -3,6 +3,7 @@
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import TiptapEditor from '@/components/TiptapEditor';
 
 export default function Editor() {
   const { isAdmin, status } = useAuth();
@@ -14,5 +15,5 @@ export default function Editor() {
   }, [isAdmin, router, status]);
 
   if (!isAdmin) return <></>;
-  return <div>Editorside</div>;
+  return <TiptapEditor />;
 }
