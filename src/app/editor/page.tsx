@@ -13,5 +13,6 @@ export default function Editor() {
     if (status === 'unauthenticated' || !isAdmin) router.push('/');
   }, [isAdmin, router, status]);
 
-  if (isAdmin) return <h1>Editor</h1>;
+  if (!isAdmin) return <></>;
+  return <div>Editorside</div>;
 }
