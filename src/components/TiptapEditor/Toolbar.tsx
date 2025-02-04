@@ -16,8 +16,24 @@ import {
   Minus,
   Image
 } from 'lucide-react';
+import { useRef } from 'react';
+import uploadImage from '@/utils/uploadImage';
 
 export default function Toolbar({ editor }: { editor: Editor }) {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const imageUrl = await uploadImage(file);
+      if (imageUrl) {
+        editor.chain().focus().setImage({ src: imageUrl }).run();
+      }
+    }
+  };
+
   const buttons: { type: string; icon: LucideIcon; onClick: () => void }[] = [
     {
       type: 'heading1',
@@ -82,13 +98,7 @@ export default function Toolbar({ editor }: { editor: Editor }) {
     {
       type: 'image',
       icon: Image,
-      onClick: () => {
-        editor
-          .chain()
-          .focus()
-          .setImage({ src: 'https://picsum.photos/200/300 ' })
-          .run();
-      }
+      onClick: () => fileInputRef.current?.click()
     }
   ];
 
@@ -102,6 +112,15 @@ export default function Toolbar({ editor }: { editor: Editor }) {
           size="sm"
           className={`px-2 ${editor.isActive(type) && 'bg-slate-200'}`}>
           <Icon />
+          {type === 'image' && (
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              style={{ display: 'none' }}
+            />
+          )}
         </Button>
       ))}
     </div>
