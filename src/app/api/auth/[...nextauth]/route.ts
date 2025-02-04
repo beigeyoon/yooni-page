@@ -12,6 +12,13 @@ const handler = NextAuth({
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: 'jwt',
+    maxAge: 24 * 60 * 60,
+  },
+  jwt: {
+    maxAge: 24 * 60 * 60,
+  },
   callbacks: {
     async redirect({ baseUrl }) {
       return baseUrl;
