@@ -103,7 +103,7 @@ export default function Toolbar({ editor }: { editor: Editor }) {
   ];
 
   return (
-    <div className="border-neutral-500-100 mb-4 border-b border-neutral-400 pb-2">
+    <div className="border-neutral-500-100 mb-1 border-b border-neutral-400 pb-2">
       {buttons.map(({ type, icon: Icon, onClick }) => (
         <Button
           key={type}

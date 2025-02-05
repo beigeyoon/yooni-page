@@ -1,9 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from 'next-auth/providers/google';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from "@/lib/prisma";
+import { ExtendedSession } from "@/types";
 
-const handler = NextAuth({
+export const authOption: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -16,15 +17,25 @@ const handler = NextAuth({
     strategy: 'jwt',
     maxAge: 24 * 60 * 60,
   },
-  jwt: {
-    maxAge: 24 * 60 * 60,
-  },
   callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        token.accessToken = account.access_token;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token?.accessToken) {
+        (session as ExtendedSession).accessToken = token.accessToken as string;
+      }
+      return session;
+    },
     async redirect({ baseUrl }) {
       return baseUrl;
     },
   },
   debug: true,
-});
+};
 
+const handler = NextAuth(authOption);
 export { handler as GET, handler as POST };

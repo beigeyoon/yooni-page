@@ -12,7 +12,7 @@ import { signIn } from 'next-auth/react';
 
 export function LoginButton() {
   const googleLogin = () => {
-    signIn('google');
+    signIn('google', { redirect: false });
   };
 
   return (

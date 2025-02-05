@@ -8,21 +8,21 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id            Int       @id @default(autoincrement())
+model user {
+  id            String    @id @default(uuid())
   name          String?
   email         String    @unique
   emailVerified DateTime?
   image         String?
-  accounts      Account[]
-  sessions      Session[]
-  posts         Post[]
-  Comment       Comment[]
+  accounts      account[]
+  sessions      session[]
+  posts         post[]
+  Comment       comment[]
 }
 
-model Account {
-  id                Int     @id @default(autoincrement())
-  userId            Int
+model account {
+  id                String  @id @default(uuid())
+  userId            String
   provider          String
   providerAccountId String
   type              String
@@ -34,18 +34,18 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
 
-  user User @relation(fields: [userId], references: [id])
+  user user @relation(fields: [userId], references: [id])
 
   @@unique([provider, providerAccountId])
 }
 
-model Session {
-  id           Int      @id @default(autoincrement())
+model session {
+  id           String   @id @default(uuid())
   sessionToken String   @unique
-  userId       Int
+  userId       String
   expires      DateTime
 
-  user User @relation(fields: [userId], references: [id])
+  user user @relation(fields: [userId], references: [id])
 }
 
 enum CategoryType {
@@ -55,33 +55,33 @@ enum CategoryType {
   PHOTO
 }
 
-model Post {
-  id          Int          @id @default(autoincrement())
+model post {
+  id          String       @id @default(uuid())
   title       String       @db.VarChar(255)
   subtitle    String?      @db.Text
   content     String       @db.Text
   createdAt   DateTime     @default(now())
-  userId      Int
+  userId      String
   category    CategoryType
   isPublished Boolean      @default(false)
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  comments Comment[]
+  user     user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments comment[]
 }
 
-model Comment {
-  id        Int      @id @default(autoincrement())
+model comment {
+  id        String   @id @default(uuid())
   content   String   @db.Text
   createdAt DateTime @default(now())
-  userId    Int
-  postId    Int
+  userId    String
+  postId    String
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
-model Project {
-  id          Int      @id @default(autoincrement())
+model project {
+  id          String   @id @default(uuid())
   title       String   @db.VarChar(255)
   description String   @db.Text
   imageUrl    String?  @db.Text

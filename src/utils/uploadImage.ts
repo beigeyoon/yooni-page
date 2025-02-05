@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from "@/lib/supabase";
 
 async function uploadImage(file: File) {
   const fileName = `${Date.now()}_${file.name}`;
@@ -11,7 +11,7 @@ async function uploadImage(file: File) {
     });
 
   if (error) {
-    console.error('🚫 이미지 업로드 실패: ', error.message);
+    console.error('❌ 이미지 업로드 실패: ', error.message);
     return null;
   }
 
