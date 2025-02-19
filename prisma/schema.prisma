@@ -51,8 +51,8 @@ model session {
 enum CategoryType {
   TRAVEL
   DEV
-  PROJECT
   PHOTO
+  TALK
 }
 
 model post {
@@ -63,6 +63,7 @@ model post {
   createdAt   DateTime     @default(now())
   userId      String
   category    CategoryType
+  subCategory String?      @db.Text
   isPublished Boolean      @default(false)
 
   user     user      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -78,14 +79,4 @@ model comment {
 
   user user @relation(fields: [userId], references: [id], onDelete: Cascade)
   post post @relation(fields: [postId], references: [id], onDelete: Cascade)
-}
-
-model project {
-  id          String   @id @default(uuid())
-  title       String   @db.VarChar(255)
-  description String   @db.Text
-  imageUrl    String?  @db.Text
-  githubUrl   String?  @db.Text
-  demoUrl     String?  @db.Text
-  createdAt   DateTime @default(now())
 }

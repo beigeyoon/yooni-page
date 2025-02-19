@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "CategoryType" AS ENUM ('TRAVEL', 'DEV', 'PROJECT', 'PHOTO');
+CREATE TYPE "CategoryType" AS ENUM ('TRAVEL', 'DEV', 'PHOTO', 'TALK');
 
 -- CreateTable
 CREATE TABLE "user" (
@@ -49,6 +49,7 @@ CREATE TABLE "post" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" TEXT NOT NULL,
     "category" "CategoryType" NOT NULL,
+    "subCategory" TEXT,
     "isPublished" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "post_pkey" PRIMARY KEY ("id")
@@ -63,19 +64,6 @@ CREATE TABLE "comment" (
     "postId" TEXT NOT NULL,
 
     CONSTRAINT "comment_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "project" (
-    "id" TEXT NOT NULL,
-    "title" VARCHAR(255) NOT NULL,
-    "description" TEXT NOT NULL,
-    "imageUrl" TEXT,
-    "githubUrl" TEXT,
-    "demoUrl" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "project_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

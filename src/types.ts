@@ -7,7 +7,7 @@ export interface ExtendedSession extends Session {
 export interface PostFormValues {
   title?: string;
   subtitle?: string;
-  category?: 'TRAVEL' | 'DEV' | 'PROJECT' | 'PHOTO';
+  category?: 'TRAVEL' | 'DEV' | 'PROJECT' | 'PHOTO' | 'TALK';
   isPublished?: boolean;
   content?: string;
 }

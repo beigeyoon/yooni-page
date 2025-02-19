@@ -97,10 +97,10 @@ export default function Editor() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="TRAVEL">TRAVEL</SelectItem>
                   <SelectItem value="DEV">DEV</SelectItem>
-                  <SelectItem value="PROJECT">PROJECT</SelectItem>
                   <SelectItem value="PHOTO">PHOTO</SelectItem>
+                  <SelectItem value="TRAVEL">TRAVEL</SelectItem>
+                  <SelectItem value="TALK">TALK</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
