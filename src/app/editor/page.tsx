@@ -76,7 +76,7 @@ export default function Editor() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex gap-12 p-8">
+      className="flex gap-12">
       <section className="flex-1">
         <TiptapEditor
           ref={editorRef}
