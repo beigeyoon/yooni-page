@@ -3,7 +3,7 @@ CREATE TYPE "CategoryType" AS ENUM ('TRAVEL', 'DEV', 'PHOTO', 'TALK');
 
 -- CreateTable
 CREATE TABLE "user" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT,
     "email" TEXT NOT NULL,
     "emailVerified" TIMESTAMP(3),
@@ -14,8 +14,8 @@ CREATE TABLE "user" (
 
 -- CreateTable
 CREATE TABLE "account" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
     "provider" TEXT NOT NULL,
     "providerAccountId" TEXT NOT NULL,
     "type" TEXT NOT NULL,
@@ -32,9 +32,9 @@ CREATE TABLE "account" (
 
 -- CreateTable
 CREATE TABLE "session" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "sessionToken" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
     "expires" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "session_pkey" PRIMARY KEY ("id")
@@ -42,12 +42,12 @@ CREATE TABLE "session" (
 
 -- CreateTable
 CREATE TABLE "post" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "title" VARCHAR(255) NOT NULL,
     "subtitle" TEXT,
     "content" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
     "category" "CategoryType" NOT NULL,
     "subCategory" TEXT,
     "isPublished" BOOLEAN NOT NULL DEFAULT false,
@@ -57,11 +57,11 @@ CREATE TABLE "post" (
 
 -- CreateTable
 CREATE TABLE "comment" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "content" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" TEXT NOT NULL,
-    "postId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
+    "postId" UUID NOT NULL,
 
     CONSTRAINT "comment_pkey" PRIMARY KEY ("id")
 );
@@ -76,10 +76,10 @@ CREATE UNIQUE INDEX "account_provider_providerAccountId_key" ON "account"("provi
 CREATE UNIQUE INDEX "session_sessionToken_key" ON "session"("sessionToken");
 
 -- AddForeignKey
-ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "post" ADD CONSTRAINT "post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
