@@ -1,8 +1,11 @@
 import { Session } from "next-auth";
 
-export interface ExtendedSession extends Session { 
+export interface ExtendedSession extends Session {
   accessToken?: string;
-};
+  user?: Session["user"] & {
+    id?: string;
+  };
+}
 
 export interface PostFormValues {
   title?: string;

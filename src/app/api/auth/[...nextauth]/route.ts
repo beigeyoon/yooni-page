@@ -27,6 +27,7 @@ export const authOption: NextAuthOptions = {
     async session({ session, token }) {
       if (token?.accessToken) {
         (session as ExtendedSession).accessToken = token.accessToken as string;
+        (session as ExtendedSession).user!.id = token.sub as string;
       }
       return session;
     },

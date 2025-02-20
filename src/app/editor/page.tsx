@@ -19,7 +19,7 @@ import { createPost } from '@/lib/api/posts';
 import { PostFormValues as FormValues } from '@/types';
 
 export default function Editor() {
-  const { isAdmin, status } = useAuth();
+  const { isAdmin, status, session } = useAuth();
   const router = useRouter();
   const editorRef = useRef<{ getEditorContent: () => string } | null>(null);
 
@@ -60,7 +60,7 @@ export default function Editor() {
     const payload = {
       ...data,
       content,
-      userId: '32e5b74b-4dc8-47de-b464-a6c7f90d7c9b',
+      userId: session?.user?.id as string,
       isPublished: clickedButton === 'publish'
     };
 
