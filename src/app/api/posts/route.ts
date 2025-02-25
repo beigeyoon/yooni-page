@@ -3,6 +3,34 @@ import { supabaseForServer } from "@/lib/supabaseForServer";
 import { getServerSession } from "next-auth";
 import { authOption } from "../auth/[...nextauth]/route";
 
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const postId = searchParams.get("id");
+  const category = searchParams.get("category");
+
+  if (postId) {
+    const { data, error } = await supabaseForServer
+      .from("post")
+      .select("*")
+      .eq("id", postId)
+      .single();
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ data }, { status: 200 });
+  } else {
+    let query = supabaseForServer.from("post").select("*");
+    if (category) {
+      query = query.eq("category", category);
+    };
+    const { data, error } = await query;
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    };
+    return NextResponse.json({ data }, { status: 200 });
+  };
+};
+
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOption);
   if (!session || !session.user) {

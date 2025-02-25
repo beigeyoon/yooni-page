@@ -56,7 +56,6 @@ export default function Editor() {
 
     const clickedButton = event.nativeEvent.submitter.value;
 
-    // userId 수정 필요
     const payload = {
       ...data,
       content,
