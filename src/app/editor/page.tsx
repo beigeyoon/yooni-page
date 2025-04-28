@@ -97,9 +97,9 @@ export default function Editor() {
               <SelectContent>
                 <SelectGroup>
                   <SelectItem value="DEV">DEV</SelectItem>
-                  <SelectItem value="PHOTO">PHOTO</SelectItem>
                   <SelectItem value="TRAVEL">TRAVEL</SelectItem>
                   <SelectItem value="TALK">TALK</SelectItem>
+                  <SelectItem value="PHOTO">PHOTO</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
