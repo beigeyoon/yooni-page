@@ -10,6 +10,7 @@ import {
   QueryClientProvider
 } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { FileWarning } from 'lucide-react';
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,14 @@ const Talks = () => {
     router.push(`/talks/${id}`);
   };
 
+  if (!posts || posts.length === 0) {
+    return (
+      <div className="flex w-full flex-col items-center gap-4 pt-10">
+        <FileWarning width={48} />
+        작성된 포스트가 없습니다.
+      </div>
+    );
+  }
   return (
     <div className="flex flex-row-reverse justify-center gap-16 pb-10">
       {posts?.map(post => (
