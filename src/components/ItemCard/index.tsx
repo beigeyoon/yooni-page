@@ -7,15 +7,22 @@ import {
 } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { useMemo } from 'react';
+import Image from 'next/image';
+import { ExternalLink } from 'lucide-react';
 
 interface Props {
   content: {
     title: string;
     desc: string[] | string[][];
   };
+  links?: {
+    title: string;
+    src: string;
+  }[];
+  imgHref?: string;
 }
 
-export default function ProfileCard({ content }: Props) {
+export default function ItemCard({ content, links, imgHref }: Props) {
   const { title, desc } = content;
   const isTwoColumnDesc = useMemo(
     () =>
@@ -28,8 +35,8 @@ export default function ProfileCard({ content }: Props) {
   );
 
   return (
-    <Card className="hover:bg-neutral-100">
-      <CardHeader>
+    <Card className="flex w-full justify-between p-6">
+      <CardHeader className="max-w-[400px] p-4">
         <CardTitle className="text-xl text-neutral-400">{title}</CardTitle>
         <CardContent className="p-0 pt-2">
           {isTwoColumnDesc ? (
@@ -58,10 +65,34 @@ export default function ProfileCard({ content }: Props) {
                   - {item}
                 </CardDescription>
               ))}
+              {links &&
+                links.map((item, idx) => (
+                  <CardDescription
+                    key={idx}
+                    className="text-black">
+                    <a
+                      href={item.src}
+                      target="_blank"
+                      rel="noopener noreferrer">
+                      - {item.title}{' '}
+                      <ExternalLink className="inline-block h-4 w-4 align-text-top" />
+                    </a>
+                  </CardDescription>
+                ))}
             </>
           )}
         </CardContent>
       </CardHeader>
+      {imgHref && (
+        <div className="relative h-[240px] w-[400px]">
+          <Image
+            src={imgHref}
+            alt="project-image"
+            fill
+            style={{ objectFit: 'cover' }}
+          />
+        </div>
+      )}
     </Card>
   );
 }

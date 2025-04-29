@@ -1,5 +1,5 @@
 import { PROFILE, ABOUT_CONTENT } from '@/constants/about';
-import ProfileCard from '@/components/ProfileCard';
+import ItemCard from '@/components/ItemCard';
 import Image from 'next/image';
 import { Copy } from 'lucide-react';
 import CopyButton from '@/components/CopyButton';
@@ -9,7 +9,7 @@ export default function About() {
     <div className="flex flex-row-reverse justify-center gap-16 pb-10">
       <div className="flex flex-col gap-8">
         {ABOUT_CONTENT.map((item, idx) => (
-          <ProfileCard
+          <ItemCard
             key={idx}
             content={item}
           />
