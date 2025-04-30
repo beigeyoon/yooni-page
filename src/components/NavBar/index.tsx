@@ -26,7 +26,7 @@ export function NavBar() {
           className="mx-2">
           <Shell
             size={28}
-            className="text-zinc-600"
+            className="text-zinc-600 hover:text-zinc-400"
           />
         </Link>
         {NAV_MENUS.map((menu, idx) => (
