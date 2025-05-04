@@ -32,7 +32,7 @@ export function RecentPosts({
       case 'travels':
         return '여행';
       case 'talks':
-        return '잡담';
+        return '얘기';
       default:
         return '';
     }
@@ -60,10 +60,10 @@ export function RecentPosts({
         {posts?.map(post => (
           <TableRow
             key={post.id}
-            className="cursor-pointer"
+            className="cursor-pointer hover:bg-zinc-100"
             onClick={() => onClickPost(post.id)}>
             <TableCell className="font-semibold">{post.title}</TableCell>
-            <TableCell className="text-right">
+            <TableCell className="text-right text-xs">
               {handleTimeStirng(post.createdAt)}
             </TableCell>
           </TableRow>
