@@ -8,6 +8,20 @@ export const PROJECTS_CONTENT: Array<{
   imgHref: string;
 }> = [
   {
+    title: 'Personal Blog',
+    desc: [
+      '포트폴리오 및 개인 기록물 관리를 위한 블로그',
+      'Next.js, Typescript, TailwindCSS, Shadcn, Prisam, Supabase, Tiptap',
+    ],
+    links: [
+      {
+        title: '레포지토리 링크',
+        src: 'https://github.com/beigeyoon/yooni-page',
+      }
+    ],
+    imgHref: '/images/blog.webp',
+  },
+  {
     title: 'Wedding Invitation',
     desc: [
       '셀프 모바일 청첩장',
