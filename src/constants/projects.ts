@@ -5,7 +5,7 @@ export const PROJECTS_CONTENT: Array<{
     title: string;
     src: string;
   }[];
-  imgHref?: string;
+  imgHref: string;
 }> = [
   {
     title: 'Wedding Invitation',
@@ -20,7 +20,7 @@ export const PROJECTS_CONTENT: Array<{
         src: 'https://wedding-heetaku-yooni.vercel.app',
       }
     ],
-    imgHref: '/images/wedding-invitation.png',
+    imgHref: '/images/wedding.png',
   },
   {
     title: 'Korean Typing Exercise',
@@ -35,14 +35,14 @@ export const PROJECTS_CONTENT: Array<{
         src: 'https://yooni-typing.vercel.app',
       }
     ],
-    imgHref: '/images/typing-exercise.png',
+    imgHref: '/images/typing.png',
   },
   {
     title: 'Apple Reminder clone-coding',
     desc: [
       '애플 제공 어플리케이션 미리 알림(reminder)의 클론 코딩',
-      '실제 주로 사용하는 앱으로, 사용하지 않는 기능은 제거하고 니즈를 느끼던 캘린더뷰 추가',
-      'Next.js, Typescript, TailwindCSS, Prisma, Zustand, React-query',
+      '사용하지 않는 기능 제거, 니즈를 느끼던 캘린더뷰 추가',
+      'Next.js, Typescript, TailwindCSS, Zustand, React-query, Prisma',
     ],
     links: [
       {

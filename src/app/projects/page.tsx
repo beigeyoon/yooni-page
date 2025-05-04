@@ -1,11 +1,11 @@
-import ItemCard from '@/components/ItemCard';
 import { PROJECTS_CONTENT } from '@/constants/projects';
+import ProjectCard from '@/components/ProjectCard';
 
 export default function Projects() {
   return (
-    <div className="flex w-full flex-col items-center gap-8 px-24">
+    <div className="grid grid-cols-2 gap-8 px-24 py-12">
       {PROJECTS_CONTENT.map((item, idx) => (
-        <ItemCard
+        <ProjectCard
           key={idx}
           content={item}
           links={item.links}
