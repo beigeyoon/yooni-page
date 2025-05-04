@@ -19,7 +19,7 @@ export function NavBar() {
   const activeMenu = '/' + pathname.split('/')[1] || '';
 
   return (
-    <NavigationMenu className="flex max-w-none items-center justify-between border-b border-neutral-400 p-4">
+    <NavigationMenu className="sticky top-0 z-50 flex max-w-none items-center justify-between border-b border-neutral-400 bg-white/80 p-4 backdrop-blur">
       <NavigationMenuList>
         <Link
           href="/"
