@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 let prisma: PrismaClient;
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 if (process.env.NODE_ENV === 'production') {
   prisma = new PrismaClient();
 } else {
