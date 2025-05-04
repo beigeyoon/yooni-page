@@ -15,7 +15,7 @@ export const PROJECTS_CONTENT: Array<{
     ],
     links: [
       {
-        title: '레포지토리 링크',
+        title: 'Github 레포지토리 링크',
         src: 'https://github.com/beigeyoon/yooni-page',
       }
     ],
@@ -32,6 +32,10 @@ export const PROJECTS_CONTENT: Array<{
       {
         title: '배포 링크',
         src: 'https://wedding-heetaku-yooni.vercel.app',
+      },
+      {
+        title: 'Github 레포지토리 링크',
+        src: 'https://github.com/beigeyoon/wedding-letter',
       }
     ],
     imgHref: '/images/wedding.png',
@@ -47,6 +51,10 @@ export const PROJECTS_CONTENT: Array<{
       {
         title: '배포 링크',
         src: 'https://yooni-typing.vercel.app',
+      },
+      {
+        title: 'Github 레포지토리 링크',
+        src: 'https://github.com/beigeyoon/typing-exercise',
       }
     ],
     imgHref: '/images/typing.png',
@@ -62,6 +70,10 @@ export const PROJECTS_CONTENT: Array<{
       {
         title: '배포 링크',
         src: 'https://yooni-reminder.vercel.app',
+      },
+      {
+        title: 'Github 레포지토리 링크',
+        src: 'https://github.com/beigeyoon/reminder',
       }
     ],
     imgHref: '/images/reminder.png',

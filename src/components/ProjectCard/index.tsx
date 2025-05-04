@@ -28,7 +28,7 @@ export default function ProjectCard({ content, links, imgHref }: Props) {
         />
       </div>
       <div className="p-6">
-        <h1 className="mb-3 text-xl font-bold text-neutral-600">{title}</h1>
+        <h1 className="mb-3 text-xl font-bold text-neutral-900">{title}</h1>
         <div>
           {desc.map((item, idx) => (
             <div
@@ -41,7 +41,7 @@ export default function ProjectCard({ content, links, imgHref }: Props) {
             links.map((item, idx) => (
               <div
                 key={idx}
-                className="text-sm text-neutral-600">
+                className="text-sm font-bold text-neutral-600">
                 <a
                   href={item.src}
                   target="_blank"
