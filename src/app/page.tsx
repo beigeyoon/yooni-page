@@ -3,6 +3,7 @@ import { getPostsForServer } from '@/lib/api/posts';
 import { Category, Post } from '@/types';
 import Image from 'next/image';
 import { Silkscreen } from 'next/font/google';
+import { Newspaper } from 'lucide-react';
 const silkscreen = Silkscreen({
   subsets: ['latin'],
   weight: '400',
@@ -44,7 +45,9 @@ export default async function Home() {
         </p>
       </section>
       <section className="px-12">
-        <h2 className="pb-4 text-2xl font-bold text-neutral-800">📝 최신 글</h2>
+        <h2 className="pb-4 text-2xl font-bold text-neutral-800">
+          <Newspaper className="inline-block" /> 최신 글
+        </h2>
         <div className="flex gap-8 rounded-lg bg-neutral-100/60 p-4">
           <RecentPosts
             category="devs"
