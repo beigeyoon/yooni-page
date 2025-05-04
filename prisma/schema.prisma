@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model user {
+  id            String    @id @default(uuid()) @db.Uuid
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      account[]
+  sessions      session[]
+  posts         post[]
+  comments      comment[]
+}
+
+model account {
+  id                String  @id @default(uuid()) @db.Uuid
+  userId            String  @db.Uuid
+  provider          String
+  providerAccountId String
+  type              String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model session {
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionToken String   @unique
+  userId       String   @db.Uuid
+  expires      DateTime
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum CategoryType {
+  TRAVEL
+  DEV
+  PHOTO
+  TALK
+}
+
+model post {
+  id          String       @id @default(uuid()) @db.Uuid
+  title       String       @db.VarChar(255)
+  subtitle    String?      @db.Text
+  content     String       @db.Text
+  createdAt   DateTime     @default(now())
+  userId      String       @db.Uuid
+  category    CategoryType
+  subCategory String?      @db.Text
+  isPublished Boolean      @default(false)
+
+  user     user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments comment[]
+}
+
+model comment {
+  id        String   @id @default(uuid()) @db.Uuid
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  userId    String   @db.Uuid
+  postId    String   @db.Uuid
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
