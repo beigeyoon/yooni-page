@@ -7,10 +7,10 @@ import Toolbar from './Toolbar';
 import { Input } from '../ui/input';
 import { forwardRef, useImperativeHandle } from 'react';
 import { UseFormRegister } from 'react-hook-form';
-import { FormValues } from '@/app/editor/page';
+import { PostFormValues } from '@/types';
 
 interface Props {
-  register: UseFormRegister<FormValues>;
+  register: UseFormRegister<PostFormValues>;
 }
 
 const TiptapEditor = forwardRef((props: Props, ref) => {
@@ -54,7 +54,7 @@ const TiptapEditor = forwardRef((props: Props, ref) => {
       <Toolbar editor={editor} />
       <EditorContent
         editor={editor}
-        className="prose editor-container"
+        className="editor-container prose"
       />
     </div>
   );
