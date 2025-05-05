@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseForServer } from "@/lib/supabaseForServer";
 import { getServerSession } from "next-auth";
-import { authOption } from "../auth/[...nextauth]/route";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 };
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOption);
+  const session = await getServerSession(authOptions);
   if (!session || !session.user) {
     return NextResponse.json(
       { error: "❌ 인증된 사용자가 아닙니다." },
