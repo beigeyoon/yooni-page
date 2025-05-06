@@ -53,4 +53,30 @@ export async function POST(request: NextRequest) {
     { message: "✅ Post created successfully", data },
     { status: 201 }
   );
-}
+};
+
+export async function PUT(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user) {
+    return NextResponse.json(
+      { error: "❌ 인증된 사용자가 아닙니다." },
+      { status: 401 }
+    );
+  };
+
+  const body = await request.json();
+  const { id, ...rest } = body;
+  const { data, error } = await supabaseForServer
+    .from("post")
+    .update({ ...rest })
+    .eq("id", id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  };
+
+  return NextResponse.json(
+    { message: "✅ Post updated successfully", data },
+    { status: 200 }
+  );
+};

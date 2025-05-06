@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import TiptapEditor from '@/components/TiptapEditor';
 import { useForm, Controller } from 'react-hook-form';
@@ -15,13 +15,33 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { createPost } from '@/lib/api/posts';
+import { createPost, updatePost } from '@/lib/api/posts';
 import { PostFormValues as FormValues } from '@/types';
+import {
+  useQuery,
+  QueryClient,
+  QueryClientProvider
+} from '@tanstack/react-query';
+import { getPost } from '@/lib/api/posts';
+import { Post } from '@/types';
 
-export default function Editor() {
+const queryClient = new QueryClient();
+
+const Editor = () => {
   const { isAdmin, status, session } = useAuth();
   const router = useRouter();
   const editorRef = useRef<{ getEditorContent: () => string } | null>(null);
+
+  const searchParams = useSearchParams();
+  const id = searchParams.get('id');
+  const isEditMode = !!id;
+
+  const { data: post } = useQuery({
+    queryKey: ['posts', id],
+    enabled: !!id,
+    queryFn: () => getPost(id!) as Promise<{ data: { data: Post } }>,
+    select: (data: { data: { data: Post } }) => data.data.data as Post
+  });
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -37,10 +57,10 @@ export default function Editor() {
     formState: { errors }
   } = useForm<FormValues>({
     defaultValues: {
-      title: '',
-      subtitle: '',
-      category: undefined,
-      isPublished: false
+      title: post?.title || '',
+      subtitle: post?.subtitle || '',
+      category: post?.category || undefined,
+      isPublished: post?.isPublished || false
     }
   });
 
@@ -63,7 +83,9 @@ export default function Editor() {
       isPublished: clickedButton === 'publish'
     };
 
-    const response = await createPost(payload);
+    const response = isEditMode
+      ? await updatePost({ ...payload, id: post?.id })
+      : await createPost(payload);
     if (response.success) {
       router.push('/');
     } else {
@@ -80,6 +102,7 @@ export default function Editor() {
         <TiptapEditor
           ref={editorRef}
           register={register}
+          content={post?.content || ''}
         />
       </section>
       <section className="flex flex-col gap-4">
@@ -124,4 +147,14 @@ export default function Editor() {
       </section>
     </form>
   );
-}
+};
+
+const EditorWrapper = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Editor />
+    </QueryClientProvider>
+  );
+};
+
+export default EditorWrapper;

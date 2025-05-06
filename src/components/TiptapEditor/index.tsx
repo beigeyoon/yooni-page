@@ -11,10 +11,11 @@ import { PostFormValues } from '@/types';
 
 interface Props {
   register: UseFormRegister<PostFormValues>;
+  content?: string;
 }
 
 const TiptapEditor = forwardRef((props: Props, ref) => {
-  const { register } = props;
+  const { register, content } = props;
 
   useImperativeHandle(ref, () => ({
     getEditorContent: () => editor?.getHTML() || ''
@@ -32,7 +33,7 @@ const TiptapEditor = forwardRef((props: Props, ref) => {
       })
     ],
     editable: true,
-    content: ''
+    content
   });
 
   if (!editor) return <></>;

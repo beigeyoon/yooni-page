@@ -29,3 +29,10 @@ export async function createPost(payload: PostPayload) {
     body: JSON.stringify(payload),
   });
 };
+
+export async function updatePost(payload: PostPayload) {
+  return await apiFetch(`/api/posts?id=${payload.id}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  });
+};
