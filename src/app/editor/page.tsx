@@ -24,6 +24,7 @@ import {
 } from '@tanstack/react-query';
 import { getPost } from '@/lib/api/posts';
 import { Post } from '@/types';
+import { Loading } from '@/components/Loading';
 
 const queryClient = new QueryClient();
 
@@ -36,7 +37,7 @@ const Editor = () => {
   const id = searchParams.get('id');
   const isEditMode = !!id;
 
-  const { data: post } = useQuery({
+  const { data: post, isLoading } = useQuery({
     queryKey: ['posts', id],
     enabled: !!id,
     queryFn: () => getPost(id!) as Promise<{ data: { data: Post } }>,
@@ -54,6 +55,7 @@ const Editor = () => {
     handleSubmit,
     setError,
     clearErrors,
+    reset,
     formState: { errors }
   } = useForm<FormValues>({
     defaultValues: {
@@ -63,6 +65,17 @@ const Editor = () => {
       isPublished: post?.isPublished || false
     }
   });
+
+  useEffect(() => {
+    if (post) {
+      reset({
+        title: post.title,
+        subtitle: post.subtitle,
+        category: post.category,
+        isPublished: post.isPublished
+      });
+    }
+  }, [post, reset]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: FormValues, event: any) => {
@@ -94,6 +107,9 @@ const Editor = () => {
   };
 
   if (!isAdmin) return <></>;
+  if (id && isLoading) {
+    return <Loading />;
+  }
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
