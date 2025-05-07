@@ -19,6 +19,7 @@ export interface PostFormValues {
 
 export interface PostPayload extends PostFormValues {
   userId: string;
+  id?: string;
 };
 
 export interface Post {

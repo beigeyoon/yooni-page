@@ -63,7 +63,7 @@ export function RecentPosts({
             className="cursor-pointer hover:bg-zinc-100"
             onClick={() => onClickPost(post.id)}>
             <TableCell className="font-semibold">{post.title}</TableCell>
-            <TableCell className="text-right text-xs">
+            <TableCell className="min-w-[88px] text-right text-xs">
               {handleTimeStirng(post.createdAt)}
             </TableCell>
           </TableRow>

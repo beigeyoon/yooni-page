@@ -16,10 +16,13 @@ import { useAdjacentPosts } from '@/hooks/useAdjacentPosts';
 import { getCategoryPathname } from '@/utils/getCategoryPathname';
 import { Category } from '@/types';
 import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 const queryClient = new QueryClient();
 
 const PostContent = () => {
   const router = useRouter();
+  const { isAdmin } = useAuth();
   const params = useParams();
   const { id } = params as { id: string };
 
@@ -34,6 +37,10 @@ const PostContent = () => {
     post?.category as Category
   );
 
+  const onClickEdit = () => {
+    router.push(`/editor?id=${post?.id}`);
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -46,9 +53,17 @@ const PostContent = () => {
     );
   }
   return (
-    <div className="flex flex-col px-24 py-10">
+    <div className="flex max-w-[1000px] flex-col px-24 py-10">
       <div className="mb-10 flex items-center justify-between font-bold text-neutral-400">
-        #{post.category}
+        <span>#{post.category}</span>
+        {isAdmin && (
+          <Button
+            variant="link"
+            className="text-neutral-400"
+            onClick={onClickEdit}>
+            Edit
+          </Button>
+        )}
       </div>
 
       <div className="border-b border-neutral-400 pb-10">
