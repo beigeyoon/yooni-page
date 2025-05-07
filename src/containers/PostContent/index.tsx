@@ -53,7 +53,7 @@ const PostContent = () => {
     );
   }
   return (
-    <div className="flex max-w-[1000px] flex-col px-24 py-10">
+    <div className="mx-auto flex max-w-[900px] flex-col py-8">
       <div className="mb-10 flex items-center justify-between font-bold text-neutral-400">
         <span>#{post.category}</span>
         {isAdmin && (

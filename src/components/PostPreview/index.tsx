@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { Card, CardDescription, CardTitle } from '@/components/ui/card';
-
 export function PostPreview({
   post,
   onClick
@@ -11,14 +9,14 @@ export function PostPreview({
 }) {
   const { title, subtitle, createdAt } = post;
   return (
-    <Card
-      className="flex w-full justify-between p-6 hover:cursor-pointer hover:bg-neutral-100"
+    <div
+      className="flex w-full flex-col justify-between border-b p-4 hover:cursor-pointer hover:bg-neutral-100"
       onClick={onClick}>
-      <div>
-        <CardTitle className="mb-2 text-lg">{title}</CardTitle>
-        <CardDescription className="text-md">{subtitle}</CardDescription>
+      <div className="mb-2 flex items-baseline justify-between gap-4 text-lg">
+        <span className="text-xl font-bold">{title}</span>
+        <span className="text-sm">{createdAt}</span>
       </div>
-      <div>{createdAt}</div>
-    </Card>
+      <div className="text-md">{subtitle}</div>
+    </div>
   );
 }

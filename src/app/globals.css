@@ -101,3 +101,31 @@ body {
   margin-bottom: 12px;
   line-height: 1.6;
 }
+
+.image-album {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.image-album img {
+  width: 100%;
+}
+
+.image-album[data-count='2'] img {
+  width: calc((100% - 10px) / 2); /* 8px gap 고려 */
+}
+
+.image-album[data-count='3'] img {
+  width: calc((100% - 20px) / 3); /* (gap * (n - 1)) */
+}
+
+.image-album[data-count='4'] {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.image-album[data-count='4'] img {
+  width: 100%;
+}

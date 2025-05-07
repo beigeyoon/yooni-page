@@ -44,7 +44,7 @@ const PostList = ({ category }: { category: Category }) => {
     );
   }
   return (
-    <div className="flex flex-col-reverse justify-center gap-8 px-24 pt-10">
+    <div className="mx-auto flex max-w-[900px] flex-col-reverse justify-center pt-8">
       {posts?.map(post => (
         <PostPreview
           key={post.id}
