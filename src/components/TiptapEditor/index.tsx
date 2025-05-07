@@ -10,6 +10,7 @@ import { UseFormRegister } from 'react-hook-form';
 import { PostFormValues } from '@/types';
 import Link from '@tiptap/extension-link';
 import Iframe from '../../extensions/Iframe';
+import ImageGroup from '@/extensions/ImageGroup';
 
 interface Props {
   register: UseFormRegister<PostFormValues>;
@@ -33,6 +34,7 @@ const TiptapEditor = forwardRef((props: Props, ref) => {
       Image.configure({
         inline: false
       }),
+      ImageGroup,
       Link.configure({
         protocols: ['ftp'],
         defaultProtocol: 'https',

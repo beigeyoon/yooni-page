@@ -21,7 +21,7 @@ const Iframe = Node.create({
 
   renderHTML({ HTMLAttributes }) {
     return ['iframe', mergeAttributes(HTMLAttributes, {
-      style: 'display: block; margin-left: auto; margin-right: auto;',
+      style: 'display: block; margin-left: auto; margin-right: auto; padding-top: 20px; padding-bottom: 20px;',
     })];
   },
 

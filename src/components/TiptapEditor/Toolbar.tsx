@@ -24,16 +24,32 @@ import uploadImage from '@/utils/uploadImage';
 export default function Toolbar({ editor }: { editor: Editor }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleImageUpload = async (
+  const handleMultipleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const imageUrl = await uploadImage(file);
-      if (imageUrl) {
-        editor.chain().focus().setImage({ src: imageUrl }).run();
-      }
+    const files = event.target.files;
+    if (!files) return;
+
+    const uploadedUrls: string[] = [];
+
+    for (const file of files) {
+      const url = await uploadImage(file);
+      if (url) uploadedUrls.push(url);
     }
+
+    if (uploadedUrls.length === 0) return;
+
+    editor
+      .chain()
+      .focus()
+      .insertContent({
+        type: 'imageGroup',
+        content: uploadedUrls.map(url => ({
+          type: 'image',
+          attrs: { src: url }
+        }))
+      })
+      .run();
   };
 
   const buttons: { type: string; icon: LucideIcon; onClick: () => void }[] = [
@@ -144,14 +160,16 @@ export default function Toolbar({ editor }: { editor: Editor }) {
           onClick={onClick}
           variant="ghost"
           size="sm"
+          type="button"
           className={`px-2 ${editor.isActive(type) && 'bg-slate-200'}`}>
           <Icon />
           {type === 'image' && (
             <input
               type="file"
               accept="image/*"
+              multiple
               ref={fileInputRef}
-              onChange={handleImageUpload}
+              onChange={handleMultipleImageUpload}
               style={{ display: 'none' }}
             />
           )}
