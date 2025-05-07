@@ -25,6 +25,7 @@ import {
 import { getPost } from '@/lib/api/posts';
 import { Post } from '@/types';
 import { Loading } from '@/components/Loading';
+import dynamic from 'next/dynamic';
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,7 @@ const Editor = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: FormValues, event: any) => {
+    if (!event.nativeEvent.submitter) return;
     const content = editorRef.current?.getEditorContent() || '';
 
     if (content.length === 0 || content.trim() === '<p></p>') {
@@ -165,10 +167,13 @@ const Editor = () => {
   );
 };
 
+const DynamicEditor = dynamic(() => Promise.resolve(Editor), {
+  ssr: false
+});
 const EditorWrapper = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <Editor />
+      <DynamicEditor />
     </QueryClientProvider>
   );
 };
