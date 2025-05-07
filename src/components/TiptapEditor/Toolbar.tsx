@@ -14,7 +14,9 @@ import {
   Quote,
   Code2,
   Minus,
-  Image
+  Image,
+  Link,
+  MapPinned
 } from 'lucide-react';
 import { useRef } from 'react';
 import uploadImage from '@/utils/uploadImage';
@@ -99,6 +101,38 @@ export default function Toolbar({ editor }: { editor: Editor }) {
       type: 'image',
       icon: Image,
       onClick: () => fileInputRef.current?.click()
+    },
+    {
+      type: 'link',
+      icon: Link,
+      onClick: () => {
+        const url = prompt('링크 URL을 입력하세요: ');
+        if (url) {
+          editor
+            .chain()
+            .focus()
+            .extendMarkRange('link')
+            .setLink({ href: url })
+            .run();
+        }
+      }
+    },
+    {
+      type: 'map',
+      icon: MapPinned,
+      onClick: () => {
+        const src = prompt(
+          '구글맵 embed src 주소를 입력하세요 (iframe src 속성)'
+        );
+        if (src) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (editor.chain() as any)
+            .setIframe({
+              src
+            })
+            .run();
+        }
+      }
     }
   ];
 

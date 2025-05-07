@@ -8,6 +8,8 @@ import { Input } from '../ui/input';
 import { forwardRef, useImperativeHandle } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 import { PostFormValues } from '@/types';
+import Link from '@tiptap/extension-link';
+import Iframe from '../../extensions/Iframe';
 
 interface Props {
   register: UseFormRegister<PostFormValues>;
@@ -30,7 +32,15 @@ const TiptapEditor = forwardRef((props: Props, ref) => {
       }),
       Image.configure({
         inline: false
-      })
+      }),
+      Link.configure({
+        protocols: ['ftp'],
+        defaultProtocol: 'https',
+        HTMLAttributes: {
+          class: 'custom-link'
+        }
+      }),
+      Iframe
     ],
     editable: true,
     content
