@@ -3,7 +3,6 @@
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import TiptapEditor from '@/components/TiptapEditor';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,6 +27,9 @@ import { Loading } from '@/components/Loading';
 import dynamic from 'next/dynamic';
 
 const queryClient = new QueryClient();
+const TiptapEditor = dynamic(() => import('@/components/TiptapEditor'), {
+  ssr: false
+});
 
 const Editor = () => {
   const { isAdmin, status, session } = useAuth();
