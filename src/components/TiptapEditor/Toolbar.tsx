@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useRef } from 'react';
 import uploadImage from '@/utils/uploadImage';
+import heic2any from 'heic2any';
 
 export default function Toolbar({ editor }: { editor: Editor }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -33,7 +34,28 @@ export default function Toolbar({ editor }: { editor: Editor }) {
     const uploadedUrls: string[] = [];
 
     for (const file of files) {
-      const url = await uploadImage(file);
+      let blob: Blob | File = file;
+      if (
+        file.type === 'image/heic' ||
+        file.name.toLowerCase().endsWith('.heic')
+      ) {
+        try {
+          const convertedBlob = (await heic2any({
+            blob: file,
+            toType: 'image/jpeg'
+          })) as Blob;
+          blob = new File(
+            [convertedBlob],
+            file.name.replace(/\.heic$/i, '.jpg'),
+            { type: 'image/jpeg', lastModified: Date.now() }
+          );
+        } catch (error) {
+          console.error('❌ HEIC 변환 실패:', error);
+          continue;
+        }
+      }
+
+      const url = await uploadImage(blob as File);
       if (url) uploadedUrls.push(url);
     }
 

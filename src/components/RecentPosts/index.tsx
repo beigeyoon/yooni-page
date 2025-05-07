@@ -11,6 +11,7 @@ import {
 import { Post } from '@/types';
 import handleTimeStirng from '@/utils/handleTimeStirng';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 
 export function RecentPosts({
   category,
@@ -38,6 +39,11 @@ export function RecentPosts({
     }
   };
 
+  const filteredPosts = useMemo(
+    () => posts?.filter(post => post.isPublished),
+    [posts]
+  );
+
   return (
     <Table>
       <TableHeader>
@@ -48,7 +54,7 @@ export function RecentPosts({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {posts?.length === 0 && (
+        {filteredPosts?.length === 0 && (
           <TableRow className="hover:bg-transparent">
             <TableCell
               colSpan={2}
@@ -57,7 +63,7 @@ export function RecentPosts({
             </TableCell>
           </TableRow>
         )}
-        {posts?.map(post => (
+        {filteredPosts?.map(post => (
           <TableRow
             key={post.id}
             className="cursor-pointer hover:bg-zinc-100"

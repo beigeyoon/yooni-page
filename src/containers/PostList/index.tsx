@@ -13,13 +13,16 @@ import { useRouter } from 'next/navigation';
 import { FileWarning } from 'lucide-react';
 import { Loading } from '@/components/Loading';
 import { getCategoryPathname } from '@/utils/getCategoryPathname';
+import { useAuth } from '@/hooks/useAuth';
+import { useMemo } from 'react';
 
 const queryClient = new QueryClient();
 
 const PostList = ({ category }: { category: Category }) => {
   const router = useRouter();
+  const { isAdmin } = useAuth();
 
-  const { data: posts, isLoading } = useQuery({
+  const { data: postsData, isLoading } = useQuery({
     queryKey: ['posts', category],
     queryFn: () => getPosts(category),
     select: data => {
@@ -31,6 +34,11 @@ const PostList = ({ category }: { category: Category }) => {
   const handlePostClick = (id: string) => {
     router.push(`/${getCategoryPathname(category)}/${id}`);
   };
+
+  const posts = useMemo(
+    () => (isAdmin ? postsData : postsData?.filter(post => post.isPublished)),
+    [postsData, isAdmin]
+  );
 
   if (isLoading) {
     return <Loading />;

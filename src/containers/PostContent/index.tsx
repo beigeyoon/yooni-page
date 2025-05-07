@@ -18,6 +18,7 @@ import { Category } from '@/types';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import { useEffect } from 'react';
 const queryClient = new QueryClient();
 
 const PostContent = () => {
@@ -36,6 +37,10 @@ const PostContent = () => {
     id,
     post?.category as Category
   );
+
+  useEffect(() => {
+    if (post && !isAdmin) router.push('/');
+  }, [isAdmin, post, router]);
 
   const onClickEdit = () => {
     router.push(`/editor?id=${post?.id}`);
