@@ -130,6 +130,7 @@ const Editor = () => {
           rules={{ required: '카테고리를 선택하세요.' }}
           render={({ field }) => (
             <Select
+              key={field.value}
               onValueChange={field.onChange}
               value={field.value}>
               <SelectTrigger className="w-[140px]">
