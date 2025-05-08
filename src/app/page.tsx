@@ -3,7 +3,8 @@ import { getPostsForServer } from '@/lib/api/posts';
 import { Category, Post } from '@/types';
 import Image from 'next/image';
 import { Silkscreen } from 'next/font/google';
-import { Newspaper } from 'lucide-react';
+import { Newspaper, Grid2X2Check } from 'lucide-react';
+import GithubCalendar from '@/components/GithubCalendar';
 const silkscreen = Silkscreen({
   subsets: ['latin'],
   weight: '400',
@@ -44,7 +45,7 @@ export default async function Home() {
           <b>프론트엔드 개발자 유니</b>의 다양한 기록을 둘러보세요.
         </p>
       </section>
-      <section className="px-12">
+      <section className="px-12 pb-12">
         <h2 className="pb-4 text-2xl font-bold text-neutral-800">
           <Newspaper className="inline-block" /> 최신 글
         </h2>
@@ -62,6 +63,12 @@ export default async function Home() {
             posts={postsByCategory['TALK']}
           />
         </div>
+      </section>
+      <section className="px-12">
+        <h2 className="pb-4 text-2xl font-bold text-neutral-800">
+          <Grid2X2Check className="inline-block" /> Commits
+        </h2>
+        <GithubCalendar />
       </section>
     </div>
   );
