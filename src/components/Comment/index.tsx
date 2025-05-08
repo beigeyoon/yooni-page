@@ -23,7 +23,6 @@ const Comment = ({
 
   return (
     <div>
-      <div className="py-2 text-lg font-bold">Comments</div>
       <CommentList
         comments={comments}
         isLoading={isLoading}
