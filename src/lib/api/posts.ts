@@ -36,3 +36,9 @@ export async function updatePost(payload: PostPayload) {
     body: JSON.stringify(payload),
   });
 };
+
+export async function deletePost(id: string) {
+  return await apiFetch(`/api/posts?id=${id}`, {
+    method: 'DELETE',
+  });
+};

@@ -32,3 +32,25 @@ export interface Post {
   userId: string;
   createdAt: string;
 };
+
+export interface CommentFormValues {
+  content?: string;
+};
+
+export interface CommentPayload extends CommentFormValues {
+  postId: string;
+  userId: string;
+  userName?: string;
+  userImage?: string;
+  id?: string;
+}
+
+export interface Comment {
+  id: string;
+  content: string;
+  postId: string;
+  userId: string;
+  userName?: string;
+  userImage?: string;
+  createdAt: string;
+};

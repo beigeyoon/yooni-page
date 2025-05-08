@@ -7,9 +7,9 @@ import {
 } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { Post } from '@/types';
-import { getPost } from '@/lib/api/posts';
+import { deletePost, getPost } from '@/lib/api/posts';
 import { Loading } from '@/components/Loading';
-import { FileWarning } from 'lucide-react';
+import { FileWarning, SquarePen } from 'lucide-react';
 import handleTimeStirng from '@/utils/handleTimeStirng';
 import { useRouter } from 'next/navigation';
 import { useAdjacentPosts } from '@/hooks/useAdjacentPosts';
@@ -19,11 +19,13 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect } from 'react';
+import Comment from '@/components/Comment';
+import { DeleteButton } from '@/components/DeleteButton';
 const queryClient = new QueryClient();
 
 const PostContent = () => {
   const router = useRouter();
-  const { isAdmin } = useAuth();
+  const { isAdmin, session } = useAuth();
   const params = useParams();
   const { id } = params as { id: string };
 
@@ -46,6 +48,20 @@ const PostContent = () => {
     router.push(`/editor?id=${post?.id}`);
   };
 
+  const onDeletePost = async () => {
+    if (session?.user?.id !== post?.userId) {
+      alert('삭제 권한이 없습니다.');
+      return;
+    }
+
+    const response = await deletePost(post!.id);
+    if (response.success) {
+      router.push(`/${getCategoryPathname(post!.category)}`);
+    } else {
+      console.error('❌ 포스트 삭제 실패:', response.error);
+    }
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -62,12 +78,15 @@ const PostContent = () => {
       <div className="mb-10 flex items-center justify-between font-bold text-neutral-400">
         <span>#{post.category}</span>
         {isAdmin && (
-          <Button
-            variant="link"
-            className="text-neutral-400"
-            onClick={onClickEdit}>
-            Edit
-          </Button>
+          <div>
+            <Button
+              variant="ghost"
+              className="h-fit cursor-pointer px-2 py-1 text-neutral-500 hover:text-neutral-700"
+              onClick={onClickEdit}>
+              <SquarePen width={18} />
+            </Button>
+            <DeleteButton confirmDelete={onDeletePost} />
+          </div>
         )}
       </div>
 
@@ -94,6 +113,11 @@ const PostContent = () => {
       <div
         className="prose max-w-none py-16 text-base leading-relaxed text-neutral-700"
         dangerouslySetInnerHTML={{ __html: post.content }}
+      />
+
+      <Comment
+        postId={post.id}
+        session={session}
       />
 
       <div className="flex justify-between py-12 text-sm text-neutral-400">

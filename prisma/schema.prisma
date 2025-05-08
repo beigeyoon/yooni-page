@@ -56,7 +56,7 @@ enum CategoryType {
 }
 
 model post {
-  id          String       @id @default(uuid()) @db.Uuid
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title       String       @db.VarChar(255)
   subtitle    String?      @db.Text
   content     String       @db.Text
@@ -71,10 +71,12 @@ model post {
 }
 
 model comment {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   content   String   @db.Text
   createdAt DateTime @default(now())
   userId    String   @db.Uuid
+  userName  String?
+  userImage String?
   postId    String   @db.Uuid
 
   user user @relation(fields: [userId], references: [id], onDelete: Cascade)

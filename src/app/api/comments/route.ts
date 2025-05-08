@@ -5,30 +5,28 @@ import { authOptions } from "@/lib/authOptions";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const postId = searchParams.get("id");
-  const category = searchParams.get("category");
+  const postId = searchParams.get("postId");
 
   if (postId) {
     const { data, error } = await supabaseForServer
-      .from("post")
+      .from("comment")
       .select("*")
-      .eq("id", postId)
-      .single();
+      .eq("postId", postId)
+      .order("createdAt", { ascending: true });
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     return NextResponse.json({ data }, { status: 200 });
   } else {
-    let query = supabaseForServer.from("post").select("*");
-    if (category) {
-      query = query.eq("category", category);
-    };
-    const { data, error } = await query;
+    const { data, error } = await supabaseForServer
+      .from("comment")
+      .select("*")
+      .order("createdAt", { ascending: true });
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
-    };
+    }
     return NextResponse.json({ data }, { status: 200 });
-  };
+  }
 };
 
 export async function POST(request: NextRequest) {
@@ -38,19 +36,20 @@ export async function POST(request: NextRequest) {
       { error: "❌ 인증된 사용자가 아닙니다." },
       { status: 401 }
     );
-  };
+  }
 
   const body = await request.json();
+
   const { data, error } = await supabaseForServer
-    .from("post")
+    .from("comment")
     .insert([{ ...body }]);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
-  };
+  }
 
   return NextResponse.json(
-    { message: "✅ Post created successfully", data },
+    { message: "✅ Comment created successfully", data },
     { status: 201 }
   );
 };
@@ -62,21 +61,38 @@ export async function PUT(request: NextRequest) {
       { error: "❌ 인증된 사용자가 아닙니다." },
       { status: 401 }
     );
-  };
+  }
 
   const body = await request.json();
-  const { id, ...rest } = body;
+  const { id, content, userId } = body;
+  const { data: comment, error: fetchError } = await supabaseForServer
+    .from("comment")
+    .select("userId")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) {
+    return NextResponse.json({ error: fetchError.message }, { status: 500 });
+  }
+
+  if (comment.userId !== userId) {
+    return NextResponse.json(
+      { error: "❌ 본인 댓글만 수정할 수 있습니다." },
+      { status: 403 }
+    );
+  }
+
   const { data, error } = await supabaseForServer
-    .from("post")
-    .update({ ...rest })
+    .from("comment")
+    .update({ content })
     .eq("id", id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
-  };
+  }
 
   return NextResponse.json(
-    { message: "✅ Post updated successfully", data },
+    { message: "✅ Comment updated successfully", data },
     { status: 200 }
   );
 };
@@ -91,12 +107,12 @@ export async function DELETE(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url);
-  const postId = searchParams.get("id");
+  const commentId = searchParams.get("id");
 
   const { data, error } = await supabaseForServer
-    .from("post")
+    .from("comment")
     .delete()
-    .eq("id", postId);
+    .eq("id", commentId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
