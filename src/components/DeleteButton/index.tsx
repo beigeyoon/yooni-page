@@ -8,8 +8,17 @@ import {
 } from '@/components/ui/dialog';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { Trash2, TriangleAlert } from 'lucide-react';
+import { useState } from 'react';
+import { LoaderCircle } from 'lucide-react';
 
 export function DeleteButton({ confirmDelete }: { confirmDelete: () => void }) {
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
+  const handleDelete = () => {
+    setIsDeleting(true);
+    confirmDelete();
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -28,7 +37,9 @@ export function DeleteButton({ confirmDelete }: { confirmDelete: () => void }) {
             정말로 삭제하시겠습니까?
           </DialogDescription>
         </DialogHeader>
-        <Button onClick={confirmDelete}>확인</Button>
+        <Button onClick={handleDelete}>
+          {isDeleting ? <LoaderCircle className="animate-spin" /> : '확인'}
+        </Button>
       </DialogContent>
     </Dialog>
   );

@@ -49,7 +49,7 @@ const PostContent = () => {
   };
 
   const onDeletePost = async () => {
-    if (session?.user?.id !== post?.userId) {
+    if (!isAdmin) {
       alert('삭제 권한이 없습니다.');
       return;
     }
