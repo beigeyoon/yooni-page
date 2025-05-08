@@ -19,7 +19,6 @@ const CommentList = ({
   }
   return (
     <>
-      <div className="py-2 text-lg font-bold">Comments ({comments.length})</div>
       {comments.map(comment => (
         <CommentItem
           key={comment.id}
