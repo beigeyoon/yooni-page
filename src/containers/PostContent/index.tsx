@@ -39,7 +39,7 @@ const PostContent = () => {
   );
 
   useEffect(() => {
-    if (post && !isAdmin) router.push('/');
+    if (post && !post.isPublished && !isAdmin) router.push('/');
   }, [isAdmin, post, router]);
 
   const onClickEdit = () => {
