@@ -25,7 +25,7 @@ export default async function Home() {
   }
 
   return (
-    <>
+    <div className="mx-auto max-w-[1100px] pb-12">
       <section className="flex flex-col items-center pb-24 pt-10 text-center">
         <Image
           src="/images/yooni_px.png"
@@ -63,6 +63,6 @@ export default async function Home() {
           />
         </div>
       </section>
-    </>
+    </div>
   );
 }
