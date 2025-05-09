@@ -6,6 +6,7 @@ import { createComment } from '@/lib/api/comments';
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { ExtendedSession } from '@/types';
+import { LoaderCircle } from 'lucide-react';
 
 const CommentForm = ({
   postId,
@@ -15,12 +16,14 @@ const CommentForm = ({
   session: ExtendedSession | null;
 }) => {
   const [content, setContent] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
 
   const onSubmit = async () => {
     if (!content.trim()) return;
 
+    setIsSubmitting(true);
     const response = await createComment({
       content,
       postId,
@@ -37,6 +40,8 @@ const CommentForm = ({
     } else {
       console.error('❌ 댓글 등록 실패:', response.error);
     }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -49,7 +54,7 @@ const CommentForm = ({
         variant="outline"
         className="h-[60px] text-neutral-500"
         onClick={onSubmit}>
-        등록
+        {isSubmitting ? <LoaderCircle className="animate-spin" /> : '등록'}
       </Button>
     </div>
   );
