@@ -1,9 +1,11 @@
 import { RecentPosts } from '@/components/RecentPosts';
 import { getPostsForServer } from '@/lib/api/posts';
 import { Category, Post } from '@/types';
-import Image from 'next/image';
 import { Silkscreen } from 'next/font/google';
-import { Newspaper } from 'lucide-react';
+import { Newspaper, Grid2X2Check } from 'lucide-react';
+import GithubCalendar from '@/components/GithubCalendar';
+import ImageSlide from '@/components/ImageSlide';
+import { mainYooniImages } from '@/constants/imageMarquee';
 const silkscreen = Silkscreen({
   subsets: ['latin'],
   weight: '400',
@@ -26,14 +28,9 @@ export default async function Home() {
 
   return (
     <div className="mx-auto max-w-[1100px] pb-12">
-      <section className="flex flex-col items-center pb-24 pt-10 text-center">
-        <Image
-          src="/images/yooni_px.png"
-          alt="profile"
-          width={180}
-          height={180}
-        />
-        <h1 className={`mb-8 text-5xl font-bold ${silkscreen.className}`}>
+      <section className="flex flex-col items-center px-12 pb-24 pt-12 text-center">
+        <ImageSlide images={mainYooniImages} />
+        <h1 className={`mb-8 mt-12 text-5xl font-bold ${silkscreen.className}`}>
           Hello, there!
         </h1>
         <p className="text-lg">
@@ -44,7 +41,7 @@ export default async function Home() {
           <b>프론트엔드 개발자 유니</b>의 다양한 기록을 둘러보세요.
         </p>
       </section>
-      <section className="px-12">
+      <section className="px-12 pb-12">
         <h2 className="pb-4 text-2xl font-bold text-neutral-800">
           <Newspaper className="inline-block" /> 최신 글
         </h2>
@@ -62,6 +59,12 @@ export default async function Home() {
             posts={postsByCategory['TALK']}
           />
         </div>
+      </section>
+      <section className="px-12">
+        <h2 className="pb-4 text-2xl font-bold text-neutral-800">
+          <Grid2X2Check className="inline-block" /> Commits
+        </h2>
+        <GithubCalendar />
       </section>
     </div>
   );
