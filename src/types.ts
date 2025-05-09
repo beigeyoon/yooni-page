@@ -54,3 +54,18 @@ export interface Comment {
   userImage?: string;
   createdAt: string;
 };
+
+export interface ThoughtFormValues {
+  content?: string;
+};
+
+export interface ThoughtPayload extends ThoughtFormValues {
+  id?: string;
+  createdAt?: string;
+};
+
+export interface Thought {
+  id: string;
+  content: string;
+  createdAt: string;
+};
