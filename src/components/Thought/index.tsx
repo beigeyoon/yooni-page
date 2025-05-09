@@ -65,7 +65,7 @@ const RandomThought = () => {
           size={28}
           className="animate-blink text-neutral-300 hover:animate-none"
         />
-        {`" ${thoughts?.[index].content || '전하고 싶은 말이 없네요..'} "`}
+        {`" ${thoughts && thoughts.length > 0 ? thoughts[index].content : 'Yooni said..'} "`}
       </blockquote>
     </div>
   );
