@@ -9,25 +9,39 @@ import {
 import { getThoughts, createThought } from '@/lib/api/thoughts';
 import { Thought } from '@/types';
 import { CirclePlus, Pointer } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 const queryClient = new QueryClient();
 
 const RandomThought = () => {
   const { isAdmin } = useAuth();
-  const [index, setIndex] = useState<number>(0);
+  const [index, setIndex] = useState<number | null>(null);
 
   const { data: thoughts, isLoading } = useQuery({
     queryKey: ['thought'],
     queryFn: () => getThoughts() as Promise<{ data: { data: Thought[] } }>,
+
     select: (data: { data: { data: Thought[] } }) => data.data.data as Thought[]
   });
+
+  const total = useMemo(() => {
+    if (thoughts) {
+      return thoughts.length;
+    } else return -1;
+  }, [thoughts]);
+
+  useEffect(() => {
+    if (thoughts && index === null && total > 0) {
+      const randomIndex = Math.floor(Math.random() * total);
+      setIndex(randomIndex);
+    }
+  }, [thoughts, total, index]);
 
   const nextThought = async () => {
     if (!thoughts || thoughts.length === 0) return;
 
     let newIndex: number;
     do {
-      newIndex = Math.floor(Math.random() * thoughts.length);
+      newIndex = Math.floor(Math.random() * total);
     } while (thoughts.length > 1 && newIndex === index);
 
     setIndex(newIndex);
@@ -65,7 +79,7 @@ const RandomThought = () => {
           size={28}
           className="animate-blink text-neutral-300 hover:animate-none"
         />
-        {`" ${thoughts && thoughts.length > 0 ? thoughts[index].content : 'Yooni said..'} "`}
+        {`" ${thoughts && thoughts.length > 0 && index ? thoughts[index].content : 'Yooni said..'} "`}
       </blockquote>
     </div>
   );
