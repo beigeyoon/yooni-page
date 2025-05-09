@@ -56,7 +56,22 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+			keyframes: {
+        wobble: {
+          '0%, 100%': { transform: 'scale(1.1) rotate(0deg)' },
+          '25%': { transform: 'scale(1.1) rotate(2deg)' },
+          '75%': { transform: 'scale(1.1) rotate(-2deg)' },
+        },
+				blink: {
+          '0%, 100%': { opacity: '0.5' },
+          '50%': { opacity: '1' },
+        },
+      },
+      animation: {
+        wobble: 'wobble 0.3s ease-in-out infinite',
+				blink: 'blink 1s infinite',
+      },
   	}
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports

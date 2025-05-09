@@ -6,6 +6,7 @@ import { Newspaper, Grid2X2Check } from 'lucide-react';
 import GithubCalendar from '@/components/GithubCalendar';
 import ImageSlide from '@/components/ImageSlide';
 import { mainYooniImages } from '@/constants/imageMarquee';
+import Thought from '@/components/Thought';
 const silkscreen = Silkscreen({
   subsets: ['latin'],
   weight: '400',
@@ -28,7 +29,8 @@ export default async function Home() {
 
   return (
     <div className="mx-auto max-w-[1100px] pb-12">
-      <section className="flex flex-col items-center px-12 pb-24 pt-12 text-center">
+      <Thought />
+      <section className="flex flex-col items-center px-12 pb-24 pt-8 text-center">
         <ImageSlide images={mainYooniImages} />
         <h1 className={`mb-8 mt-12 text-5xl font-bold ${silkscreen.className}`}>
           Hello, there!

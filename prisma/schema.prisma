@@ -82,3 +82,9 @@ model comment {
   user user @relation(fields: [userId], references: [id], onDelete: Cascade)
   post post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
+
+model thought {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+}
