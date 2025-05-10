@@ -128,7 +128,7 @@ export default function Toolbar({ editor }: { editor: Editor }) {
     {
       type: 'codeBlock',
       icon: Code2,
-      onClick: () => editor.chain().focus().toggleCodeBlock().run()
+      onClick: () => editor.chain().focus().setCodeBlock().run()
     },
     {
       type: 'horizontalRule',
