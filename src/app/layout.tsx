@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import 'highlight.js/styles/atom-one-dark.css';
+import 'highlight.js/styles/agate.min.css';
 import './globals.css';
 import AuthProvider from '@/lib/AuthProvider';
 import { NavBar } from '@/components/NavBar';
