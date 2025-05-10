@@ -8,10 +8,12 @@ import { Comment as CommentType, ExtendedSession } from '@/types';
 
 const Comment = ({
   postId,
-  session
+  session,
+  status
 }: {
   postId: string;
   session: ExtendedSession | null;
+  status: 'authenticated' | 'loading' | 'unauthenticated';
 }) => {
   const { data: comments, isLoading } = useQuery({
     queryKey: ['comments', postId],
@@ -32,6 +34,7 @@ const Comment = ({
       <CommentFrom
         postId={postId}
         session={session}
+        status={status}
       />
     </div>
   );

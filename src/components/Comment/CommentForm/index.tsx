@@ -10,10 +10,12 @@ import { LoaderCircle } from 'lucide-react';
 
 const CommentForm = ({
   postId,
-  session
+  session,
+  status
 }: {
   postId: string;
   session: ExtendedSession | null;
+  status: 'authenticated' | 'loading' | 'unauthenticated';
 }) => {
   const [content, setContent] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -44,6 +46,14 @@ const CommentForm = ({
     setIsSubmitting(false);
   };
 
+  if (status !== 'authenticated') {
+    return (
+      <Textarea
+        placeholder="로그인한 유저만 댓글을 남길 수 있습니다. (구글 계정으로 로그인 가능)"
+        disabled
+      />
+    );
+  }
   return (
     <div className="flex h-[60px] gap-4 py-2">
       <Textarea

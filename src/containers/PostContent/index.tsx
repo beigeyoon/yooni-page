@@ -25,7 +25,7 @@ const queryClient = new QueryClient();
 
 const PostContent = () => {
   const router = useRouter();
-  const { isAdmin, session } = useAuth();
+  const { isAdmin, session, status } = useAuth();
   const params = useParams();
   const { id } = params as { id: string };
 
@@ -118,6 +118,7 @@ const PostContent = () => {
       <Comment
         postId={post.id}
         session={session}
+        status={status}
       />
 
       <div className="flex justify-between py-12 text-sm text-neutral-400">
