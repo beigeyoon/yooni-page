@@ -74,7 +74,7 @@ const PostContent = () => {
     );
   }
   return (
-    <div className="mx-auto flex max-w-[900px] flex-col py-8">
+    <div className="mx-auto flex max-w-[900px] flex-col py-8 max-sm:overflow-hidden max-sm:px-6">
       <div className="mb-10 flex items-center justify-between font-bold text-neutral-400">
         <span>#{post.category}</span>
         {isAdmin && (
@@ -111,7 +111,7 @@ const PostContent = () => {
       </div>
 
       <div
-        className="prose max-w-none py-16 text-base leading-relaxed text-neutral-700"
+        className="post-content prose max-w-none py-16 text-base leading-relaxed text-neutral-700"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 

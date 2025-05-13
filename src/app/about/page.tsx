@@ -6,7 +6,7 @@ import CopyButton from '@/components/CopyButton';
 
 export default function About() {
   return (
-    <div className="flex flex-row-reverse justify-center gap-16 pb-10">
+    <div className="flex flex-row-reverse justify-center gap-16 pb-10 max-sm:flex-col-reverse max-sm:p-6">
       <div className="flex flex-col gap-8">
         {ABOUT_CONTENT.map((item, idx) => (
           <ItemCard
@@ -15,7 +15,7 @@ export default function About() {
           />
         ))}
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col items-center">
         <Image
           src="/images/yooni.webp"
           alt="yooni-profile-image"
