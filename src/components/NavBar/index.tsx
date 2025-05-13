@@ -14,6 +14,7 @@ import { NAV_MENUS } from '@/constants';
 import { usePathname } from 'next/navigation';
 import { Shell, Menu } from 'lucide-react';
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from '../ui/sheet';
+import { DialogDescription, DialogTitle } from '../ui/dialog';
 
 export function NavBar() {
   const pathname = usePathname();
@@ -53,7 +54,10 @@ export function NavBar() {
           </NavigationMenuItem>
         ))}
       </NavigationMenuList>
-      <AuthStatus />
+      <div className="max-sm:hidden">
+        <AuthStatus />
+      </div>
+
       {/* 모바일 메뉴 */}
       <div className="flex justify-center sm:hidden">
         <Sheet>
@@ -62,7 +66,9 @@ export function NavBar() {
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="w-64">
+            className="flex w-64 flex-col items-center justify-between">
+            <DialogTitle className="hidden" />
+            <DialogDescription className="hidden" />
             <NavigationMenuList className="mt-8 flex flex-col gap-4 font-medium">
               {NAV_MENUS.map((menu, idx) => (
                 <NavigationMenuItem key={idx}>
@@ -77,6 +83,7 @@ export function NavBar() {
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
+            <AuthStatus />
           </SheetContent>
         </Sheet>
       </div>

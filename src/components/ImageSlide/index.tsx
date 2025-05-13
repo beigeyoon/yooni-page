@@ -36,14 +36,14 @@ const ImageSlide = ({ images }: { images: string[] }) => {
   return (
     <div
       ref={containerRef}
-      className="relative mx-auto h-[150px] w-full overflow-hidden">
+      className="relative mx-auto h-[150px] w-full overflow-hidden max-sm:h-[100px]">
       <div
         ref={trackRef}
         className="m-0 flex p-0">
         {images.map((src, idx) => (
           <div
             key={idx}
-            className="image-item mr-4 w-[150px] flex-none text-center">
+            className="image-item mr-4 w-[150px] flex-none text-center max-sm:w-[100px]">
             <Image
               src={src}
               alt={`img-${idx}`}

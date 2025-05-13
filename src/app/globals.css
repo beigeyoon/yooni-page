@@ -132,3 +132,7 @@ body {
 .image-album[data-count='4'] img {
   width: 100%;
 }
+
+.post-content iframe {
+  width: 100%;
+}

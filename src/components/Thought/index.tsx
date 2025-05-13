@@ -64,7 +64,7 @@ const RandomThought = () => {
 
   if (isLoading) return <div className="h-[56px]" />;
   return (
-    <div className="relative mt-4 flex h-[40px] justify-center">
+    <div className="relative mt-4 flex h-[40px] justify-center max-sm:px-6">
       {isAdmin && (
         <button
           className="absolute m-[-24px] text-neutral-300 hover:text-neutral-500"
@@ -73,12 +73,9 @@ const RandomThought = () => {
         </button>
       )}
       <blockquote
-        className="hover:animate-wobble mb-2 flex w-fit cursor-pointer gap-2 text-center text-2xl font-bold italic text-neutral-700 transition"
+        className="mb-2 flex w-fit cursor-pointer items-center gap-2 text-center text-2xl font-bold italic text-neutral-700 transition hover:animate-wobble max-sm:text-[16px]"
         onClick={nextThought}>
-        <Pointer
-          size={28}
-          className="animate-blink text-neutral-300 hover:animate-none"
-        />
+        <Pointer className="h-[28px] w-[28px] animate-blink text-neutral-300 hover:animate-none max-sm:h-[20px] max-sm:w-[20px]" />
         {`" ${thoughts && thoughts.length > 0 && index ? thoughts[index].content : 'Yooni said..'} "`}
       </blockquote>
     </div>
