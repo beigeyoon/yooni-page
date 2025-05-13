@@ -19,7 +19,7 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <NavBar />
-          <div className="p-8">{children}</div>
+          <div className="p-8 max-sm:p-0">{children}</div>
         </AuthProvider>
       </body>
     </html>

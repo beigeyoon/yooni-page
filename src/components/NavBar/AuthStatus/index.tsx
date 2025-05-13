@@ -13,7 +13,7 @@ export default function AuthStatus() {
   const router = useRouter();
 
   return (
-    <>
+    <div className="max-sm:hidden">
       {status === 'authenticated' ? (
         <div className="flex items-center gap-2">
           {isAdmin && (
@@ -37,6 +37,6 @@ export default function AuthStatus() {
       ) : (
         <LoginButton />
       )}
-    </>
+    </div>
   );
 }
