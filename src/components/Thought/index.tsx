@@ -76,7 +76,7 @@ const RandomThought = () => {
         className="mb-2 flex w-fit cursor-pointer items-center gap-2 text-center text-2xl font-bold italic text-neutral-700 transition hover:animate-wobble max-sm:text-[16px]"
         onClick={nextThought}>
         <Pointer className="h-[28px] w-[28px] animate-blink text-neutral-300 hover:animate-none max-sm:h-[20px] max-sm:w-[20px]" />
-        {`" ${thoughts && thoughts.length > 0 && index ? thoughts[index].content : 'Yooni said..'} "`}
+        {`" ${thoughts && thoughts.length > 0 && index !== null ? thoughts[index].content : 'Yooni said..'} "`}
       </blockquote>
     </div>
   );
