@@ -46,9 +46,9 @@ export function RecentPosts({
 
   return (
     <Table>
-      <TableHeader>
-        <TableRow className="border-b-zinc-400 hover:bg-transparent">
-          <TableHead className="text-[16px] hover:bg-transparent">
+      <TableHeader className="border-b border-b-zinc-400">
+        <TableRow className="hover:bg-transparent border-none">
+          <TableHead className="text-[16px] hover:bg-transparent border-none">
             {categoryInKorean(category)}
           </TableHead>
         </TableRow>
