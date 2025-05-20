@@ -9,8 +9,12 @@ export async function getPosts(category: Category) {
 };
 
 export async function getPostsForServer(category: Category) {
-  const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) && `https://${process.env.VERCEL_URL}` || 'http://localhost:3000';
+  let BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!BASE_URL) {
+    if (process.env.VERCEL_URL) {
+      BASE_URL = `https://${process.env.VERCEL_URL}`;
+    } else BASE_URL = 'http://localhost:3000';
+  };
   return await fetch(`${BASE_URL}/api/posts?category=${category}`, {
     method: 'GET',
     cache: 'no-store',
@@ -24,8 +28,12 @@ export async function getPost(id: string) {
 };
 
 export async function getPostForServer(id: string) {
-  const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) && `https://${process.env.VERCEL_URL}` || 'http://localhost:3000';
+  let BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!BASE_URL) {
+    if (process.env.VERCEL_URL) {
+      BASE_URL = `https://${process.env.VERCEL_URL}`;
+    } else BASE_URL = 'http://localhost:3000';
+  };
   return await fetch(`${BASE_URL}/api/posts?id=${id}`, {
     method: 'GET',
     cache: 'no-store',
