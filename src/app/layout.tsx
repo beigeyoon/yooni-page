@@ -3,6 +3,7 @@ import 'highlight.js/styles/agate.min.css';
 import './globals.css';
 import AuthProvider from '@/lib/AuthProvider';
 import { NavBar } from '@/components/NavBar';
+import { QueryProvider } from '@/lib/QueryProvider';
 
 export const metadata: Metadata = {
   title: 'Yooni Page',
@@ -17,10 +18,12 @@ export default function RootLayout({
   return (
     <html lang="kr">
       <body>
+        <QueryProvider>
         <AuthProvider>
           <NavBar />
           <div className="p-8 max-sm:p-0">{children}</div>
         </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );
