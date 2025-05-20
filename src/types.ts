@@ -7,7 +7,7 @@ export interface ExtendedSession extends Session {
   };
 }
 
-export type Category = 'TRAVEL' | 'DEV' | 'PROJECT' | 'PHOTO' | 'TALK';
+export type Category = 'travel' | 'dev' | 'talk' | 'photo';
 
 export interface PostFormValues {
   title?: string;

@@ -9,7 +9,6 @@ import { FileWarning, SquarePen } from 'lucide-react';
 import handleTimeStirng from '@/utils/handleTimeStirng';
 import { useRouter } from 'next/navigation';
 import { useAdjacentPosts } from '@/hooks/useAdjacentPosts';
-import { getCategoryPathname } from '@/utils/getCategoryPathname';
 import { Category } from '@/types';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -51,7 +50,7 @@ const PostContent = () => {
 
     const response = await deletePost(post!.id);
     if (response.success) {
-      router.push(`/${getCategoryPathname(post!.category)}`);
+      router.push(`/${post!.category}`);
     } else {
       console.error('❌ 포스트 삭제 실패:', response.error);
     }
@@ -119,11 +118,7 @@ const PostContent = () => {
       <div className="flex justify-between py-12 text-sm text-neutral-400">
         {prevPost ? (
           <button
-            onClick={() =>
-              router.push(
-                `/${getCategoryPathname(prevPost.category)}/${prevPost.id}`
-              )
-            }
+            onClick={() => router.push(`/${prevPost.category}/${prevPost.id}`)}
             className="hover:text-neutral-700">
             ← 이전 글: {prevPost.title}
           </button>
@@ -133,11 +128,7 @@ const PostContent = () => {
 
         {nextPost ? (
           <button
-            onClick={() =>
-              router.push(
-                `/${getCategoryPathname(nextPost.category)}/${nextPost.id}`
-              )
-            }
+            onClick={() => router.push(`/${nextPost.category}/${nextPost.id}`)}
             className="hover:text-neutral-700">
             다음 글: {nextPost.title} →
           </button>

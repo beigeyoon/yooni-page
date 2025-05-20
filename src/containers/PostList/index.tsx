@@ -8,7 +8,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { FileWarning } from 'lucide-react';
 import { Loading } from '@/components/Loading';
-import { getCategoryPathname } from '@/utils/getCategoryPathname';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemo } from 'react';
 
@@ -20,13 +19,13 @@ const PostList = ({ category }: { category: Category }) => {
     queryKey: ['posts', category],
     queryFn: () => getPosts(category),
     select: data => {
-      const postsData = (data?.data as Post[]);
+      const postsData = data?.data as Post[];
       return getPostsList(postsData, category);
     }
   });
 
   const handlePostClick = (id: string) => {
-    router.push(`/${getCategoryPathname(category)}/${id}`);
+    router.push(`/${category}/${id}`);
   };
 
   const posts = useMemo(

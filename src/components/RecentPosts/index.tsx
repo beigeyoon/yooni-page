@@ -28,11 +28,11 @@ export function RecentPosts({
 
   const categoryInKorean = (category: string) => {
     switch (category) {
-      case 'devs':
+      case 'dev':
         return '개발';
-      case 'travels':
+      case 'travel':
         return '여행';
-      case 'talks':
+      case 'talk':
         return '얘기';
       default:
         return '';
@@ -47,8 +47,8 @@ export function RecentPosts({
   return (
     <Table>
       <TableHeader className="border-b border-b-zinc-400">
-        <TableRow className="hover:bg-transparent border-none">
-          <TableHead className="text-[16px] hover:bg-transparent border-none">
+        <TableRow className="border-none hover:bg-transparent">
+          <TableHead className="border-none text-[16px] hover:bg-transparent">
             {categoryInKorean(category)}
           </TableHead>
         </TableRow>

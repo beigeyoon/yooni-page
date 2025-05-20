@@ -12,7 +12,7 @@ import Thought from '@/components/Thought';
 import {
   dehydrate,
   HydrationBoundary,
-  QueryClient,
+  QueryClient
 } from '@tanstack/react-query';
 
 const silkscreen = Silkscreen({
@@ -22,7 +22,7 @@ const silkscreen = Silkscreen({
 });
 
 export default async function Home() {
-  const categories: Category[] = ['DEV', 'TRAVEL', 'TALK'];
+  const categories: Category[] = ['dev', 'travel', 'talk'];
   const postsByCategory: Record<string, Post[]> = {};
 
   const queryClient = new QueryClient();
@@ -30,18 +30,23 @@ export default async function Home() {
   for (const category of categories) {
     await queryClient.prefetchQuery({
       queryKey: ['posts', category],
-      queryFn: () => getPostsForServer(category),
-    })
-  };
+      queryFn: () => getPostsForServer(category)
+    });
+  }
 
   const dehydratedState = dehydrate(queryClient);
 
   for (const category of categories) {
-    const cached = queryClient.getQueryData(['posts', category]) as Awaited<ReturnType<typeof getPostsForServer>>;
+    const cached = queryClient.getQueryData(['posts', category]) as Awaited<
+      ReturnType<typeof getPostsForServer>
+    >;
     const posts = cached.data as Post[];
-    posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    posts.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
     postsByCategory[category] = posts.slice(0, 3);
-  };
+  }
 
   return (
     <HydrationBoundary state={dehydratedState}>
@@ -69,16 +74,16 @@ export default async function Home() {
           </h2>
           <div className="flex gap-8 rounded-lg bg-neutral-100/60 p-4 max-sm:flex-col">
             <RecentPosts
-              category="devs"
-              posts={postsByCategory['DEV']}
+              category="dev"
+              posts={postsByCategory['dev']}
             />
             <RecentPosts
-              category="travels"
-              posts={postsByCategory['TRAVEL']}
+              category="travel"
+              posts={postsByCategory['travel']}
             />
             <RecentPosts
-              category="talks"
-              posts={postsByCategory['TALK']}
+              category="talk"
+              posts={postsByCategory['talk']}
             />
           </div>
         </section>
