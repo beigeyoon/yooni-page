@@ -4,19 +4,13 @@ import { PostPreview } from '@/components/PostPreview';
 import { getPosts } from '@/lib/api/posts';
 import { Category, Post } from '@/types';
 import getPostsList from '@/utils/getPostsList';
-import {
-  useQuery,
-  QueryClient,
-  QueryClientProvider
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { FileWarning } from 'lucide-react';
 import { Loading } from '@/components/Loading';
 import { getCategoryPathname } from '@/utils/getCategoryPathname';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemo } from 'react';
-
-const queryClient = new QueryClient();
 
 const PostList = ({ category }: { category: Category }) => {
   const router = useRouter();
@@ -26,7 +20,7 @@ const PostList = ({ category }: { category: Category }) => {
     queryKey: ['posts', category],
     queryFn: () => getPosts(category),
     select: data => {
-      const postsData = (data?.data as { data: Post[] }).data;
+      const postsData = (data?.data as Post[]);
       return getPostsList(postsData, category);
     }
   });
@@ -64,12 +58,4 @@ const PostList = ({ category }: { category: Category }) => {
   );
 };
 
-const PostListWrapper = ({ category }: { category: Category }) => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <PostList category={category} />
-    </QueryClientProvider>
-  );
-};
-
-export default PostListWrapper;
+export default PostList;
