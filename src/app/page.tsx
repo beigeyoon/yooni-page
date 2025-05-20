@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { RecentPosts } from '@/components/RecentPosts';
 import { getPostsForServer } from '@/lib/api/posts';
 import { Category, Post } from '@/types';
@@ -12,6 +14,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
+
 const silkscreen = Silkscreen({
   subsets: ['latin'],
   weight: '400',
