@@ -16,17 +16,12 @@ import {
 import { Label } from '@/components/ui/label';
 import { createPost, updatePost } from '@/lib/api/posts';
 import { PostFormValues as FormValues } from '@/types';
-import {
-  useQuery,
-  QueryClient,
-  QueryClientProvider
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getPost } from '@/lib/api/posts';
 import { Post } from '@/types';
 import { Loading } from '@/components/Loading';
 import dynamic from 'next/dynamic';
 
-const queryClient = new QueryClient();
 const TiptapEditor = dynamic(() => import('@/components/TiptapEditor'), {
   ssr: false
 });
@@ -173,12 +168,5 @@ const Editor = () => {
 const DynamicEditor = dynamic(() => Promise.resolve(Editor), {
   ssr: false
 });
-const EditorWrapper = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <DynamicEditor />
-    </QueryClientProvider>
-  );
-};
 
-export default EditorWrapper;
+export default DynamicEditor;

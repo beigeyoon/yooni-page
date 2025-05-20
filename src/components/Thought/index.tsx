@@ -1,16 +1,11 @@
 'use client';
 
 import { useAuth } from '@/hooks/useAuth';
-import {
-  useQuery,
-  QueryClient,
-  QueryClientProvider
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getThoughts, createThought } from '@/lib/api/thoughts';
 import { Thought } from '@/types';
 import { CirclePlus, Pointer } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-const queryClient = new QueryClient();
 
 const RandomThought = () => {
   const { isAdmin } = useAuth();
@@ -82,12 +77,4 @@ const RandomThought = () => {
   );
 };
 
-const RandomThoughtWrapper = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <RandomThought />
-    </QueryClientProvider>
-  );
-};
-
-export default RandomThoughtWrapper;
+export default RandomThought;
