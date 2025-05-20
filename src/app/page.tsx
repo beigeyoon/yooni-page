@@ -7,6 +7,11 @@ import GithubCalendar from '@/components/GithubCalendar';
 import ImageSlide from '@/components/ImageSlide';
 import { mainYooniImages } from '@/constants/imageMarquee';
 import Thought from '@/components/Thought';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query'
 const silkscreen = Silkscreen({
   subsets: ['latin'],
   weight: '400',
@@ -17,17 +22,26 @@ export default async function Home() {
   const categories: Category[] = ['DEV', 'TRAVEL', 'TALK'];
   const postsByCategory: Record<string, Post[]> = {};
 
+  const queryClient = new QueryClient();
+
   for (const category of categories) {
-    const res = await getPostsForServer(category);
-    const posts = res.data as Post[];
-    posts.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-    postsByCategory[category] = posts?.slice(0, 3);
-  }
+    await queryClient.prefetchQuery({
+      queryKey: ['posts', category],
+      queryFn: () => getPostsForServer(category),
+    })
+  };
+
+  const dehydratedState = dehydrate(queryClient);
+
+  for (const category of categories) {
+    const cached = queryClient.getQueryData(['posts', category]) as Awaited<ReturnType<typeof getPostsForServer>>;
+    const posts = cached.data as Post[];
+    posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    postsByCategory[category] = posts.slice(0, 3);
+  };
 
   return (
+    <HydrationBoundary state={dehydratedState}>
     <div className="mx-auto max-w-[1100px] pb-12">
       <Thought />
       <section className="flex flex-col items-center px-12 pb-24 pt-8 text-center max-sm:px-0">
@@ -72,5 +86,6 @@ export default async function Home() {
         <GithubCalendar />
       </section>
     </div>
+    </HydrationBoundary>
   );
 }
