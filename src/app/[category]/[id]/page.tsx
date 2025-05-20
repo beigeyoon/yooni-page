@@ -2,7 +2,7 @@ import PostContent from '@/containers/PostContent';
 import {
   dehydrate,
   HydrationBoundary,
-  QueryClient,
+  QueryClient
 } from '@tanstack/react-query';
 import { getPostForServer } from '@/lib/api/posts';
 
@@ -13,7 +13,7 @@ const Post = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   await queryClient.prefetchQuery({
     queryKey: ['post', id],
-    queryFn: () => getPostForServer(id),
+    queryFn: () => getPostForServer(id)
   });
 
   const dehydratedState = dehydrate(queryClient);
@@ -22,7 +22,7 @@ const Post = async ({ params }: { params: Promise<{ id: string }> }) => {
     <HydrationBoundary state={dehydratedState}>
       <PostContent />
     </HydrationBoundary>
-  )
+  );
 };
 
 export default Post;

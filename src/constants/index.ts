@@ -1,8 +1,8 @@
 export const NAV_MENUS = [
   { title: 'About', path: '/about' },
-  { title: 'Projects', path: '/projects' },
-  { title: 'Devs', path: '/devs' },
-  { title: 'Travels', path: '/travels' },
-  { title: 'Talks', path: '/talks' },
+  { title: 'Project', path: '/project' },
+  { title: 'Dev', path: '/dev' },
+  { title: 'Travel', path: '/travel' },
+  { title: 'Talk', path: '/talk' },
   // { title: 'Photos', path: '/photos' },
 ];

@@ -56,15 +56,15 @@ enum CategoryType {
 }
 
 model post {
-  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String       @db.VarChar(255)
-  subtitle    String?      @db.Text
-  content     String       @db.Text
-  createdAt   DateTime     @default(now())
-  userId      String       @db.Uuid
-  category    CategoryType
-  subCategory String?      @db.Text
-  isPublished Boolean      @default(false)
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String   @db.VarChar(255)
+  subtitle    String?  @db.Text
+  content     String   @db.Text
+  createdAt   DateTime @default(now())
+  userId      String   @db.Uuid
+  category    String
+  subCategory String?  @db.Text
+  isPublished Boolean  @default(false)
 
   user     user      @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments comment[]

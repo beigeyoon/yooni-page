@@ -135,10 +135,10 @@ const Editor = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="DEV">DEV</SelectItem>
-                  <SelectItem value="TRAVEL">TRAVEL</SelectItem>
-                  <SelectItem value="TALK">TALK</SelectItem>
-                  <SelectItem value="PHOTO">PHOTO</SelectItem>
+                  <SelectItem value="dev">dev</SelectItem>
+                  <SelectItem value="travel">travel</SelectItem>
+                  <SelectItem value="talk">talk</SelectItem>
+                  {/* <SelectItem value="photo">photo</SelectItem> */}
                 </SelectGroup>
               </SelectContent>
             </Select>
