@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  useQuery,
-  QueryClient,
-  QueryClientProvider
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { Post } from '@/types';
 import { deletePost, getPost } from '@/lib/api/posts';
@@ -21,7 +17,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useEffect } from 'react';
 import Comment from '@/components/Comment';
 import { DeleteButton } from '@/components/DeleteButton';
-const queryClient = new QueryClient();
 
 const PostContent = () => {
   const router = useRouter();
@@ -154,12 +149,4 @@ const PostContent = () => {
   );
 };
 
-const PostContentWrapper = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <PostContent />
-    </QueryClientProvider>
-  );
-};
-
-export default PostContentWrapper;
+export default PostContent;

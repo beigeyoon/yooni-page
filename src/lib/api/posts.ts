@@ -23,6 +23,15 @@ export async function getPost(id: string) {
   });
 };
 
+export async function getPostForServer(id: string) {
+  const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}` || 'http://localhost:3000';
+  return await fetch(`${BASE_URL}/api/posts?id=${id}`, {
+    method: 'GET',
+    cache: 'no-store',
+  }).then((res) => res.json());
+};
+
 export async function createPost(payload: PostPayload) {
   return await apiFetch('/api/posts', {
     method: 'POST',
