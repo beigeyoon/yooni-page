@@ -5,6 +5,34 @@ import {
   QueryClient
 } from '@tanstack/react-query';
 import { getPostForServer } from '@/lib/api/posts';
+import { Metadata } from 'next';
+
+export async function generateMetadata({
+  params
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const { id } = params;
+
+  const postData = await getPostForServer(id);
+  const post = postData?.data;
+
+  if (!post) {
+    return {
+      title: '게시글을 찾을 수 없음',
+      description: '존재하지 않는 게시글입니다.'
+    };
+  }
+
+  return {
+    title: post.title,
+    description: post.subtitle || post.content.slice(0, 100),
+    openGraph: {
+      title: post.title,
+      description: post.subtitle || post.content.slice(0, 100)
+    }
+  };
+}
 
 const Post = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
