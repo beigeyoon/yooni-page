@@ -10,9 +10,9 @@ import { Metadata } from 'next';
 export async function generateMetadata({
   params
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const { id } = params;
+  const { id } = await params;
 
   const postData = await getPostForServer(id);
   const post = postData?.data;
@@ -27,9 +27,42 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.subtitle || post.content.slice(0, 100),
+    keywords: [
+      '프론트엔드',
+      '프론트엔드 개발자',
+      'Next.js',
+      '웹 개발',
+      '기술 블로그',
+      '개발 블로그',
+      '포트폴리오',
+      '유니',
+      'yooni',
+      '프론트엔드 포트폴리오',
+      '여행 블로그',
+      '여행',
+      '생각',
+      '글쓰기',
+      '이야기',
+      '커리어',
+      '유니 블로그',
+      '개발자 블로그',
+      '포트폴리오 블로그'
+    ],
     openGraph: {
       title: post.title,
-      description: post.subtitle || post.content.slice(0, 100)
+      description: post.subtitle || post.content.slice(0, 100),
+      type: 'article',
+      images: [
+        'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png'
+      ]
+    },
+    twitter: {
+      title: post.title,
+      description: post.subtitle || post.content.slice(0, 100),
+      card: 'summary_large_image',
+      images: [
+        'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png'
+      ]
     }
   };
 }

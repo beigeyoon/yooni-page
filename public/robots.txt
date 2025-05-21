@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://yooni.seoul.kr
+
+# Sitemaps
+Sitemap: https://yooni.seoul.kr/sitemap.xml
