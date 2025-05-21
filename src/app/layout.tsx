@@ -44,6 +44,9 @@ export const metadata: Metadata = {
     images: [
       'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_2.png'
     ]
+  },
+  other: {
+    'google-site-verification': '5W1hOcpX-1XPgPg4aa6h6QyycCMe5tJLiLDK74p9neg'
   }
 };
 
