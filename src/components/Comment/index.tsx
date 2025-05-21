@@ -25,7 +25,9 @@ const Comment = ({
 
   return (
     <div>
-      <div className="py-2 text-lg font-bold">Comments</div>
+      <div className="py-2 text-lg font-bold">
+        Comments {comments && comments.length > 0 && `(${comments.length})`}
+      </div>
       <CommentList
         comments={comments}
         isLoading={isLoading}
