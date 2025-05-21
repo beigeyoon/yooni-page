@@ -17,14 +17,14 @@ export default function ProjectCard({ content, links, imgHref }: Props) {
   const { title, desc } = content;
 
   return (
-    <div className="flex h-[400px] flex-col justify-between overflow-hidden rounded-lg border border-neutral-300">
+    <div className="group flex h-[400px] flex-col justify-between overflow-hidden rounded-lg border border-neutral-300 transition-transform duration-300 hover:scale-105">
       <div className="relative h-[280px] w-full overflow-hidden">
         <Image
           src={imgHref}
           alt="project-image"
           fill
           style={{ objectFit: 'cover' }}
-          className="grayscale"
+          className="grayscale transition-all duration-300 group-hover:grayscale-0"
         />
       </div>
       <div className="p-6">

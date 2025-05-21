@@ -16,6 +16,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useEffect } from 'react';
 import Comment from '@/components/Comment';
 import { DeleteButton } from '@/components/DeleteButton';
+import Link from 'next/link';
 
 const PostContent = () => {
   const router = useRouter();
@@ -70,7 +71,7 @@ const PostContent = () => {
   return (
     <div className="mx-auto flex max-w-[900px] flex-col py-8 max-sm:overflow-hidden max-sm:px-6">
       <div className="mb-10 flex items-center justify-between font-bold text-neutral-400">
-        <span>#{post.category}</span>
+        <Link href={`/${post.category}`}>#{post.category}</Link>
         {isAdmin && (
           <div>
             <Button
