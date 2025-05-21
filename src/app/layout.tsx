@@ -6,7 +6,7 @@ import { NavBar } from '@/components/NavBar';
 import { QueryProvider } from '@/lib/QueryProvider';
 
 export const metadata: Metadata = {
-  title: 'Yooni Page',
+  title: '유니 블로그',
   description: '프론트엔드 개발자 유니의 기록을 담은 공간',
   keywords: [
     '프론트엔드',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     '포트폴리오 블로그'
   ],
   openGraph: {
-    title: 'Yooni Page',
+    title: '유니 블로그',
     description: '프론트엔드 개발자 유니의 기록을 담은 공간',
     type: 'website',
     images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     ]
   },
   twitter: {
-    title: 'Yooni Page',
+    title: '유니 블로그',
     description: '프론트엔드 개발자 유니의 기록을 담은 공간',
     card: 'summary_large_image',
     images: [
