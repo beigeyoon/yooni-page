@@ -7,7 +7,7 @@ interface InfiniteSliderProps {
   direction?: 'left' | 'right';
   speed?: number;
   repeat?: number;
-  backgroundColor?: string;
+  backgroundColorClass?: string;
 }
 
 const InfiniteSlider = ({
@@ -15,7 +15,7 @@ const InfiniteSlider = ({
   direction = 'right',
   speed = 0.5,
   repeat = 10,
-  backgroundColor = 'transparent'
+  backgroundColorClass = 'bg-transparent'
 }: InfiniteSliderProps) => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [trackWidth, setTrackWidth] = useState(0);
@@ -63,7 +63,7 @@ const InfiniteSlider = ({
 
   return (
     <div
-      className={`relative mx-auto w-full overflow-hidden py-1 bg-${backgroundColor}`}>
+      className={`relative mx-auto w-full overflow-hidden py-1 ${backgroundColorClass}`}>
       <div
         ref={trackRef}
         className="m-0 flex p-0 will-change-transform">
