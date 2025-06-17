@@ -65,7 +65,7 @@ export default function RootLayout({
           <AuthProvider>
             <InfiniteSlider
               direction="left"
-              backgroundColor="black"
+              backgroundColorClass="bg-black"
               speed={0.58}
               repeat={20}>
               {mainYooniMessages.map((message, idx) => (
