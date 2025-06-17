@@ -136,3 +136,13 @@ body {
 .post-content iframe {
   width: 100%;
 }
+
+.post-content li p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.editor-container .tiptap li p {
+  margin-top: 0;
+  margin-bottom: 0;
+}

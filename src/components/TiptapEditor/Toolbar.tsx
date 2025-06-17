@@ -7,6 +7,8 @@ import {
   Heading3,
   Bold,
   Italic,
+  Underline,
+  Palette,
   Strikethrough,
   Code,
   List,
@@ -101,9 +103,35 @@ export default function Toolbar({ editor }: { editor: Editor }) {
       onClick: () => editor.chain().focus().toggleItalic().run()
     },
     {
+      type: 'underline',
+      icon: Underline,
+      onClick: () => editor.chain().focus().toggleUnderline().run()
+    },
+    {
       type: 'strike',
       icon: Strikethrough,
       onClick: () => editor.chain().focus().toggleStrike().run()
+    },
+    {
+      type: 'color',
+      icon: Palette,
+      onClick: () => {
+        const colorInput = document.createElement('input');
+        colorInput.type = 'color';
+        colorInput.value = '#000000';
+        colorInput.style.position = 'absolute';
+        colorInput.style.left = '-9999px';
+
+        document.body.appendChild(colorInput);
+
+        colorInput.click();
+
+        colorInput.addEventListener('input', () => {
+          const color = colorInput.value;
+          editor.chain().focus().setColor(color).run();
+          document.body.removeChild(colorInput);
+        });
+      }
     },
     {
       type: 'code',
