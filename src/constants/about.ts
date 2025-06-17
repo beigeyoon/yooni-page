@@ -25,14 +25,14 @@ export const ABOUT_CONTENT: Array<{
     title: 'Skills',
     desc: [
       'HTML / CSS / Javascript / Typescript',
-      'React / React-native / Redux',
+      'React / React-native / Redux / Zustand',
       'Next.js',
-      'Angular.js',
+      'TailwindCSS / Styled-components',
       'Tanstack-query',
       'SQL / GraphQL / Prisma',
       'Git / Github',
       'Figma',
-      'Photoshop / Premiere',
+      '(Photoshop / Premiere)',
     ],
   },
   {
@@ -46,7 +46,7 @@ export const ABOUT_CONTENT: Array<{
   {
     title: 'Education',
     desc: [
-      [ 'CODESTATES', 'Blockchain Engineering Bootcamp 3기 수료' ],
+      [ 'CODESTATES', 'Blockchain Bootcamp 수료' ],
       [ '상명대학교', '사진영상콘텐츠학과 중퇴' ],
       [ '성균관대학교', '시스템경영공학과 졸업' ],
       [ '삼성SDS', '동계 인턴십 프로그램 수료' ],

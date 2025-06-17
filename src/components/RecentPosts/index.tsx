@@ -66,10 +66,12 @@ export function RecentPosts({
         {filteredPosts?.map(post => (
           <TableRow
             key={post.id}
-            className="cursor-pointer hover:bg-zinc-100"
+            className="flex w-full cursor-pointer justify-between hover:bg-zinc-100"
             onClick={() => onClickPost(post.id)}>
-            <TableCell className="font-semibold">{post.title}</TableCell>
-            <TableCell className="min-w-[88px] text-right text-xs">
+            <TableCell className="overflow-hidden truncate whitespace-nowrap font-semibold md:max-w-[170px]">
+              {post.title}
+            </TableCell>
+            <TableCell className="text-[10px] sm:min-w-[80px]">
               {handleTimeStirng(post.createdAt)}
             </TableCell>
           </TableRow>
