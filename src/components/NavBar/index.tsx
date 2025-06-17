@@ -12,23 +12,27 @@ import { buttonVariants } from '../ui/button';
 import AuthStatus from './AuthStatus';
 import { NAV_MENUS } from '@/constants';
 import { usePathname } from 'next/navigation';
-import { Shell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from '../ui/sheet';
 import { DialogDescription, DialogTitle } from '../ui/dialog';
+import Image from 'next/image';
 
 export function NavBar() {
   const pathname = usePathname();
   const activeMenu = '/' + pathname.split('/')[1] || '';
 
   return (
-    <NavigationMenu className="sticky top-0 z-50 flex max-w-none items-center justify-between border-b border-neutral-400 bg-white/80 p-4 backdrop-blur max-sm:w-full max-sm:border-neutral-300">
+    <NavigationMenu className="sticky top-0 z-50 flex max-w-none items-center justify-between border-b border-neutral-400 bg-white/80 px-4 py-2 backdrop-blur max-sm:w-full max-sm:border-neutral-300">
       <NavigationMenuList>
         <Link
           href="/"
           className="mx-2 max-sm:flex max-sm:items-center">
-          <Shell
-            size={28}
-            className="text-zinc-600 hover:text-zinc-400 max-sm:mr-3 max-sm:inline-block"
+          <Image
+            src="/images/main_yooni/main_yooni_2.png"
+            alt="main-logo"
+            height={38}
+            width={38}
+            className="hover:opacity-50 max-sm:mr-3 max-sm:inline-block"
           />
           <span className="text-md font-bold leading-none sm:hidden">
             Yooni

@@ -6,14 +6,12 @@ import { Category, Post } from '@/types';
 import { Silkscreen } from 'next/font/google';
 import { Newspaper, Grid2X2Check } from 'lucide-react';
 import GithubCalendar from '@/components/GithubCalendar';
-import ImageSlide from '@/components/ImageSlide';
-import { mainYooniImages } from '@/constants/imageMarquee';
-import Thought from '@/components/Thought';
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient
 } from '@tanstack/react-query';
+import Image from 'next/image';
 
 const silkscreen = Silkscreen({
   subsets: ['latin'],
@@ -50,16 +48,20 @@ export default async function Home() {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <div className="mx-auto max-w-[1100px] pb-12">
-        <Thought />
-        <section className="flex flex-col items-center px-12 pb-24 pt-8 text-center max-sm:px-0">
-          <ImageSlide images={mainYooniImages} />
+      <div className="mx-auto max-w-[940px] pb-12">
+        <section className="flex flex-col items-center px-12 pb-16 pt-8 text-center max-sm:px-0">
+          <Image
+            src="/images/main_yooni/main_yooni_3.png"
+            alt="main-logo"
+            height={180}
+            width={180}
+          />
           <h1
-            className={`mb-8 mt-12 text-5xl font-bold max-sm:px-6 max-sm:text-3xl ${silkscreen.className}`}>
+            className={`mb-6 mt-3 text-4xl font-bold max-sm:px-6 max-sm:text-3xl ${silkscreen.className}`}>
             Hello, there!
           </h1>
-          <p className="text-lg max-sm:px-6">
-            반가워요!
+          <p className="max-sm:text-md text-lg max-sm:px-6">
+            만나서 반가워요!
             <br />
             이곳은 개발의 치열함과 여행의 설렘, <br className="sm:hidden" />
             이야기의 즐거움을 담은 공간입니다.

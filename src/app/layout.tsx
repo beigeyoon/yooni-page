@@ -4,6 +4,8 @@ import './globals.css';
 import AuthProvider from '@/lib/AuthProvider';
 import { NavBar } from '@/components/NavBar';
 import { QueryProvider } from '@/lib/QueryProvider';
+import InfiniteSlider from '@/components/InfiniteSlider';
+import { mainYooniMessages } from '@/constants/infiniteSliderContents';
 
 export const metadata: Metadata = {
   title: '유니 블로그',
@@ -61,6 +63,19 @@ export default function RootLayout({
       <body>
         <QueryProvider>
           <AuthProvider>
+            <InfiniteSlider
+              direction="left"
+              backgroundColor="black"
+              speed={0.58}
+              repeat={20}>
+              {mainYooniMessages.map((message, idx) => (
+                <div
+                  key={idx}
+                  className="my-[1px] mr-2 text-center text-sm font-semibold text-white">
+                  {message}
+                </div>
+              ))}
+            </InfiniteSlider>
             <NavBar />
             <div className="p-8 max-sm:p-0">{children}</div>
           </AuthProvider>
