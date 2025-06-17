@@ -11,6 +11,7 @@ import { PostFormValues } from '@/types';
 import Link from '@tiptap/extension-link';
 import Iframe from '../../extensions/Iframe';
 import ImageGroup from '@/extensions/ImageGroup';
+import Underline from '@tiptap/extension-underline';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import javascript from 'highlight.js/lib/languages/javascript';
 import typescript from 'highlight.js/lib/languages/typescript';
@@ -19,6 +20,8 @@ import css from 'highlight.js/lib/languages/css';
 import plaintext from 'highlight.js/lib/languages/plaintext';
 import { createLowlight } from 'lowlight';
 import { toHtml } from 'hast-util-to-html';
+import TextStyle from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
 
 const lowlight = createLowlight();
 lowlight.register('javascript', javascript);
@@ -44,6 +47,7 @@ const TiptapEditor = forwardRef((props: Props, ref) => {
         },
         codeBlock: false
       }),
+      Underline,
       Image.configure({
         inline: false
       }),
@@ -61,6 +65,10 @@ const TiptapEditor = forwardRef((props: Props, ref) => {
         HTMLAttributes: {
           class: 'my-code-block'
         }
+      }),
+      TextStyle,
+      Color.configure({
+        types: ['textStyle']
       })
     ],
     editable: true,
