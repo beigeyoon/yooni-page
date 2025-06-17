@@ -28,7 +28,7 @@ export function NavBar() {
           href="/"
           className="mx-2 max-sm:flex max-sm:items-center">
           <Image
-            src="/images/main_yooni/main_yooni_2.png"
+            src="/images/yooni-favicon.png"
             alt="main-logo"
             height={38}
             width={38}
