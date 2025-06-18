@@ -6,6 +6,7 @@ import { NavBar } from '@/components/NavBar';
 import { QueryProvider } from '@/lib/QueryProvider';
 import InfiniteSlider from '@/components/InfiniteSlider';
 import { mainYooniMessages } from '@/constants/infiniteSliderContents';
+import GlobalLoading from '@/components/Loading/GlobalLoading';
 
 export const metadata: Metadata = {
   title: '유니 블로그',
@@ -62,6 +63,7 @@ export default function RootLayout({
     <html lang="kr">
       <body>
         <QueryProvider>
+          <GlobalLoading />
           <AuthProvider>
             <InfiniteSlider
               direction="left"

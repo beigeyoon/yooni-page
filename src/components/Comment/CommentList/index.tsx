@@ -1,4 +1,4 @@
-import { Loading } from '@/components/Loading';
+import { Spinner } from '@/components/Loading/Spinner';
 import CommentItem from './CommentItem';
 import { Comment, ExtendedSession } from '@/types';
 
@@ -12,7 +12,7 @@ const CommentList = ({
   session: ExtendedSession | null;
 }) => {
   if (isLoading) {
-    return <Loading />;
+    return <Spinner />;
   }
   if (!comments || comments.length === 0) {
     return null;

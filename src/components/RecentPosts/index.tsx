@@ -10,8 +10,8 @@ import {
 } from '@/components/ui/table';
 import { Post } from '@/types';
 import handleTimeStirng from '@/utils/handleTimeStirng';
-import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
+import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 
 export function RecentPosts({
   category,
@@ -20,7 +20,7 @@ export function RecentPosts({
   category: string;
   posts: Post[];
 }) {
-  const router = useRouter();
+  const router = useRouteWithLoading();
 
   const onClickPost = (id: string) => {
     router.push(`/${category}/${id}`);

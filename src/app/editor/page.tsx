@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
@@ -19,8 +19,8 @@ import { PostFormValues as FormValues } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { getPost } from '@/lib/api/posts';
 import { Post } from '@/types';
-import { Loading } from '@/components/Loading';
 import dynamic from 'next/dynamic';
+import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 
 const TiptapEditor = dynamic(() => import('@/components/TiptapEditor'), {
   ssr: false
@@ -28,14 +28,14 @@ const TiptapEditor = dynamic(() => import('@/components/TiptapEditor'), {
 
 const Editor = () => {
   const { isAdmin, status, session } = useAuth();
-  const router = useRouter();
+  const router = useRouteWithLoading();
   const editorRef = useRef<{ getEditorContent: () => string } | null>(null);
 
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
   const isEditMode = !!id;
 
-  const { data: post, isLoading } = useQuery({
+  const { data: post } = useQuery({
     queryKey: ['posts', id],
     enabled: !!id,
     queryFn: () => getPost(id!) as Promise<{ data: { data: Post } }>,
@@ -106,9 +106,6 @@ const Editor = () => {
   };
 
   if (!isAdmin) return <></>;
-  if (id && isLoading) {
-    return <Loading />;
-  }
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

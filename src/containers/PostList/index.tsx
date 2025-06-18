@@ -5,17 +5,16 @@ import { getPosts } from '@/lib/api/posts';
 import { Category, Post } from '@/types';
 import getPostsList from '@/utils/getPostsList';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { FileWarning } from 'lucide-react';
-import { Loading } from '@/components/Loading';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemo } from 'react';
+import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 
 const PostList = ({ category }: { category: Category }) => {
-  const router = useRouter();
+  const router = useRouteWithLoading();
   const { isAdmin } = useAuth();
 
-  const { data: postsData, isLoading } = useQuery({
+  const { data: postsData } = useQuery({
     queryKey: ['posts', category],
     queryFn: () => getPosts(category),
     select: data => {
@@ -33,9 +32,6 @@ const PostList = ({ category }: { category: Category }) => {
     [postsData, isAdmin]
   );
 
-  if (isLoading) {
-    return <Loading />;
-  }
   if (!posts || posts.length === 0) {
     return (
       <div className="flex w-full flex-col items-center gap-4 pt-10">
