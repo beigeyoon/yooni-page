@@ -6,11 +6,11 @@ import { signOut } from 'next-auth/react';
 import { Label } from '@/components/ui/label';
 import { User, Pencil } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 
 export default function AuthStatus() {
   const { status, session, isAdmin } = useAuth();
-  const router = useRouter();
+  const router = useRouteWithLoading();
 
   return (
     <div>

@@ -4,10 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { Post } from '@/types';
 import { deletePost, getPost } from '@/lib/api/posts';
-import { Loading } from '@/components/Loading';
 import { FileWarning, SquarePen } from 'lucide-react';
 import handleTimeStirng from '@/utils/handleTimeStirng';
-import { useRouter } from 'next/navigation';
 import { useAdjacentPosts } from '@/hooks/useAdjacentPosts';
 import { Category } from '@/types';
 import Image from 'next/image';
@@ -17,9 +15,10 @@ import { useEffect } from 'react';
 import Comment from '@/components/Comment';
 import { DeleteButton } from '@/components/DeleteButton';
 import Link from 'next/link';
+import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 
 const PostContent = () => {
-  const router = useRouter();
+  const router = useRouteWithLoading();
   const { isAdmin, session, status } = useAuth();
   const params = useParams();
   const { id } = params as { id: string };
@@ -36,7 +35,8 @@ const PostContent = () => {
   );
 
   useEffect(() => {
-    if (post && !post.isPublished && !isAdmin) router.push('/');
+    if (!post || isAdmin || post.isPublished) return;
+    router.push('/');
   }, [isAdmin, post, router]);
 
   const onClickEdit = () => {
@@ -57,10 +57,8 @@ const PostContent = () => {
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
   if (!post) {
+    if (isLoading) return <></>;
     return (
       <div className="flex w-full flex-col items-center gap-4 pt-10">
         <FileWarning width={48} />
