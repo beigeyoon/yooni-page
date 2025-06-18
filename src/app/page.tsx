@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = 'auto';
 
 import { RecentPosts } from '@/components/RecentPosts';
 import { getPostsForServer } from '@/lib/api/posts';
@@ -25,12 +25,14 @@ export default async function Home() {
 
   const queryClient = new QueryClient();
 
-  for (const category of categories) {
-    await queryClient.prefetchQuery({
-      queryKey: ['posts', category],
-      queryFn: () => getPostsForServer(category)
-    });
-  }
+  await Promise.all(
+    categories.map(category =>
+      queryClient.prefetchQuery({
+        queryKey: ['posts', category],
+        queryFn: () => getPostsForServer(category)
+      })
+    )
+  );
 
   const dehydratedState = dehydrate(queryClient);
 
@@ -38,6 +40,7 @@ export default async function Home() {
     const cached = queryClient.getQueryData(['posts', category]) as Awaited<
       ReturnType<typeof getPostsForServer>
     >;
+    if (!cached) continue;
     const posts = cached.data as Post[];
     posts.sort(
       (a, b) =>

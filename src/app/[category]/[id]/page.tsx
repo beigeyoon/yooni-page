@@ -5,14 +5,11 @@ import {
   QueryClient
 } from '@tanstack/react-query';
 import { getPostForServer } from '@/lib/api/posts';
-import { Metadata } from 'next';
 
-export async function generateMetadata({
-  params
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const { id } = await params;
+export async function generateMetadata(props: {
+  params: Promise<{ category: string; id: string }>;
+}) {
+  const { id } = await props.params;
 
   const postData = await getPostForServer(id);
   const post = postData?.data;
@@ -67,8 +64,10 @@ export async function generateMetadata({
   };
 }
 
-const Post = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const { id } = await params;
+const Post = async (props: {
+  params: Promise<{ category: string; id: string }>;
+}) => {
+  const { id } = await props.params;
 
   const queryClient = new QueryClient();
 
