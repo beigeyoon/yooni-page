@@ -8,6 +8,12 @@ import {
   NavigationMenuLink,
   NavigationMenuList
 } from '@/components/ui/navigation-menu';
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { buttonVariants } from '../ui/button';
 import AuthStatus from './AuthStatus';
 import { NAV_MENUS } from '@/constants';
@@ -24,20 +30,33 @@ export function NavBar() {
   return (
     <NavigationMenu className="sticky top-0 z-50 flex max-w-none items-center justify-between border-b border-neutral-400 bg-white/80 px-4 py-2 backdrop-blur max-sm:w-full max-sm:border-neutral-300">
       <NavigationMenuList>
-        <Link
-          href="/"
-          className="mx-2 max-sm:flex max-sm:items-center">
-          <Image
-            src="/images/yooni-favicon.png"
-            alt="main-logo"
-            height={38}
-            width={38}
-            className="hover:opacity-50 max-sm:mr-3 max-sm:inline-block"
-          />
-          <span className="text-md font-bold leading-none sm:hidden">
-            Yooni
-          </span>
-        </Link>
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                href="/"
+                className="mx-2 max-sm:flex max-sm:items-center">
+                <Image
+                  src="/images/yooni-favicon.png"
+                  alt="main-logo"
+                  height={38}
+                  width={38}
+                  className="hover:opacity-50 max-sm:mr-3 max-sm:inline-block"
+                />
+                <span className="text-md font-bold leading-none sm:hidden">
+                  Yooni
+                </span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent
+              className="p-1"
+              side="bottom"
+              sideOffset={6}>
+              <div className="text-center text-4xl">🔮</div>
+              <span className="text-xs">Hakunamatata!</span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         {/* 데스크탑 메뉴 */}
         {NAV_MENUS.map((menu, idx) => (
           <NavigationMenuItem
