@@ -9,17 +9,12 @@ import PageReady from '@/components/Loading/PageReady';
 import { metaDataKeywords } from '@/constants/metadataKeywords';
 import { Metadata } from 'next';
 
-type PageProps = {
-  params: {
-    category: string;
-    id: string;
-  };
-};
-
 export async function generateMetadata({
   params
-}: PageProps): Promise<Metadata> {
-  const { id } = params;
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
 
   const postData = await getPostForServer(id);
   const post = postData?.data;
@@ -54,8 +49,8 @@ export async function generateMetadata({
   };
 }
 
-const Post = async ({ params }: PageProps) => {
-  const { id } = params;
+const Post = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
 
   const queryClient = new QueryClient();
 
