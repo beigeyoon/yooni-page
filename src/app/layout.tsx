@@ -7,31 +7,12 @@ import { QueryProvider } from '@/lib/QueryProvider';
 import InfiniteSlider from '@/components/InfiniteSlider';
 import { mainYooniMessages } from '@/constants/infiniteSliderContents';
 import GlobalLoading from '@/components/Loading/GlobalLoading';
+import { metaDataKeywords } from '@/constants/metadataKeywords';
 
 export const metadata: Metadata = {
   title: '유니 블로그',
   description: '프론트엔드 개발자 유니의 기록을 담은 공간',
-  keywords: [
-    '프론트엔드',
-    '프론트엔드 개발자',
-    'Next.js',
-    '웹 개발',
-    '기술 블로그',
-    '개발 블로그',
-    '포트폴리오',
-    '유니',
-    'yooni',
-    '프론트엔드 포트폴리오',
-    '여행 블로그',
-    '여행',
-    '생각',
-    '글쓰기',
-    '이야기',
-    '커리어',
-    '유니 블로그',
-    '개발자 블로그',
-    '포트폴리오 블로그'
-  ],
+  keywords: metaDataKeywords,
   openGraph: {
     title: '유니 블로그',
     description: '프론트엔드 개발자 유니의 기록을 담은 공간',

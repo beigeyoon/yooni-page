@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { getPostForServer } from '@/lib/api/posts';
 import PageReady from '@/components/Loading/PageReady';
+import { metaDataKeywords } from '@/constants/metadataKeywords';
 
 export async function generateMetadata({ params }: { params: { category: string; id: string } }) {
   const { id } = params;
@@ -23,27 +24,7 @@ export async function generateMetadata({ params }: { params: { category: string;
   return {
     title: post.title,
     description: post.subtitle || post.content.slice(0, 100),
-    keywords: [
-      '프론트엔드',
-      '프론트엔드 개발자',
-      'Next.js',
-      '웹 개발',
-      '기술 블로그',
-      '개발 블로그',
-      '포트폴리오',
-      '유니',
-      'yooni',
-      '프론트엔드 포트폴리오',
-      '여행 블로그',
-      '여행',
-      '생각',
-      '글쓰기',
-      '이야기',
-      '커리어',
-      '유니 블로그',
-      '개발자 블로그',
-      '포트폴리오 블로그'
-    ],
+    keywords: metaDataKeywords,
     openGraph: {
       title: post.title,
       description: post.subtitle || post.content.slice(0, 100),
