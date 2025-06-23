@@ -5,11 +5,16 @@ import {
   QueryClient
 } from '@tanstack/react-query';
 import { getPostForServer } from '@/lib/api/posts';
+import PageReady from '@/components/Loading/PageReady';
+import { metaDataKeywords } from '@/constants/metadataKeywords';
+import { Metadata } from 'next';
 
-export async function generateMetadata(props: {
-  params: Promise<{ category: string; id: string }>;
-}) {
-  const { id } = await props.params;
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
 
   const postData = await getPostForServer(id);
   const post = postData?.data;
@@ -24,27 +29,7 @@ export async function generateMetadata(props: {
   return {
     title: post.title,
     description: post.subtitle || post.content.slice(0, 100),
-    keywords: [
-      '프론트엔드',
-      '프론트엔드 개발자',
-      'Next.js',
-      '웹 개발',
-      '기술 블로그',
-      '개발 블로그',
-      '포트폴리오',
-      '유니',
-      'yooni',
-      '프론트엔드 포트폴리오',
-      '여행 블로그',
-      '여행',
-      '생각',
-      '글쓰기',
-      '이야기',
-      '커리어',
-      '유니 블로그',
-      '개발자 블로그',
-      '포트폴리오 블로그'
-    ],
+    keywords: metaDataKeywords,
     openGraph: {
       title: post.title,
       description: post.subtitle || post.content.slice(0, 100),
@@ -64,10 +49,8 @@ export async function generateMetadata(props: {
   };
 }
 
-const Post = async (props: {
-  params: Promise<{ category: string; id: string }>;
-}) => {
-  const { id } = await props.params;
+const Post = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
 
   const queryClient = new QueryClient();
 
@@ -80,6 +63,7 @@ const Post = async (props: {
 
   return (
     <HydrationBoundary state={dehydratedState}>
+      <PageReady />
       <PostContent />
     </HydrationBoundary>
   );
