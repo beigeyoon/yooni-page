@@ -13,7 +13,6 @@ export const useRouteWithLoading = () => {
     setIsRouting(true);
     startTransition(() => {
       router.push(url);
-      setIsRouting(false);
     });
   };
 

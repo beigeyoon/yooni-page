@@ -5,11 +5,10 @@ import {
   QueryClient
 } from '@tanstack/react-query';
 import { getPostForServer } from '@/lib/api/posts';
+import PageReady from '@/components/Loading/PageReady';
 
-export async function generateMetadata(props: {
-  params: Promise<{ category: string; id: string }>;
-}) {
-  const { id } = await props.params;
+export async function generateMetadata({ params }: { params: { category: string; id: string } }) {
+  const { id } = params;
 
   const postData = await getPostForServer(id);
   const post = postData?.data;
@@ -64,10 +63,8 @@ export async function generateMetadata(props: {
   };
 }
 
-const Post = async (props: {
-  params: Promise<{ category: string; id: string }>;
-}) => {
-  const { id } = await props.params;
+const Post = async ({ params }: { params: { category: string; id: string } }) => {
+  const { id } = params;
 
   const queryClient = new QueryClient();
 
@@ -80,6 +77,7 @@ const Post = async (props: {
 
   return (
     <HydrationBoundary state={dehydratedState}>
+      <PageReady />
       <PostContent />
     </HydrationBoundary>
   );
