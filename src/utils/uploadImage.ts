@@ -1,9 +1,6 @@
 import { supabase } from "@/lib/supabase";
 
 async function uploadImage(file: File) {
-  const { data: session } = await supabase.auth.getSession();
-  console.log('✅ session:', session);
-  
   const fileName = `${Date.now()}_${file.name}`;
   const { error } = await supabase.storage
     .from('images')
