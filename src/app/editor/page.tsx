@@ -21,6 +21,7 @@ import { getPost } from '@/lib/api/posts';
 import { Post } from '@/types';
 import dynamic from 'next/dynamic';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
+import PageReady from '@/components/Loading/PageReady';
 
 const TiptapEditor = dynamic(() => import('@/components/TiptapEditor'), {
   ssr: false
@@ -107,58 +108,63 @@ const Editor = () => {
 
   if (!isAdmin) return <></>;
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex gap-12">
-      <section className="flex-1">
-        <TiptapEditor
-          ref={editorRef}
-          register={register}
-          content={post?.content || ''}
-        />
-      </section>
-      <section className="flex flex-col gap-4">
-        <Controller
-          name="category"
-          control={control}
-          rules={{ required: '카테고리를 선택하세요.' }}
-          render={({ field }) => (
-            <Select
-              key={field.value}
-              onValueChange={field.onChange}
-              value={field.value}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="dev">dev</SelectItem>
-                  <SelectItem value="travel">travel</SelectItem>
-                  <SelectItem value="talk">talk</SelectItem>
-                  {/* <SelectItem value="photo">photo</SelectItem> */}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          )}
-        />
-        <Button
-          value="save"
-          type="submit"
-          variant="outline">
-          임시저장
-        </Button>
-        <Button
-          value="publish"
-          type="submit">
-          작성완료
-        </Button>
-        <div className="flex flex-col gap-2 text-red-500">
-          {Object.keys(errors).map(key => (
-            <Label key={key}>{errors[key as keyof FormValues]?.message}</Label>
-          ))}
-        </div>
-      </section>
-    </form>
+    <>
+      <PageReady />
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex gap-12">
+        <section className="flex-1">
+          <TiptapEditor
+            ref={editorRef}
+            register={register}
+            content={post?.content || ''}
+          />
+        </section>
+        <section className="flex flex-col gap-4">
+          <Controller
+            name="category"
+            control={control}
+            rules={{ required: '카테고리를 선택하세요.' }}
+            render={({ field }) => (
+              <Select
+                key={field.value}
+                onValueChange={field.onChange}
+                value={field.value}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="dev">dev</SelectItem>
+                    <SelectItem value="travel">travel</SelectItem>
+                    <SelectItem value="talk">talk</SelectItem>
+                    {/* <SelectItem value="photo">photo</SelectItem> */}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
+          <Button
+            value="save"
+            type="submit"
+            variant="outline">
+            임시저장
+          </Button>
+          <Button
+            value="publish"
+            type="submit">
+            작성완료
+          </Button>
+          <div className="flex flex-col gap-2 text-red-500">
+            {Object.keys(errors).map(key => (
+              <Label key={key}>
+                {errors[key as keyof FormValues]?.message}
+              </Label>
+            ))}
+          </div>
+        </section>
+      </form>
+    </>
   );
 };
 
