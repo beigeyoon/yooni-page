@@ -17,7 +17,7 @@ export default function About() {
       </div>
       <div className="flex flex-col items-center">
         <Image
-          src="/images/yooni.webp"
+          src="/images/porto-yooni.png"
           alt="yooni-profile-image"
           width={280}
           height={280}

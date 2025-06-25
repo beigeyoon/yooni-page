@@ -35,7 +35,7 @@ export default function ItemCard({ content, links, imgHref }: Props) {
   );
 
   return (
-    <Card className="flex w-full justify-between p-6">
+    <Card className="flex w-full justify-between p-6 max-sm:p-2">
       <CardHeader className="max-w-[400px] p-4">
         <CardTitle className="text-xl text-neutral-400">{title}</CardTitle>
         <CardContent className="p-0 pt-2">
@@ -45,13 +45,15 @@ export default function ItemCard({ content, links, imgHref }: Props) {
                 {desc.map((item, idx) => (
                   <TableRow
                     key={idx}
-                    className="border-0">
+                    className="border-0 max-sm:flex">
                     <TableCell
                       width={150}
-                      className="py-1 pl-0 font-bold">
+                      className="py-1 pl-0 font-bold max-sm:px-0">
                       {item[0]}
                     </TableCell>
-                    <TableCell className="py-1">{item[1]}</TableCell>
+                    <TableCell className="py-1 max-sm:px-0">
+                      {item[1]}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

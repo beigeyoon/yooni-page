@@ -41,7 +41,7 @@ export function NavBar() {
                   alt="main-logo"
                   height={38}
                   width={38}
-                  className="hover:opacity-50 max-sm:mr-3 max-sm:inline-block"
+                  className="min-h-[38px] min-w-[38px] hover:opacity-50 max-sm:mr-3 max-sm:inline-block"
                 />
                 <span className="text-md font-bold leading-none sm:hidden">
                   Yooni
@@ -49,8 +49,8 @@ export function NavBar() {
               </Link>
             </TooltipTrigger>
             <TooltipContent
-              className="p-1"
-              side="bottom"
+              className="bg-violet-500 p-2 max-sm:hidden"
+              side="right"
               sideOffset={6}>
               <div className="text-center text-4xl">🔮</div>
               <span className="text-xs">Hakunamatata!</span>
