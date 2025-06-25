@@ -24,7 +24,7 @@ export default function AuthStatus() {
               <Pencil className="w-4" />
             </Button>
           )}
-          <Label className="flex items-center gap-1 text-sm text-neutral-400 max-sm:hidden">
+          <Label className="flex items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-neutral-400 max-sm:hidden">
             <User className="w-4" />
             {session?.user?.name} ({session?.user?.email})
           </Label>

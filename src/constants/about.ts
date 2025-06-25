@@ -46,10 +46,10 @@ export const ABOUT_CONTENT: Array<{
   {
     title: 'Education',
     desc: [
-      [ 'CODESTATES', 'Blockchain Bootcamp 수료' ],
+      [ 'CODESTATES', '블록체인 부트캠프 수료' ],
       [ '상명대학교', '사진영상콘텐츠학과 중퇴' ],
       [ '성균관대학교', '시스템경영공학과 졸업' ],
-      [ '삼성SDS', '동계 인턴십 프로그램 수료' ],
+      [ '삼성SDS', '동계 인턴 프로그램 수료' ],
     ],
   },
 ];

@@ -68,7 +68,7 @@ export function RecentPosts({
             key={post.id}
             className="flex w-full cursor-pointer justify-between hover:bg-zinc-100"
             onClick={() => onClickPost(post.id)}>
-            <TableCell className="overflow-hidden truncate whitespace-nowrap font-semibold md:max-w-[170px]">
+            <TableCell className="overflow-hidden truncate whitespace-nowrap font-semibold max-sm:max-w-[230px] md:max-w-[170px]">
               {post.title}
             </TableCell>
             <TableCell className="text-[10px] sm:min-w-[80px]">
