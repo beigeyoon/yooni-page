@@ -9,6 +9,7 @@ import { FileWarning } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemo } from 'react';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
+import PhotoPreview from '@/components/PhotoPreview';
 
 const PostList = ({ category }: { category: Category }) => {
   const router = useRouteWithLoading();
@@ -27,6 +28,8 @@ const PostList = ({ category }: { category: Category }) => {
     router.push(`/${category}/${id}`);
   };
 
+  const handlePhotoPostClick = () => {};
+
   const posts = useMemo(
     () => (isAdmin ? postsData : postsData?.filter(post => post.isPublished)),
     [postsData, isAdmin]
@@ -42,13 +45,24 @@ const PostList = ({ category }: { category: Category }) => {
   }
   return (
     <div className="mx-auto flex max-w-[900px] flex-col-reverse justify-center pt-8">
-      {posts?.map(post => (
-        <PostPreview
-          key={post.id}
-          post={post}
-          onClick={() => handlePostClick(post.id)}
-        />
-      ))}
+      {posts?.map(post => {
+        if (category !== 'photo') {
+          return (
+            <PostPreview
+              key={post.id}
+              post={post}
+              onClick={() => handlePostClick(post.id)}
+            />
+          );
+        } else
+          return (
+            <PhotoPreview
+              key={post.id}
+              post={post}
+              onClick={() => handlePhotoPostClick()}
+            />
+          );
+      })}
     </div>
   );
 };
