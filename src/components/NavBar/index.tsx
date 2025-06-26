@@ -26,6 +26,7 @@ import Image from 'next/image';
 export function NavBar() {
   const pathname = usePathname();
   const activeMenu = '/' + pathname.split('/')[1] || '';
+  const mobile_NAV_MENUS = NAV_MENUS.slice(0, -1);
 
   return (
     <NavigationMenu className="sticky top-0 z-50 flex max-w-none items-center justify-between border-b border-neutral-400 bg-white/80 px-4 py-2 backdrop-blur max-sm:w-full max-sm:border-neutral-300">
@@ -93,7 +94,7 @@ export function NavBar() {
             <DialogTitle className="hidden" />
             <DialogDescription className="hidden" />
             <NavigationMenuList className="mt-8 flex flex-col gap-4 font-medium">
-              {NAV_MENUS.map((menu, idx) => (
+              {mobile_NAV_MENUS.map((menu, idx) => (
                 <NavigationMenuItem key={idx}>
                   <Link
                     href={menu.path}
