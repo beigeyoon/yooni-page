@@ -1,8 +1,9 @@
 import type { Config } from "tailwindcss";
+import plugin from 'tailwindcss/plugin';
 
 export default {
-    darkMode: ["class"],
-    content: [
+	darkMode: ["class"],
+	content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
 		"./src/containers/**/*.{js,ts,jsx,tsx,mdx}",
@@ -74,6 +75,17 @@ export default {
       },
   	}
   },
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  plugins: [require("tailwindcss-animate"), require('@tailwindcss/typography')],
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        '.mask-fade-right': {
+          maskImage: 'linear-gradient(to right, black 60%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 100%)',
+        },
+      });
+    }),
+  ],
 } satisfies Config;

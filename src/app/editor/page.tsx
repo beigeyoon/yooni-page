@@ -138,7 +138,7 @@ const Editor = () => {
                     <SelectItem value="dev">dev</SelectItem>
                     <SelectItem value="travel">travel</SelectItem>
                     <SelectItem value="talk">talk</SelectItem>
-                    {/* <SelectItem value="photo">photo</SelectItem> */}
+                    <SelectItem value="photo">photo</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
