@@ -28,8 +28,6 @@ const PostList = ({ category }: { category: Category }) => {
     router.push(`/${category}/${id}`);
   };
 
-  const handlePhotoPostClick = () => {};
-
   const posts = useMemo(
     () => (isAdmin ? postsData : postsData?.filter(post => post.isPublished)),
     [postsData, isAdmin]
@@ -59,7 +57,6 @@ const PostList = ({ category }: { category: Category }) => {
             <PhotoPreview
               key={post.id}
               post={post}
-              onClick={() => handlePhotoPostClick()}
             />
           );
       })}
