@@ -4,5 +4,5 @@ export const NAV_MENUS = [
   { title: 'Dev', path: '/dev' },
   { title: 'Travel', path: '/travel' },
   { title: 'Talk', path: '/talk' },
-  { title: 'Photos', path: '/photo' },
+  { title: 'Photo', path: '/photo' },
 ];
