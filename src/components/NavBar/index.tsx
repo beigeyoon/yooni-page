@@ -41,7 +41,7 @@ export function NavBar() {
                   src="/images/yooni-favicon.png"
                   alt="main-logo"
                   height={38}
-                  width={38}
+                  width={40}
                   className="min-h-[38px] min-w-[38px] hover:opacity-50 max-sm:mr-3 max-sm:inline-block"
                 />
                 <span className="text-md font-bold leading-none sm:hidden">
