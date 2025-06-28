@@ -46,7 +46,9 @@ export default async function Home() {
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
-    postsByCategory[category] = posts.slice(0, 3);
+    postsByCategory[category] = posts
+      .filter(post => post.isPublished)
+      .slice(0, 3);
   }
 
   return (
