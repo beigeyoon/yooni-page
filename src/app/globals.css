@@ -112,15 +112,22 @@ body {
 
 .image-album img {
   width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
   margin: 0;
 }
 
-.image-album[data-count='2'] img {
-  width: calc((100% - 10px) / 2); /* 8px gap 고려 */
+.image-album[data-count='2'] {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
-.image-album[data-count='3'] img {
-  width: calc((100% - 20px) / 3); /* (gap * (n - 1)) */
+.image-album[data-count='3'] {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .image-album[data-count='4'] {
@@ -129,8 +136,44 @@ body {
   gap: 10px;
 }
 
-.image-album[data-count='4'] img {
-  width: 100%;
+/* 5개 이상: 3열 그리드, 7개 이상은 자동 줄바꿈 */
+.image-album[data-count='5'],
+.image-album[data-count='6'] {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.image-album[data-count='7'],
+.image-album[data-count='8'],
+.image-album[data-count='9'],
+.image-album[data-count='10'] {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+/* 11개 이상은 5열로 */
+.image-album[data-count='11'],
+.image-album[data-count='12'],
+.image-album[data-count='13'],
+.image-album[data-count='14'],
+.image-album[data-count='15'] {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+/* 16개 이상은 flex-wrap 유지 (fallback) */
+.image-album[data-count] {
+  /* 위에서 지정한 grid가 없으면 flex-wrap로 fallback */
+}
+
+/* 5개 이미지 커스텀 레이아웃 */
+.image-album[data-count='5'] {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .post-content iframe {
@@ -145,4 +188,21 @@ body {
 .editor-container .tiptap li p {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .image-album {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .image-album img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: unset;
+    object-fit: contain;
+    border-radius: 4px;
+  }
 }
