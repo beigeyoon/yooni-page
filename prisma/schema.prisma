@@ -15,9 +15,9 @@ model user {
   emailVerified DateTime?
   image         String?
   accounts      account[]
-  sessions      session[]
-  posts         post[]
   comments      comment[]
+  posts         post[]
+  sessions      session[]
 }
 
 model account {
@@ -26,15 +26,14 @@ model account {
   provider          String
   providerAccountId String
   type              String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              user    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -44,8 +43,39 @@ model session {
   sessionToken String   @unique
   userId       String   @db.Uuid
   expires      DateTime
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+model post {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String    @db.VarChar(255)
+  subtitle    String?
+  content     String
+  createdAt   DateTime  @default(now())
+  userId      String    @db.Uuid
+  category    String
+  subCategory String?
+  isPublished Boolean   @default(false)
+  comments    comment[]
+  user        user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model comment {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content   String
+  createdAt DateTime @default(now())
+  userId    String   @db.Uuid
+  postId    String   @db.Uuid
+  userImage String?
+  userName  String?
+  post      post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model thought {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content   String
+  createdAt DateTime @default(now())
 }
 
 enum CategoryType {
@@ -53,38 +83,4 @@ enum CategoryType {
   DEV
   PHOTO
   TALK
-}
-
-model post {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String   @db.VarChar(255)
-  subtitle    String?  @db.Text
-  content     String   @db.Text
-  createdAt   DateTime @default(now())
-  userId      String   @db.Uuid
-  category    String
-  subCategory String?  @db.Text
-  isPublished Boolean  @default(false)
-
-  user     user      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  comments comment[]
-}
-
-model comment {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  content   String   @db.Text
-  createdAt DateTime @default(now())
-  userId    String   @db.Uuid
-  userName  String?
-  userImage String?
-  postId    String   @db.Uuid
-
-  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post post @relation(fields: [postId], references: [id], onDelete: Cascade)
-}
-
-model thought {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  content   String   @db.Text
-  createdAt DateTime @default(now())
 }
