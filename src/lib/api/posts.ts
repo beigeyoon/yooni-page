@@ -40,14 +40,14 @@ export async function getPostForServer(id: string) {
   }).then((res) => res.json());
 };
 
-export async function createPost(payload: PostPayload): Promise<{ message?: string; data?: any; error?: string }> {
+export async function createPost(payload: PostPayload): Promise<{ message?: string; data?: Post; error?: string }> {
   return await apiFetch('/api/posts', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 };
 
-export async function updatePost(payload: PostPayload): Promise<{ message?: string; data?: any; error?: string }> {
+export async function updatePost(payload: PostPayload): Promise<{ message?: string; data?: Post; error?: string }> {
   return await apiFetch(`/api/posts?id=${payload.id}`, {
     method: 'PUT',
     body: JSON.stringify(payload),

@@ -7,7 +7,7 @@ export async function getThoughts(): Promise<{ data: Thought[] }> {
   });
 };
 
-export async function createThought(payload: ThoughtPayload): Promise<{ message?: string; data?: any; error?: string }> {
+export async function createThought(payload: ThoughtPayload): Promise<{ message?: string; data?: Thought; error?: string }> {
   return await apiFetch('/api/thoughts', {
     method: 'POST',
     body: JSON.stringify(payload),
