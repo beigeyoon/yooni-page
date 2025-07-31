@@ -7,14 +7,14 @@ export async function getComments(postId: string): Promise<{ data: Comment[] }> 
   });
 };
 
-export async function createComment(payload: CommentPayload): Promise<{ message?: string; data?: any; error?: string }> {
+export async function createComment(payload: CommentPayload): Promise<{ message?: string; data?: Comment; error?: string }> {
   return await apiFetch('/api/comments', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 };
 
-export async function updateComment(payload: CommentPayload): Promise<{ message?: string; data?: any; error?: string }> {
+export async function updateComment(payload: CommentPayload): Promise<{ message?: string; data?: Comment; error?: string }> {
   return await apiFetch(`/api/comments?id=${payload.id}`, {
     method: 'PUT',
     body: JSON.stringify(payload),
