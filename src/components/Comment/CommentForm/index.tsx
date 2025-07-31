@@ -34,7 +34,7 @@ const CommentForm = ({
       userImage: session?.user?.image as string
     });
 
-    if (response.success) {
+    if (response.message) {
       setContent('');
       queryClient.invalidateQueries({
         queryKey: ['comments', postId]

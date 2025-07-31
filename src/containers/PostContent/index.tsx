@@ -25,8 +25,8 @@ const PostContent = () => {
 
   const { data: post, isLoading } = useQuery({
     queryKey: ['posts', id],
-    queryFn: () => getPost(id) as Promise<{ data: { data: Post } }>,
-    select: (data: { data: { data: Post } }) => data.data.data as Post
+    queryFn: () => getPost(id),
+    select: (data: { data: Post }) => data.data
   });
 
   const { prevPost, nextPost } = useAdjacentPosts(
@@ -50,7 +50,7 @@ const PostContent = () => {
     }
 
     const response = await deletePost(post!.id);
-    if (response.success) {
+    if (response.message) {
       router.push(`/${post!.category}`);
     } else {
       console.error('❌ 포스트 삭제 실패:', response.error);

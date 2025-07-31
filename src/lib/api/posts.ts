@@ -21,7 +21,7 @@ export async function getPostsForServer(category: Category) {
   }).then((res) => res.json());
 };
 
-export async function getPost(id: string) {
+export async function getPost(id: string): Promise<{ data: Post }> {
   return await apiFetch(`/api/posts?id=${id}`, {
     method: 'GET',
   });
@@ -40,21 +40,21 @@ export async function getPostForServer(id: string) {
   }).then((res) => res.json());
 };
 
-export async function createPost(payload: PostPayload) {
+export async function createPost(payload: PostPayload): Promise<{ message?: string; data?: any; error?: string }> {
   return await apiFetch('/api/posts', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 };
 
-export async function updatePost(payload: PostPayload) {
+export async function updatePost(payload: PostPayload): Promise<{ message?: string; data?: any; error?: string }> {
   return await apiFetch(`/api/posts?id=${payload.id}`, {
     method: 'PUT',
     body: JSON.stringify(payload),
   });
 };
 
-export async function deletePost(id: string) {
+export async function deletePost(id: string): Promise<{ message?: string; error?: string }> {
   return await apiFetch(`/api/posts?id=${id}`, {
     method: 'DELETE',
   });

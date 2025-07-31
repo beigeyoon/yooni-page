@@ -1,13 +1,13 @@
 import { apiFetch } from '../apiClient';
-import { ThoughtPayload } from '@/types';
+import { ThoughtPayload, Thought } from '@/types';
 
-export async function getThoughts() {
+export async function getThoughts(): Promise<{ data: Thought[] }> {
   return await apiFetch('/api/thoughts', {
     method: 'GET',
   });
 };
 
-export async function createThought(payload: ThoughtPayload) {
+export async function createThought(payload: ThoughtPayload): Promise<{ message?: string; data?: any; error?: string }> {
   return await apiFetch('/api/thoughts', {
     method: 'POST',
     body: JSON.stringify(payload),

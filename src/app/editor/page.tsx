@@ -18,8 +18,8 @@ import { createPost, updatePost } from '@/lib/api/posts';
 import { PostFormValues as FormValues } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { getPost } from '@/lib/api/posts';
-import { getSeries, Series } from '@/lib/api/series';
-import { Post } from '@/types';
+import { getSeries } from '@/lib/api/series';
+import { Post, Series } from '@/types';
 import dynamic from 'next/dynamic';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 import PageReady from '@/components/Loading/PageReady';
@@ -42,8 +42,8 @@ const Editor = () => {
   const { data: post } = useQuery({
     queryKey: ['posts', id],
     enabled: !!id,
-    queryFn: () => getPost(id!) as Promise<{ data: { data: Post } }>,
-    select: (data: { data: { data: Post } }) => data.data.data as Post
+    queryFn: () => getPost(id!),
+    select: (data: { data: Post }) => data.data
   });
 
   const {
@@ -116,7 +116,7 @@ const Editor = () => {
     const response = isEditMode
       ? await updatePost({ ...payload, id: post?.id })
       : await createPost(payload);
-    if (response.success) {
+    if (response.message) {
       router.push('/');
     } else {
       console.error('❌ 게시글 업로드 실패:', response.error);
