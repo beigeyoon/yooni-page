@@ -13,7 +13,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { createSeries, updateSeries, SeriesPayload } from '@/lib/api/series';
+import { createSeries, updateSeries } from '@/lib/api/series';
+import { SeriesPayload } from '@/types';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   Select,
