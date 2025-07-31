@@ -2,7 +2,8 @@
 
 import { PostPreview } from '@/components/PostPreview';
 import { getPosts, getPostsBySeries } from '@/lib/api/posts';
-import { getSeries, Series } from '@/lib/api/series';
+import { getSeries, SeriesResponse } from '@/lib/api/series';
+import { Series } from '@/types';
 import { Category, Post } from '@/types';
 import getPostsList from '@/utils/getPostsList';
 import { useQuery } from '@tanstack/react-query';
@@ -20,29 +21,33 @@ const PostList = ({ category, seriesId }: { category: Category; seriesId?: strin
   const { data: postsData, isLoading: postsLoading } = useQuery({
     queryKey: seriesId ? ['posts', seriesId] : ['posts', category],
     queryFn: () => seriesId ? getPostsBySeries(seriesId) : getPosts(category),
-    select: data => {
-      const postsData = data?.data as Post[];
+    select: (data: { data: Post[] }) => {
+      const postsData = data.data;
       return getPostsList(postsData, category);
     }
   });
 
   const { data: seriesData, isLoading: seriesLoading } = useQuery({
     queryKey: ['series'],
-    queryFn: getSeries
+    queryFn: getSeries,
+    select: (data: { data: Series[] }) => {
+      return data.data;
+    }
   });
 
   // 현재 카테고리에 해당하는 시리즈들 필터링 (시리즈 페이지가 아닐 때만)
-  const categorySeries = useMemo(() => {
+  const seriesByCategory = useMemo(() => {
     if (seriesId) return []; // 시리즈 페이지에서는 시리즈 버튼 숨김
-    const seriesList = seriesData?.data || [];
+    const seriesList = seriesData || [];
     if (!Array.isArray(seriesList)) return [];
-    return seriesList.filter((series: Series) => series.category === category);
+    const filtered = seriesList.filter((series: Series) => series.category === category);
+    return filtered;
   }, [seriesData, category, seriesId]);
 
   // 현재 시리즈 정보 (시리즈 페이지일 때만)
-  const currentSeries = useMemo(() => {
+  const selectedSeriesInfo = useMemo(() => {
     if (!seriesId) return null;
-    const seriesList = seriesData?.data || [];
+    const seriesList = seriesData || [];
     return seriesList.find((series: Series) => series.id === seriesId);
   }, [seriesData, seriesId]);
 
@@ -80,19 +85,19 @@ const PostList = ({ category, seriesId }: { category: Category; seriesId?: strin
   return (
     <div className="mx-auto flex max-w-[900px] flex-col pt-8">
       {/* 시리즈 페이지일 때 시리즈 정보 표시 */}
-      {seriesId && currentSeries && (
+      {seriesId && selectedSeriesInfo && (
         <div className="mx-4 mb-8 border-b border-neutral-400 pb-4">
-          <h1 className="text-3xl font-bold text-neutral-700">{currentSeries.title}</h1>
-          {currentSeries.description && (
-            <p className="mt-2 text-neutral-500">{currentSeries.description}</p>
+          <h1 className="text-3xl font-bold text-neutral-700">{selectedSeriesInfo.title}</h1>
+          {selectedSeriesInfo.description && (
+            <p className="mt-2 text-neutral-500">{selectedSeriesInfo.description}</p>
           )}
         </div>
       )}
 
       {/* 시리즈 필터링 버튼들 (일반 페이지에서만) */}
-      {!seriesId && categorySeries.length > 0 && (
+      {!seriesId && seriesByCategory.length > 0 && (
         <div className="px-4 mb-8 flex flex-wrap gap-2">
-          {categorySeries.map((series: Series) => (
+          {seriesByCategory.map((series: Series) => (
             <Button
               key={series.id}
               variant="outline"

@@ -1,8 +1,8 @@
 import { apiFetch } from '../apiClient';
-import { PostPayload } from '@/types';
+import { PostPayload, Post } from '@/types';
 import { Category } from '@/types';
 
-export async function getPosts(category: Category) {
+export async function getPosts(category: Category): Promise<{ data: Post[] }> {
   return await apiFetch(`/api/posts?category=${category}`, {
     method: 'GET',
   });
@@ -60,7 +60,7 @@ export async function deletePost(id: string) {
   });
 };
 
-export async function getPostsBySeries(seriesId: string) {
+export async function getPostsBySeries(seriesId: string): Promise<{ data: Post[] }> {
   return await apiFetch(`/api/posts?seriesId=${seriesId}`, {
     method: 'GET',
   });
