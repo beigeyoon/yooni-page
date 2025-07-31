@@ -2,7 +2,7 @@
 
 import { PostPreview } from '@/components/PostPreview';
 import { getPosts, getPostsBySeries } from '@/lib/api/posts';
-import { getSeries } from '@/lib/api/series';
+import { getSeries, Series } from '@/lib/api/series';
 import { Category, Post } from '@/types';
 import getPostsList from '@/utils/getPostsList';
 import { useQuery } from '@tanstack/react-query';
@@ -34,16 +34,16 @@ const PostList = ({ category, seriesId }: { category: Category; seriesId?: strin
   // 현재 카테고리에 해당하는 시리즈들 필터링 (시리즈 페이지가 아닐 때만)
   const categorySeries = useMemo(() => {
     if (seriesId) return []; // 시리즈 페이지에서는 시리즈 버튼 숨김
-    const seriesList = (seriesData as any)?.data?.data || [];
+    const seriesList = seriesData?.data || [];
     if (!Array.isArray(seriesList)) return [];
-    return seriesList.filter((series: any) => series.category === category);
+    return seriesList.filter((series: Series) => series.category === category);
   }, [seriesData, category, seriesId]);
 
   // 현재 시리즈 정보 (시리즈 페이지일 때만)
   const currentSeries = useMemo(() => {
     if (!seriesId) return null;
-    const seriesList = (seriesData as any)?.data?.data || [];
-    return seriesList.find((series: any) => series.id === seriesId);
+    const seriesList = seriesData?.data || [];
+    return seriesList.find((series: Series) => series.id === seriesId);
   }, [seriesData, seriesId]);
 
   const handlePostClick = (id: string) => {
@@ -92,7 +92,7 @@ const PostList = ({ category, seriesId }: { category: Category; seriesId?: strin
       {/* 시리즈 필터링 버튼들 (일반 페이지에서만) */}
       {!seriesId && categorySeries.length > 0 && (
         <div className="px-4 mb-8 flex flex-wrap gap-2">
-          {categorySeries.map((series: any) => (
+          {categorySeries.map((series: Series) => (
             <Button
               key={series.id}
               variant="outline"

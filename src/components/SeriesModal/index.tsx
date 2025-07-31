@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/dialog';
 import { createSeries, updateSeries, SeriesPayload } from '@/lib/api/series';
 import { useQueryClient } from '@tanstack/react-query';
-import { Category } from '@/types';
 import {
   Select,
   SelectContent,

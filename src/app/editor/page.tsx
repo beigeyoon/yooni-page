@@ -18,7 +18,7 @@ import { createPost, updatePost } from '@/lib/api/posts';
 import { PostFormValues as FormValues } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { getPost } from '@/lib/api/posts';
-import { getSeries } from '@/lib/api/series';
+import { getSeries, Series } from '@/lib/api/series';
 import { Post } from '@/types';
 import dynamic from 'next/dynamic';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
@@ -72,8 +72,8 @@ const Editor = () => {
 
   // 시리즈 목록 추출 (선택된 카테고리에 해당하는 것만)
   const selectedCategory = watch('category');
-  const filteredSeriesList = Array.isArray((seriesData as any)?.data?.data) 
-    ? (seriesData as any).data.data.filter((series: any) => series.category === selectedCategory)
+  const filteredSeriesList = Array.isArray(seriesData?.data) 
+    ? seriesData.data.filter((series: Series) => series.category === selectedCategory)
     : [];
 
   useEffect(() => {
@@ -178,7 +178,7 @@ const Editor = () => {
                       {seriesLoading ? (
                         <SelectItem value="loading" disabled>로딩 중...</SelectItem>
                       ) : filteredSeriesList.length > 0 ? (
-                        filteredSeriesList.map((series: any) => (
+                        filteredSeriesList.map((series: Series) => (
                           <SelectItem key={series.id} value={series.id}>
                             {series.title}
                           </SelectItem>

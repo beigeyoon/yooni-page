@@ -1,9 +1,10 @@
-import { apiFetch } from '../apiClient';
+import { apiFetch, ApiResponse } from '../apiClient';
 
 export interface Series {
   id: string;
   title: string;
   description?: string;
+  category: string;
   createdAt: Date;
 }
 
@@ -13,7 +14,7 @@ export interface SeriesPayload {
   category: string;
 }
 
-export async function getSeries() {
+export async function getSeries(): Promise<ApiResponse<Series[]>> {
   return await apiFetch('/api/series', {
     method: 'GET',
   });
