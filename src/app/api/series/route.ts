@@ -6,12 +6,12 @@ import { authOptions } from "@/lib/authOptions";
 export async function GET() {
   const { data, error } = await supabaseForServer
     .from('series')
-    .select('*')
+    .select('*');
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
+  console.log('series data:', NextResponse.json({ data }, { status: 200 }));
   return NextResponse.json({ data }, { status: 200 });
 };
 

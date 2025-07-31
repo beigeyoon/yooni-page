@@ -1,20 +1,13 @@
-import { apiFetch, ApiResponse } from '../apiClient';
+import { apiFetch } from '../apiClient';
+import { Series, SeriesPayload } from '@/types';
 
-export interface Series {
-  id: string;
-  title: string;
-  description?: string;
-  category: string;
-  createdAt: Date;
+
+
+export interface SeriesResponse {
+  data: Series[];
 }
 
-export interface SeriesPayload {
-  title: string;
-  description?: string;
-  category: string;
-}
-
-export async function getSeries(): Promise<ApiResponse<Series[]>> {
+export async function getSeries(): Promise<{ data: Series[] }> {
   return await apiFetch('/api/series', {
     method: 'GET',
   });
@@ -27,7 +20,7 @@ export async function createSeries(payload: SeriesPayload) {
   });
 }
 
-export async function updateSeries(payload: SeriesPayload & { id: string }) {
+export async function updateSeries(payload: SeriesPayload) {
   return await apiFetch(`/api/series?id=${payload.id}`, {
     method: 'PUT',
     body: JSON.stringify(payload),

@@ -57,6 +57,25 @@ export interface Comment {
   createdAt: string;
 };
 
+export interface SeriesFormValues {
+  title?: string;
+  description?: string;
+  category?: string;
+}
+
+export interface Series {
+  id: string;
+  title: string;
+  description?: string;
+  category: string;
+  createdAt: Date;
+};
+
+export interface SeriesPayload extends SeriesFormValues {
+  id?: string;
+  createdAt?: string;
+};
+
 export interface ThoughtFormValues {
   content?: string;
 };

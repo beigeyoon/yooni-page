@@ -7,7 +7,7 @@ export interface ApiResponse<T> {
 export async function apiFetch<T>(
   endpoint: string,
   options?: RequestInit,
-): Promise<ApiResponse<T>> {
+): Promise<T> {
   try {
     const response = await fetch(endpoint, {
       headers: {
@@ -18,14 +18,13 @@ export async function apiFetch<T>(
     
     if (!response.ok) {
       const error = await response.text();
-      return { success: false, error };
+      throw new Error(error);
     };
 
-    const data = await response.json();
-    return { success: true, data };
+    return await response.json();
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   catch (error: any) {
-    return { success: false, error: error.message || 'Unknown error occurred' };
+    throw new Error(error.message || 'Unknown error occurred');
   }
 }
