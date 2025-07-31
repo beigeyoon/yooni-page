@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const postId = searchParams.get("id");
   const category = searchParams.get("category");
+  const seriesId = searchParams.get("seriesId");
 
   if (postId) {
     const { data, error } = await supabaseForServer
@@ -22,14 +23,17 @@ export async function GET(request: NextRequest) {
     let query = supabaseForServer.from("post").select("*");
     if (category) {
       query = query.eq("category", category);
-    };
+    }
+    if (seriesId) {
+      query = query.eq("seriesId", seriesId);
+    }
     const { data, error } = await query;
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
-    };
+    }
     return NextResponse.json({ data }, { status: 200 });
-  };
-};
+  }
+}
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);

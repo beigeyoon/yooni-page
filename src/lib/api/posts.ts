@@ -59,3 +59,22 @@ export async function deletePost(id: string) {
     method: 'DELETE',
   });
 };
+
+export async function getPostsBySeries(seriesId: string) {
+  return await apiFetch(`/api/posts?seriesId=${seriesId}`, {
+    method: 'GET',
+  });
+}
+
+export async function getPostsBySeriesForServer(seriesId: string) {
+  let BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!BASE_URL) {
+    if (process.env.VERCEL_URL) {
+      BASE_URL = `https://${process.env.VERCEL_URL}`;
+    } else BASE_URL = 'http://localhost:3000';
+  };
+  return await fetch(`${BASE_URL}/api/posts?seriesId=${seriesId}`, {
+    method: 'GET',
+    cache: 'no-store',
+  }).then((res) => res.json());
+}
