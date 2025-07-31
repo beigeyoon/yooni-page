@@ -21,9 +21,7 @@ const PostList = ({ category, seriesId }: { category: Category; seriesId?: strin
     queryKey: seriesId ? ['posts', seriesId] : ['posts', category],
     queryFn: () => seriesId ? getPostsBySeries(seriesId) : getPosts(category),
     select: data => {
-      console.log('PostList - API Response:', data);
       const postsData = data?.data as Post[];
-      console.log('PostList - Posts Data:', postsData);
       return getPostsList(postsData, category);
     }
   });
