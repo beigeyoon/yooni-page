@@ -10,7 +10,7 @@ export default function GlobalRouteLoading() {
     setShowLoading(true);
     
     return () => setShowLoading(false);
-  }, []);
+  }, [setShowLoading]);
 
   return null;
 }

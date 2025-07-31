@@ -2,7 +2,7 @@
 
 import { PostPreview } from '@/components/PostPreview';
 import { getPosts, getPostsBySeries } from '@/lib/api/posts';
-import { getSeries, SeriesResponse } from '@/lib/api/series';
+import { getSeries } from '@/lib/api/series';
 import { Series } from '@/types';
 import { Category, Post } from '@/types';
 import getPostsList from '@/utils/getPostsList';
