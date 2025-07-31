@@ -1,1 +1,0 @@
--- manually resolved enum → string
