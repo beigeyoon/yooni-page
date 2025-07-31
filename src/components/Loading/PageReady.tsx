@@ -8,7 +8,7 @@ export default function PageReady() {
 
   useEffect(() => {
     setIsRouting(false);
-  }, []);
+  }, [setIsRouting]);
 
   return null;
 }
