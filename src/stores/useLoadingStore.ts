@@ -14,8 +14,6 @@ export const useLoadingStore = create<State>((set) => ({
   showLoading: false,
 
   setIsRouting: (isRouting) => {
-    console.log('[setIsRouting]', isRouting);
-
     if (isRouting) {
       if (delayTimer) {
         clearTimeout(delayTimer);

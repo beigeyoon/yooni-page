@@ -46,6 +46,15 @@ model session {
   user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model series {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  category    String
+  posts       post[]   @relation("SeriesToPost")
+}
+
 model post {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title       String    @db.VarChar(255)
@@ -54,9 +63,10 @@ model post {
   createdAt   DateTime  @default(now())
   userId      String    @db.Uuid
   category    String
-  subCategory String?
   isPublished Boolean   @default(false)
+  seriesId    String?   @db.Uuid
   comments    comment[]
+  series      series?   @relation("SeriesToPost", fields: [seriesId], references: [id])
   user        user      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

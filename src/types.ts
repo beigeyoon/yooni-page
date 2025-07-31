@@ -13,6 +13,7 @@ export interface PostFormValues {
   title?: string;
   subtitle?: string;
   category?: Category;
+  seriesId?: string;
   isPublished?: boolean;
   content?: string;
 }
@@ -27,6 +28,7 @@ export interface Post {
   title: string;
   subtitle: string;
   category: Category;
+  seriesId?: string;
   content: string;
   isPublished: boolean;
   userId: string;

@@ -18,10 +18,13 @@ import { createPost, updatePost } from '@/lib/api/posts';
 import { PostFormValues as FormValues } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { getPost } from '@/lib/api/posts';
+import { getSeries, Series } from '@/lib/api/series';
 import { Post } from '@/types';
 import dynamic from 'next/dynamic';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 import PageReady from '@/components/Loading/PageReady';
+import SeriesModal from '@/components/SeriesModal';
+import { Plus } from 'lucide-react';
 
 const TiptapEditor = dynamic(() => import('@/components/TiptapEditor'), {
   ssr: false
@@ -43,11 +46,6 @@ const Editor = () => {
     select: (data: { data: { data: Post } }) => data.data.data as Post
   });
 
-  useEffect(() => {
-    if (status === 'loading') return;
-    if (status === 'unauthenticated' || !isAdmin) router.push('/');
-  }, [isAdmin, router, status]);
-
   const {
     control,
     register,
@@ -55,15 +53,33 @@ const Editor = () => {
     setError,
     clearErrors,
     reset,
+    watch,
     formState: { errors }
   } = useForm<FormValues>({
     defaultValues: {
       title: post?.title || '',
       subtitle: post?.subtitle || '',
       category: post?.category || undefined,
+      seriesId: post?.seriesId || undefined,
       isPublished: post?.isPublished || false
     }
   });
+
+  const { data: seriesData, isLoading: seriesLoading } = useQuery({
+    queryKey: ['series'],
+    queryFn: getSeries
+  });
+
+  // 시리즈 목록 추출 (선택된 카테고리에 해당하는 것만)
+  const selectedCategory = watch('category');
+  const filteredSeriesList = Array.isArray(seriesData?.data) 
+    ? seriesData.data.filter((series: Series) => series.category === selectedCategory)
+    : [];
+
+  useEffect(() => {
+    if (status === 'loading') return;
+    if (status === 'unauthenticated' || !isAdmin) router.push('/');
+  }, [isAdmin, router, status]);
 
   useEffect(() => {
     if (post) {
@@ -71,6 +87,7 @@ const Editor = () => {
         title: post.title,
         subtitle: post.subtitle,
         category: post.category,
+        seriesId: post.seriesId || undefined,
         isPublished: post.isPublished
       });
     }
@@ -142,6 +159,52 @@ const Editor = () => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+            )}
+          />
+          <Controller
+            name="seriesId"
+            control={control}
+            render={({ field }) => (
+              <div className="space-y-2">
+                <Select
+                  key={field.value}
+                  onValueChange={field.onChange}
+                  value={field.value || ""}>
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Series" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {seriesLoading ? (
+                        <SelectItem value="loading" disabled>로딩 중...</SelectItem>
+                      ) : filteredSeriesList.length > 0 ? (
+                        filteredSeriesList.map((series: Series) => (
+                          <SelectItem key={series.id} value={series.id}>
+                            {series.title}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem value="no-data" disabled>시리즈 없음</SelectItem>
+                      )}
+                    </SelectGroup>
+                    <div className="border-t pt-2 mt-2">
+                      <SeriesModal
+                        trigger={
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="w-full justify-start text-sm"
+                          >
+                            <Plus className="w-4 h-4 mr-2" />
+                            새 시리즈
+                          </Button>
+                        }
+                      />
+                    </div>
+                  </SelectContent>
+                </Select>
+              </div>
             )}
           />
           <Button
