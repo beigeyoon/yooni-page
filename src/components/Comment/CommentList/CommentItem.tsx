@@ -21,7 +21,7 @@ const CommentItem = ({
     }
 
     const response = await deleteComment(comment.id);
-    if (response.success) {
+    if (response.message) {
       queryClient.invalidateQueries({
         queryKey: ['comments', comment.postId]
       });

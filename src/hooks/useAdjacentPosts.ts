@@ -7,8 +7,8 @@ export function useAdjacentPosts(postId: string, category: Category) {
     queryKey: ['posts', category],
     enabled: !!category,
     queryFn: () => getPosts(category),
-    select: data => {
-      const postsData = (data?.data as { data: Post[] }).data;
+    select: (data: { data: Post[] }) => {
+      const postsData = data.data;
       return postsData.sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );

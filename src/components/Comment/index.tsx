@@ -17,10 +17,8 @@ const Comment = ({
 }) => {
   const { data: comments, isLoading } = useQuery({
     queryKey: ['comments', postId],
-    queryFn: () =>
-      getComments(postId) as Promise<{ data: { data: CommentType[] } }>,
-    select: (data: { data: { data: CommentType[] } }) =>
-      data.data.data as CommentType[]
+    queryFn: () => getComments(postId),
+    select: (data: { data: CommentType[] }) => data.data
   });
 
   return (

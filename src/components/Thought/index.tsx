@@ -13,9 +13,8 @@ const RandomThought = () => {
 
   const { data: thoughts, isLoading } = useQuery({
     queryKey: ['thought'],
-    queryFn: () => getThoughts() as Promise<{ data: { data: Thought[] } }>,
-
-    select: (data: { data: { data: Thought[] } }) => data.data.data as Thought[]
+    queryFn: () => getThoughts(),
+    select: (data: { data: Thought[] }) => data.data
   });
 
   const total = useMemo(() => {
@@ -50,7 +49,7 @@ const RandomThought = () => {
       content
     });
 
-    if (response.success) {
+    if (response.message) {
       alert('생각이 등록되었습니다.');
     } else {
       console.error('❌ 새로운 생각 등록 실패:', response.error);
