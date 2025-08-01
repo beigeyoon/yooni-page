@@ -8,10 +8,29 @@ export const PROJECTS_CONTENT: Array<{
   imgHref: string;
 }> = [
   {
+    title: 'Yooti',
+    desc: [
+      '시간 기반 아이템(할일/스케쥴/루틴 등)을 통합 관리하는 캘린더 앱',
+      '실제 앱스토어 출시를 목표로 고도화 진행중',
+      'Cursor, React-native, Expo, Typescript',
+    ],
+    links: [
+      {
+        title: '웹버전 공유용 배포 링크',
+        src: 'https://gorgeous-monstera-ba69a1.netlify.app',
+      },
+      {
+        title: 'Github 레포지토리 링크',
+        src: 'https://github.com/beigeyoon/yooni-page',
+      }
+    ],
+    imgHref: '/images/yooti.png',
+  },
+  {
     title: 'Personal Blog',
     desc: [
       '포트폴리오 및 개인 기록물 관리를 위한 블로그',
-      'Next.js, Typescript, TailwindCSS, Shadcn, Prisam, Supabase, Tiptap',
+      'Next.js, Typescript, TailwindCSS, Prisam, Supabase, Tiptap',
     ],
     links: [
       {

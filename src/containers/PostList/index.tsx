@@ -86,28 +86,38 @@ const PostList = ({ category, seriesId }: { category: Category; seriesId?: strin
     <div className="mx-auto flex max-w-[900px] flex-col pt-8">
       {/* 시리즈 페이지일 때 시리즈 정보 표시 */}
       {seriesId && selectedSeriesInfo && (
-        <div className="mx-4 mb-8 border-b border-neutral-400 pb-4">
-          <h1 className="text-3xl font-bold text-neutral-700">{selectedSeriesInfo.title}</h1>
+        <div className="mb-8 rounded-lg bg-gradient-to-r from-neutral-50 to-neutral-100 p-6 shadow-sm">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-2 w-2 rounded-full bg-neutral-400"></div>
+            <span className="text-sm font-medium text-neutral-500 uppercase tracking-wide">Series</span>
+          </div>
+          <h1 className="text-3xl font-bold text-neutral-800 mb-2">{selectedSeriesInfo.title}</h1>
           {selectedSeriesInfo.description && (
-            <p className="mt-2 text-neutral-500">{selectedSeriesInfo.description}</p>
+            <p className="text-neutral-600 leading-relaxed">{selectedSeriesInfo.description}</p>
           )}
         </div>
       )}
 
       {/* 시리즈 필터링 버튼들 (일반 페이지에서만) */}
       {!seriesId && seriesByCategory.length > 0 && (
-        <div className="px-4 mb-8 flex flex-wrap gap-2">
-          {seriesByCategory.map((series: Series) => (
-            <Button
-              key={series.id}
-              variant="outline"
-              size="sm"
-              onClick={() => handleSeriesClick(series.id)}
-              className="text-sm"
-            >
-              {series.title}
-            </Button>
-          ))}
+        <div className="mb-8 mx-4">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-1.5 w-1.5 rounded-full bg-neutral-300"></div>
+            <span className="text-sm font-medium text-neutral-500 uppercase tracking-wide">Series</span>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {seriesByCategory.map((series: Series) => (
+              <Button
+                key={series.id}
+                variant="outline"
+                size="sm"
+                onClick={() => handleSeriesClick(series.id)}
+                className="text-sm font-medium text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 border-neutral-200 hover:border-neutral-300 transition-all duration-200 rounded-full px-4 py-2"
+              >
+                {series.title}
+              </Button>
+            ))}
+          </div>
         </div>
       )}
       
