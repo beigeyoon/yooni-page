@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseForServer } from "@/lib/supabaseForServer";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
+import { sendCommentNotification } from "@/lib/email";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -46,6 +47,33 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // 댓글 생성 성공 시 이메일 알림 발송
+  try {
+    // 포스트 정보 가져오기
+    const { data: postData, error: postError } = await supabaseForServer
+      .from("post")
+      .select("title, category")
+      .eq("id", body.postId)
+      .single();
+
+    if (!postError && postData) {
+      // 이메일 알림 발송 (비동기로 처리하여 응답 지연 방지)
+      sendCommentNotification({
+        postTitle: postData.title,
+        postId: body.postId,
+        postCategory: postData.category,
+        commenterName: session.user.name || session.user.email || "익명",
+        commentContent: body.content,
+        commentDate: new Date().toLocaleString('ko-KR'),
+      }).catch(error => {
+        console.error('이메일 알림 발송 실패:', error);
+      });
+    }
+  } catch (emailError) {
+    console.error('이메일 알림 처리 중 오류:', emailError);
+    // 이메일 발송 실패해도 댓글 생성은 성공으로 처리
   }
 
   return NextResponse.json(
