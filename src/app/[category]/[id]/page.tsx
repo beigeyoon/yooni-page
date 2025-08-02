@@ -8,6 +8,7 @@ import { getPostForServer } from '@/lib/api/posts';
 import PageReady from '@/components/Loading/PageReady';
 import { metaDataKeywords } from '@/constants/metadataKeywords';
 import { Metadata } from 'next';
+import type { Post } from '@/types';
 
 // 포스트 내용에서 키워드 추출 함수
 function extractKeywords(content: string, title: string, category: string): string[] {
@@ -123,7 +124,7 @@ export async function generateMetadata({
 }
 
 // 구조화된 데이터 생성 함수
-function generateStructuredData(post: any, category: string) {
+function generateStructuredData(post: Post, category: string) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yooni.dev';
   const postUrl = `${siteUrl}/${category}/${post.id}`;
   
