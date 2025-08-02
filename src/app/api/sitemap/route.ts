@@ -6,7 +6,7 @@ export async function GET() {
     // 모든 공개된 포스트 가져오기
     const { data: posts, error } = await supabaseForServer
       .from('post')
-      .select('id, title, category, createdAt, updatedAt')
+      .select('id, title, category, createdAt')
       .eq('isPublished', true)
       .order('createdAt', { ascending: false });
 
@@ -64,7 +64,7 @@ export async function GET() {
   </url>
 ${posts?.map(post => `  <url>
     <loc>${baseUrl}/${post.category}/${post.id}</loc>
-    <lastmod>${new Date(post.updatedAt || post.createdAt).toISOString()}</lastmod>
+    <lastmod>${new Date(post.createdAt).toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>`).join('\n')}
