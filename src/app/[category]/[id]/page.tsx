@@ -70,7 +70,7 @@ export async function generateMetadata({
 
   const keywords = extractKeywords(post.content, post.title, category);
   const description = generateDescription(post.content, post.subtitle);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yooni.dev';
+  const siteUrl = 'https://yooni.seoul.kr';
   const postUrl = `${siteUrl}/${category}/${id}`;
 
   return {
@@ -112,12 +112,14 @@ export async function generateMetadata({
     robots: {
       index: true,
       follow: true,
+      nocache: false,
       googleBot: {
         index: true,
         follow: true,
         'max-video-preview': -1,
         'max-image-preview': 'large',
         'max-snippet': -1,
+        'noarchive': false,
       },
     },
   };
@@ -125,7 +127,7 @@ export async function generateMetadata({
 
 // 구조화된 데이터 생성 함수
 function generateStructuredData(post: Post, category: string) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yooni.dev';
+  const siteUrl = 'https://yooni.seoul.kr';
   const postUrl = `${siteUrl}/${category}/${post.id}`;
   
   return {

@@ -2,29 +2,10 @@
 User-agent: *
 Allow: /
 Disallow: /editor
-Disallow: /api/
-Disallow: /admin
-
-# Googlebot
-User-agent: Googlebot
-Allow: /
-Disallow: /editor
-Disallow: /api/
-Disallow: /admin
-
-# Bingbot
-User-agent: Bingbot
-Allow: /
-Disallow: /editor
-Disallow: /api/
-Disallow: /admin
+Disallow: /api/*
 
 # Host
 Host: https://yooni.seoul.kr
 
 # Sitemaps
 Sitemap: https://yooni.seoul.kr/sitemap.xml
-Sitemap: https://yooni.seoul.kr/api/sitemap
-
-# Crawl-delay
-Crawl-delay: 1
