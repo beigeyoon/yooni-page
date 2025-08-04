@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     title: '유니 블로그',
     description: '프론트엔드 개발자 유니의 기록을 담은 공간',
     type: 'website',
+    url: 'https://yooni.seoul.kr',
+    siteName: '유니 블로그',
+    locale: 'ko_KR',
     images: [
       'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_2.png'
     ]
@@ -29,6 +32,22 @@ export const metadata: Metadata = {
     images: [
       'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_2.png'
     ]
+  },
+  alternates: {
+    canonical: 'https://yooni.seoul.kr'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'noarchive': false,
+    },
   },
   other: {
     'google-site-verification': '5W1hOcpX-1XPgPg4aa6h6QyycCMe5tJLiLDK74p9neg',
