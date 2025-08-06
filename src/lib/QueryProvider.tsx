@@ -28,7 +28,7 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryStreamedHydration>
+      <ReactQueryStreamedHydration queryClient={queryClient}>
         {children}
       </ReactQueryStreamedHydration>
     </QueryClientProvider>

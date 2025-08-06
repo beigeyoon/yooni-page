@@ -17,11 +17,11 @@ export default function About() {
       </div>
       <div className="flex flex-col items-center">
         <Image
-          src="/images/porto-yooni.png"
+          src="/images/yooni_chiangmai.webp"
           alt="yooni-profile-image"
           width={280}
           height={280}
-          className="mb-8 rounded-full"
+          className="mb-8 rounded-full grayscale hover:grayscale-0"
         />
         {PROFILE.map(item => (
           <div
