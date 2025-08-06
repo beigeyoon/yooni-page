@@ -50,11 +50,9 @@ export function NavBar() {
               </Link>
             </TooltipTrigger>
             <TooltipContent
-              className="bg-violet-500 p-2 max-sm:hidden"
-              side="right"
-              sideOffset={6}>
-              <div className="text-center text-4xl">🔮</div>
-              <span className="text-xs">Hakunamatata!</span>
+              className="bg-neutral-900 p-2 max-sm:hidden"
+              side="bottom">
+              <span className="text-xs text-white">Ready?</span>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

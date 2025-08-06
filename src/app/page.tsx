@@ -21,28 +21,28 @@ const silkscreen = Silkscreen({
 });
 
 export const metadata: Metadata = {
-  title: '윤이의 블로그 | 프론트엔드 개발자 유니',
+  title: '유니의 블로그 | 프론트엔드 개발자 유니',
   description: '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
   keywords: '프론트엔드 개발자, Next.js, React, 웹 개발, 기술 블로그, 유니, yooni, 프론트엔드, 개발자 포트폴리오',
   authors: [{ name: '윤이' }],
   openGraph: {
-    title: '윤이의 블로그 | 프론트엔드 개발자 유니',
+    title: '유니의 블로그 | 프론트엔드 개발자 유니',
     description: '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
     type: 'website',
     url: 'https://yooni.seoul.kr',
-    siteName: '윤이의 블로그',
+    siteName: '유니의 블로그',
     locale: 'ko_KR',
     images: [
       {
         url: 'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png',
         width: 1200,
         height: 630,
-        alt: '윤이의 블로그'
+        alt: '유니의 블로그'
       }
     ]
   },
   twitter: {
-    title: '윤이의 블로그 | 프론트엔드 개발자 유니',
+    title: '유니의 블로그 | 프론트엔드 개발자 유니',
     description: '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
     card: 'summary_large_image',
     images: [
@@ -108,6 +108,8 @@ export default async function Home() {
             alt="main-logo"
             height={180}
             width={180}
+            priority
+            sizes="180px"
           />
           <h1
             className={`mb-6 mt-3 text-4xl font-bold max-sm:px-6 max-sm:text-3xl ${silkscreen.className}`}>

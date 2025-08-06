@@ -74,7 +74,7 @@ export async function generateMetadata({
   const postUrl = `${siteUrl}/${category}/${id}`;
 
   return {
-    title: `${post.title} | 윤이의 블로그`,
+    title: `${post.title} | 유니의 블로그`,
     description,
     keywords: keywords.join(', '),
     authors: [{ name: '윤이' }],
@@ -84,7 +84,7 @@ export async function generateMetadata({
       description,
       type: 'article',
       url: postUrl,
-      siteName: '윤이의 블로그',
+      siteName: '유니의 블로그',
       locale: 'ko_KR',
       images: [
         {
@@ -142,7 +142,7 @@ function generateStructuredData(post: Post, category: string) {
     },
     publisher: {
       '@type': 'Organization',
-      name: '윤이의 블로그',
+      name: '유니의 블로그',
       url: siteUrl,
       logo: {
         '@type': 'ImageObject',

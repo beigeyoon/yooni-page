@@ -18,22 +18,22 @@ export async function generateMetadata({
 
   const categoryInfo = {
     dev: {
-      title: '개발 | 윤이의 블로그',
+      title: '개발 | 유니의 블로그',
       description: '프론트엔드 개발, Next.js, React, 웹 개발 관련 기술 글들을 확인하세요.',
       keywords: '프론트엔드 개발, Next.js, React, 웹 개발, 기술 블로그, 개발자'
     },
     travel: {
-      title: '여행 | 윤이의 블로그',
+      title: '여행 | 유니의 블로그',
       description: '여행 이야기와 경험을 담은 글들을 확인하세요.',
       keywords: '여행, 여행 블로그, 여행기, 여행 후기, 여행 경험'
     },
     talk: {
-      title: '이야기 | 윤이의 블로그',
+      title: '이야기 | 유니의 블로그',
       description: '일상의 이야기와 생각을 담은 글들을 확인하세요.',
       keywords: '이야기, 일상, 생각, 에세이, 블로그'
     },
     photo: {
-      title: '사진 | 윤이의 블로그',
+      title: '사진 | 유니의 블로그',
       description: '사진과 함께하는 이야기들을 확인하세요.',
       keywords: '사진, 포토, 이미지, 사진 블로그, 포토그래피'
     }
@@ -54,7 +54,7 @@ export async function generateMetadata({
       description: info.description,
       type: 'website',
       url: categoryUrl,
-      siteName: '윤이의 블로그',
+      siteName: '유니의 블로그',
       locale: 'ko_KR',
       images: [
         {
