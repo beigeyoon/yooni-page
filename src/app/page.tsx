@@ -108,6 +108,8 @@ export default async function Home() {
             alt="main-logo"
             height={180}
             width={180}
+            priority
+            sizes="180px"
           />
           <h1
             className={`mb-6 mt-3 text-4xl font-bold max-sm:px-6 max-sm:text-3xl ${silkscreen.className}`}>

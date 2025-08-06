@@ -57,10 +57,11 @@ const PhotoPreview = ({
               <Image
                 src={imageUrls[0]}
                 fill
-                sizes="150"
+                sizes="150px"
                 className="object-cover object-center"
                 alt="gallery-image"
                 priority
+                loading="eager"
               />
             </div>
           </DialogTrigger>
