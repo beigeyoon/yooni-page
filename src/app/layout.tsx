@@ -68,19 +68,21 @@ export default function RootLayout({
           <GlobalLoading />
           <AuthProvider>
             <header>
-              <InfiniteSlider
-                direction="left"
-                backgroundColorClass="bg-black"
-                speed={0.58}
-                repeat={20}>
-                {mainYooniMessages.map((message, idx) => (
-                  <div
-                    key={idx}
-                    className="my-[1px] mr-2 whitespace-nowrap text-center text-sm font-semibold text-white">
-                    {message}
-                  </div>
-                ))}
-              </InfiniteSlider>
+              <div data-nosnippet aria-hidden="true">
+                <InfiniteSlider
+                  direction="left"
+                  backgroundColorClass="bg-black"
+                  speed={0.58}
+                  repeat={20}>
+                  {mainYooniMessages.map((message, idx) => (
+                    <div
+                      key={idx}
+                      className="my-[1px] mr-2 whitespace-nowrap text-center text-sm font-semibold text-white">
+                      {message}
+                    </div>
+                  ))}
+                </InfiniteSlider>
+              </div>
               <NavBar />
             </header>
             <main className="flex-grow p-8 max-sm:p-0">{children}</main>
