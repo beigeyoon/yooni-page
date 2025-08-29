@@ -67,7 +67,7 @@ const PostContent = () => {
     );
   }
   return (
-    <div className="mx-auto flex max-w-[900px] flex-col py-8 max-sm:overflow-hidden max-sm:px-4">
+    <div className="mx-auto flex max-w-[780px] flex-col py-8 max-sm:overflow-hidden max-sm:px-4">
       <div className="mb-10 flex items-center justify-between font-bold text-neutral-400">
         <Link href={`/${post.category}`}>#{post.category}</Link>
         {isAdmin && (
