@@ -26,10 +26,10 @@ import Image from 'next/image';
 export function NavBar() {
   const pathname = usePathname();
   const activeMenu = '/' + pathname.split('/')[1] || '';
-  const mobile_NAV_MENUS = NAV_MENUS.slice(0, -1);
+  const mobile_NAV_MENUS = NAV_MENUS;
 
   return (
-    <NavigationMenu className="sticky top-0 z-50 flex max-w-none items-center justify-between border-b border-neutral-400 bg-white/80 px-4 py-2 backdrop-blur max-sm:w-full max-sm:border-neutral-300">
+    <NavigationMenu className="sticky top-0 z-50 flex max-w-none items-center justify-between border-b border-neutral-400 bg-white/80 px-4 py-2 backdrop-blur max-sm:w-full max-sm:border-neutral-300 max-sm:px-2">
       <NavigationMenuList>
         <TooltipProvider delayDuration={0}>
           <Tooltip>
@@ -41,7 +41,7 @@ export function NavBar() {
                   src="/images/yooni-favicon.png"
                   alt="main-logo"
                   height={38}
-                  width={40}
+                  width={42}
                   className="min-h-[38px] min-w-[38px] hover:opacity-50 max-sm:mr-3 max-sm:inline-block"
                 />
                 <span className="text-md font-bold leading-none sm:hidden">
@@ -81,7 +81,7 @@ export function NavBar() {
       </div>
 
       {/* 모바일 메뉴 */}
-      <div className="flex justify-center sm:hidden">
+      <div className="flex justify-center sm:hidden mr-2">
         <Sheet>
           <SheetTrigger>
             <Menu className="h-6 w-6" />
