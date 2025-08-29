@@ -71,7 +71,7 @@ export function RecentPosts({
             <TableCell className="overflow-hidden truncate whitespace-nowrap font-semibold max-sm:max-w-[230px] md:max-w-[170px]">
               {post.title}
             </TableCell>
-            <TableCell className="text-[10px] sm:min-w-[80px]">
+            <TableCell className="text-[10px] sm:min-w-[82px]">
               {handleTimeStirng(post.createdAt)}
             </TableCell>
           </TableRow>
