@@ -23,3 +23,12 @@ export const mainYooniMessages = [
   '요가의 즐거움을 알아가고 있는 중입니다 🧘‍♀️',
   'You are my soda pop, My little soda pop 🍹',
 ];
+
+export function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}

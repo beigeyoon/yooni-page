@@ -6,7 +6,7 @@ import AuthProvider from '@/lib/AuthProvider';
 import { NavBar } from '@/components/NavBar';
 import { QueryProvider } from '@/lib/QueryProvider';
 import InfiniteSlider from '@/components/InfiniteSlider';
-import { mainYooniMessages } from '@/constants/infiniteSliderContents';
+import { mainYooniMessages, shuffleArray } from '@/constants/infiniteSliderContents';
 import GlobalLoading from '@/components/Loading/GlobalLoading';
 import { metaDataKeywords } from '@/constants/metadataKeywords';
 import Footer from '@/components/Footer';
@@ -74,7 +74,7 @@ export default function RootLayout({
                   backgroundColorClass="bg-black"
                   speed={0.58}
                   repeat={20}>
-                  {mainYooniMessages.map((message, idx) => (
+                  {shuffleArray(mainYooniMessages).map((message, idx) => (
                     <div
                       key={idx}
                       className="my-[1px] mr-2 whitespace-nowrap text-center text-sm font-semibold text-white">
