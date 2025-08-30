@@ -2,8 +2,9 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import { Post } from '@/types';
+import { Post, Series } from '@/types';
 import { deletePost, getPost } from '@/lib/api/posts';
+import { getSeries } from '@/lib/api/series';
 import { FileWarning, SquarePen } from 'lucide-react';
 import handleTimeStirng from '@/utils/handleTimeStirng';
 import { useAdjacentPosts } from '@/hooks/useAdjacentPosts';
@@ -28,6 +29,16 @@ const PostContent = () => {
     queryFn: () => getPost(id),
     select: (data: { data: Post }) => data.data
   });
+
+  const { data: seriesData } = useQuery({
+    queryKey: ['series'],
+    queryFn: getSeries,
+    select: (data: { data: Series[] }) => data.data,
+    enabled: !!post?.seriesId
+  });
+
+  // 현재 포스트의 시리즈 정보 찾기
+  const currentSeries = seriesData?.find(series => series.id === post?.seriesId);
 
   const { prevPost, nextPost } = useAdjacentPosts(
     id,
@@ -69,7 +80,14 @@ const PostContent = () => {
   return (
     <div className="mx-auto flex max-w-[780px] flex-col py-8 max-sm:overflow-hidden max-sm:px-4">
       <div className="mb-10 flex items-center justify-between font-bold text-neutral-400">
-        <Link href={`/${post.category}`}>#{post.category}</Link>
+        <div>
+          <Link href={`/${post.category}`} className='mr-2 hover:underline'>#{post.category}</Link>
+          {currentSeries && (
+            <Link href={`/${post.category}/series/${currentSeries.id}`} className='hover:underline'>
+              #{currentSeries.title}
+            </Link>
+          )}
+        </div>
         {isAdmin && (
           <div>
             <Button
