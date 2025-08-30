@@ -6,6 +6,7 @@ import { Category, Post } from '@/types';
 import { Silkscreen } from 'next/font/google';
 import { Newspaper, Grid2X2Check } from 'lucide-react';
 import GithubCalendar from '@/components/GithubCalendar';
+import SeriesGroup from '@/components/SeriesGroup';
 import {
   dehydrate,
   HydrationBoundary,
@@ -125,6 +126,7 @@ export default async function Home() {
             기록을 둘러보세요.
           </p>
         </section>
+        <SeriesGroup />
         <section className="px-12 pb-12 max-sm:px-6">
           <h2 className="pb-4 text-2xl font-bold text-neutral-800">
             <Newspaper className="inline-block" /> 최신 글
