@@ -3,7 +3,7 @@ import ProjectCard from '@/components/ProjectCard';
 
 export default function Projects() {
   return (
-    <div className="mx-auto mt-8 grid max-w-[900px] grid-cols-2 gap-8 pb-12 max-sm:flex max-sm:flex-col max-sm:p-6">
+    <div className="mx-auto mt-8 grid max-w-[780px] grid-cols-2 gap-8 pb-12 max-sm:flex max-sm:flex-col max-sm:p-6">
       {PROJECTS_CONTENT.map((item, idx) => (
         <ProjectCard
           key={idx}
