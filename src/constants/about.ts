@@ -27,7 +27,7 @@ export const ABOUT_CONTENT: Array<{
       'HTML / CSS / Javascript / Typescript',
       'React / React-native / Redux / Zustand',
       'Next.js',
-      'TailwindCSS / Styled-components',
+      'TailwindCSS / Vanilla-extract',
       'Tanstack-query',
       'SQL / GraphQL / Prisma',
       'Git / Github',
@@ -38,10 +38,10 @@ export const ABOUT_CONTENT: Array<{
   {
     title: 'Work Experiences',
     desc: [
-      [ 'MARKNCOMPANY', '2025. 10 ~' ],
+      [ 'MARKNCOMPANY', '2025. 10 ~ 현재' ],
       [ 'STIBEE', '2022. 08 ~ 2024. 12' ],
       [ 'KUUS', '2021. 01 ~ 2021. 12' ],
-      [ 'HYUNDAI MOTORS', '2024. 01 ~ 2019. 03' ],
+      [ 'HYUNDAI MOTORS', '2014. 01 ~ 2019. 03' ],
     ],
   },
   {
