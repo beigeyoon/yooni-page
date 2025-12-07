@@ -38,6 +38,7 @@ export const ABOUT_CONTENT: Array<{
   {
     title: 'Work Experiences',
     desc: [
+      [ 'MARKNCOMPANY', '2025. 10 ~' ],
       [ 'STIBEE', '2022. 08 ~ 2024. 12' ],
       [ 'KUUS', '2021. 01 ~ 2021. 12' ],
       [ 'HYUNDAI MOTORS', '2024. 01 ~ 2019. 03' ],
