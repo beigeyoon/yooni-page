@@ -1,7 +1,5 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export interface CommentNotificationData {
   postTitle: string;
   postId: string;
@@ -12,6 +10,15 @@ export interface CommentNotificationData {
 }
 
 export async function sendCommentNotification(data: CommentNotificationData) {
+  const apiKey = process.env.RESEND_API_KEY;
+  
+  if (!apiKey) {
+    console.warn('RESEND_API_KEY가 설정되지 않아 이메일 알림을 발송할 수 없습니다.');
+    return { success: false, error: 'RESEND_API_KEY not configured' };
+  }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
   try {
     const { data: emailData, error } = await resend.emails.send({
       from: 'Yooni Blog <onboarding@resend.dev>',
