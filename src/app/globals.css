@@ -85,6 +85,8 @@ body {
   font-family: 'Arial, sans-serif';
   max-width: none;
   height: calc(100vh - 340px);
+  border: 1px solid #dddddd;
+  border-radius: 6px;
 }
 
 .editor-container > .tiptap {
@@ -122,6 +124,7 @@ body {
   object-fit: cover;
   border-radius: 4px;
   margin: 0;
+  height: auto;
 }
 
 .image-album[data-count='2'] {
@@ -184,6 +187,15 @@ body {
 
 .post-content iframe {
   width: 100%;
+}
+
+.post-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.post-content img[width][height] {
+  height: auto;
 }
 
 .post-content li p {

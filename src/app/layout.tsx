@@ -62,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="kr">
+    <html lang="ko">
       <body className="flex min-h-screen flex-col">
         <QueryProvider>
           <GlobalLoading />

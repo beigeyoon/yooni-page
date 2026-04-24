@@ -89,7 +89,7 @@ export default function ItemCard({ content, links, imgHref }: Props) {
         <div className="relative h-[240px] w-[400px]">
           <Image
             src={imgHref}
-            alt="project-image"
+            alt={`${title} 프로젝트 이미지`}
             fill
             style={{ objectFit: 'cover' }}
           />

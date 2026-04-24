@@ -45,14 +45,17 @@ const RandomThought = () => {
     const content = prompt('새로운 생각을 입력하세요');
     if (!content) return;
 
-    const response = await createThought({
-      content
-    });
+    try {
+      const response = await createThought({
+        content
+      });
 
-    if (response.message) {
-      alert('생각이 등록되었습니다.');
-    } else {
-      console.error('❌ 새로운 생각 등록 실패:', response.error);
+      if (response.message) {
+        alert('생각이 등록되었습니다.');
+      }
+    } catch (error) {
+      console.error('❌ 새로운 생각 등록 실패:', error);
+      alert(error instanceof Error ? error.message : '생각 등록에 실패했습니다.');
     }
   };
 

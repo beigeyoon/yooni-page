@@ -61,18 +61,16 @@ export function NavBar() {
           <NavigationMenuItem
             key={idx}
             className="max-sm:hidden">
-            <Link
-              href={menu.path}
-              legacyBehavior
-              passHref>
-              <NavigationMenuLink
+            <NavigationMenuLink asChild>
+              <Link
+                href={menu.path}
                 className={
                   buttonVariants({ variant: 'link' }) +
                   ` ${menu.path === activeMenu ? 'underline' : ''}`
                 }>
                 {menu.title}
-              </NavigationMenuLink>
-            </Link>
+              </Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
         ))}
       </NavigationMenuList>
@@ -83,7 +81,7 @@ export function NavBar() {
       {/* 모바일 메뉴 */}
       <div className="flex justify-center sm:hidden mr-2">
         <Sheet>
-          <SheetTrigger>
+          <SheetTrigger aria-label="메뉴 열기">
             <Menu className="h-6 w-6" />
           </SheetTrigger>
           <SheetContent
@@ -94,14 +92,11 @@ export function NavBar() {
             <NavigationMenuList className="mt-8 flex flex-col gap-4 font-medium">
               {mobile_NAV_MENUS.map((menu, idx) => (
                 <NavigationMenuItem key={idx}>
-                  <Link
-                    href={menu.path}
-                    legacyBehavior
-                    passHref>
-                    <NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <Link href={menu.path}>
                       <SheetClose>{menu.title}</SheetClose>
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>

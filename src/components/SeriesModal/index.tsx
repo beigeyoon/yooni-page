@@ -71,6 +71,7 @@ export default function SeriesModal({ trigger, series, onSuccess }: SeriesModalP
       onSuccess?.();
     } catch (error) {
       console.error('시리즈 저장 실패:', error);
+      alert(error instanceof Error ? error.message : '시리즈 저장에 실패했습니다.');
     }
   };
 

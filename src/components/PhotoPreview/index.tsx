@@ -59,9 +59,8 @@ const PhotoPreview = ({
                 fill
                 sizes="150px"
                 className="object-cover object-center"
-                alt="gallery-image"
+                alt={`${post.title} 대표 사진`}
                 priority
-                loading="eager"
               />
             </div>
           </DialogTrigger>
@@ -85,7 +84,7 @@ const PhotoPreview = ({
                 fill
                 sizes="150"
                 className="object-cover object-center"
-                alt="gallery-image"
+                alt={`${post.title} 사진`}
               />
             </div>
           ))}

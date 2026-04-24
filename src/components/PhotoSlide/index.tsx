@@ -20,7 +20,7 @@ const PhotoSlide = ({ imageUrls }: { imageUrls: string[] }) => {
                 src={url}
                 fill
                 className="object-contain object-center"
-                alt="gallery-image"
+                alt={`사진 ${imageUrls.indexOf(url) + 1}`}
               />
             </div>
           </CarouselItem>
