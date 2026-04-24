@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import {
   Select,
   SelectContent,
@@ -14,10 +15,9 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { createPost, updatePost } from '@/lib/api/posts';
+import { createPost, getPostForPreview, updatePost } from '@/lib/api/posts';
 import { PostFormValues as FormValues } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { getPost } from '@/lib/api/posts';
 import { getSeries } from '@/lib/api/series';
 import { Post, Series } from '@/types';
 import dynamic from 'next/dynamic';
@@ -42,7 +42,7 @@ const Editor = () => {
   const { data: post } = useQuery({
     queryKey: ['posts', id],
     enabled: !!id,
-    queryFn: () => getPost(id!),
+    queryFn: () => getPostForPreview(id!),
     select: (data: { data: Post }) => data.data
   });
 
@@ -113,13 +113,16 @@ const Editor = () => {
       isPublished: clickedButton === 'publish'
     };
 
-    const response = isEditMode
-      ? await updatePost({ ...payload, id: post?.id })
-      : await createPost(payload);
-    if (response.message) {
-      router.push('/');
-    } else {
-      console.error('❌ 게시글 업로드 실패:', response.error);
+    try {
+      const response = isEditMode
+        ? await updatePost({ ...payload, id: post?.id })
+        : await createPost(payload);
+      if (response.message) {
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('❌ 게시글 업로드 실패:', error);
+      alert(error instanceof Error ? error.message : '게시글 저장에 실패했습니다.');
     }
   };
 
@@ -127,10 +130,17 @@ const Editor = () => {
   return (
     <>
       <PageReady />
+      <div className="mx-auto mb-6 flex max-w-[980px] justify-end">
+        <Button
+          asChild
+          variant="outline">
+          <Link href="/admin">관리자</Link>
+        </Button>
+      </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex gap-12">
-        <section className="flex-1">
+        className="flex gap-12 justify-center">
+        <section className="flex-1 max-w-[780px]">
           <TiptapEditor
             ref={editorRef}
             register={register}
