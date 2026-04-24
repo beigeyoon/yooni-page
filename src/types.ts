@@ -4,10 +4,19 @@ export interface ExtendedSession extends Session {
   accessToken?: string;
   user?: Session["user"] & {
     id?: string;
+    isAdmin?: boolean;
   };
 }
 
-export type Category = 'travel' | 'dev' | 'talk' | 'photo';
+export const CATEGORIES = ['travel', 'dev', 'talk', 'photo'] as const;
+export type Category = (typeof CATEGORIES)[number];
+
+export function isValidCategory(value: unknown): value is Category {
+  return (
+    typeof value === 'string' &&
+    (CATEGORIES as readonly string[]).includes(value)
+  );
+}
 
 export interface PostFormValues {
   title?: string;

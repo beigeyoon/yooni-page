@@ -2,6 +2,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import GoogleProvider from 'next-auth/providers/google';
 import { NextAuthOptions } from 'next-auth';
 import prisma from '@/lib/prisma';
+import { isAdminEmail } from '@/lib/admin';
 import { ExtendedSession } from '@/types';
 
 export const authOptions: NextAuthOptions = {
@@ -25,10 +26,17 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      const extendedSession = session as ExtendedSession;
+
       if (token?.accessToken) {
-        (session as ExtendedSession).accessToken = token.accessToken as string;
-        (session as ExtendedSession).user!.id = token.sub as string;
+        extendedSession.accessToken = token.accessToken as string;
       }
+
+      if (extendedSession.user) {
+        extendedSession.user.id = token.sub;
+        extendedSession.user.isAdmin = isAdminEmail(extendedSession.user.email);
+      }
+
       return session;
     },
     async redirect({ baseUrl }) {
