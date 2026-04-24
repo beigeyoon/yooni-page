@@ -4,8 +4,7 @@ import { RecentPosts } from '@/components/RecentPosts';
 import { getPostsForServer } from '@/lib/api/posts.server';
 import { Category, Post } from '@/types';
 import { Silkscreen } from 'next/font/google';
-import { Newspaper, Grid2X2Check } from 'lucide-react';
-import GithubCalendar from '@/components/GithubCalendar';
+import { Newspaper } from 'lucide-react';
 import SeriesGroup from '@/components/SeriesGroup';
 import {
   dehydrate,
@@ -145,12 +144,6 @@ export default async function Home() {
               posts={postsByCategory['talk']}
             />
           </div>
-        </section>
-        <section className="px-12 max-sm:px-6">
-          <h2 className="pb-4 text-2xl font-bold text-neutral-800">
-            <Grid2X2Check className="inline-block" /> Commits
-          </h2>
-          <GithubCalendar />
         </section>
       </div>
     </HydrationBoundary>
