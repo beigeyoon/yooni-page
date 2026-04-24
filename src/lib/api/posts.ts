@@ -8,36 +8,22 @@ export async function getPosts(category: Category): Promise<{ data: Post[] }> {
   });
 };
 
-export async function getPostsForServer(category: Category) {
-  let BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
-  if (!BASE_URL) {
-    if (process.env.VERCEL_URL) {
-      BASE_URL = `https://${process.env.VERCEL_URL}`;
-    } else BASE_URL = 'http://localhost:3000';
-  };
-  return await fetch(`${BASE_URL}/api/posts?category=${category}`, {
-    method: 'GET',
-    cache: 'no-store',
-  }).then((res) => res.json());
-};
-
 export async function getPost(id: string): Promise<{ data: Post }> {
   return await apiFetch(`/api/posts?id=${id}`, {
     method: 'GET',
   });
 };
 
-export async function getPostForServer(id: string) {
-  let BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
-  if (!BASE_URL) {
-    if (process.env.VERCEL_URL) {
-      BASE_URL = `https://${process.env.VERCEL_URL}`;
-    } else BASE_URL = 'http://localhost:3000';
-  };
-  return await fetch(`${BASE_URL}/api/posts?id=${id}`, {
+export async function getPostForPreview(id: string): Promise<{ data: Post }> {
+  return await apiFetch(`/api/posts?id=${id}&preview=true`, {
     method: 'GET',
-    cache: 'no-store',
-  }).then((res) => res.json());
+  });
+};
+
+export async function getAllPostsForPreview(): Promise<{ data: Post[] }> {
+  return await apiFetch('/api/posts?preview=true', {
+    method: 'GET',
+  });
 };
 
 export async function createPost(payload: PostPayload): Promise<{ message?: string; data?: Post; error?: string }> {
@@ -64,17 +50,4 @@ export async function getPostsBySeries(seriesId: string): Promise<{ data: Post[]
   return await apiFetch(`/api/posts?seriesId=${seriesId}`, {
     method: 'GET',
   });
-}
-
-export async function getPostsBySeriesForServer(seriesId: string) {
-  let BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
-  if (!BASE_URL) {
-    if (process.env.VERCEL_URL) {
-      BASE_URL = `https://${process.env.VERCEL_URL}`;
-    } else BASE_URL = 'http://localhost:3000';
-  };
-  return await fetch(`${BASE_URL}/api/posts?seriesId=${seriesId}`, {
-    method: 'GET',
-    cache: 'no-store',
-  }).then((res) => res.json());
 }

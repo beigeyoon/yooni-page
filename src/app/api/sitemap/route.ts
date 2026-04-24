@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { supabaseForServer } from '@/lib/supabaseForServer';
+import { getSupabaseForServer } from '@/lib/supabaseForServer';
 
 export async function GET() {
   try {
+    const supabaseForServer = getSupabaseForServer();
     // 모든 공개된 포스트 가져오기
     const { data: posts, error } = await supabaseForServer
       .from('post')

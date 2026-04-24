@@ -1,7 +1,7 @@
 export const dynamic = 'auto';
 
 import { RecentPosts } from '@/components/RecentPosts';
-import { getPostsForServer } from '@/lib/api/posts';
+import { getPostsForServer } from '@/lib/api/posts.server';
 import { Category, Post } from '@/types';
 import { Silkscreen } from 'next/font/google';
 import { Newspaper, Grid2X2Check } from 'lucide-react';

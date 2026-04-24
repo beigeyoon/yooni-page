@@ -4,6 +4,23 @@ export interface ApiResponse<T> {
   error?: string;
 };
 
+async function getErrorMessage(response: Response) {
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.includes('application/json')) {
+    const payload = await response.json().catch(() => null);
+    if (payload && typeof payload.error === 'string') {
+      return payload.error;
+    }
+    if (payload && typeof payload.message === 'string') {
+      return payload.message;
+    }
+  }
+
+  const text = await response.text().catch(() => '');
+  return text || `Request failed with status ${response.status}`;
+}
+
 export async function apiFetch<T>(
   endpoint: string,
   options?: RequestInit,
@@ -17,8 +34,8 @@ export async function apiFetch<T>(
     });
     
     if (!response.ok) {
-      const error = await response.text();
-      throw new Error(error);
+      const errorMessage = await getErrorMessage(response);
+      throw new Error(errorMessage);
     };
 
     return await response.json();
