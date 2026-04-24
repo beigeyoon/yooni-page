@@ -1,11 +1,11 @@
 import { Category, Post } from '@/types';
-import { getSupabaseForServer } from '@/lib/supabaseForServer';
+import { getSupabasePublic } from '@/lib/supabasePublic';
 
 export async function getPostsForServer(
   category: Category
 ): Promise<{ data: Post[] }> {
-  const supabaseForServer = getSupabaseForServer();
-  const { data, error } = await supabaseForServer
+  const supabasePublic = getSupabasePublic();
+  const { data, error } = await supabasePublic
     .from('post')
     .select('*')
     .eq('category', category)
@@ -18,9 +18,11 @@ export async function getPostsForServer(
   return { data: data ?? [] };
 }
 
-export async function getPostForServer(id: string): Promise<{ data: Post | null }> {
-  const supabaseForServer = getSupabaseForServer();
-  const { data, error } = await supabaseForServer
+export async function getPostForServer(
+  id: string
+): Promise<{ data: Post | null }> {
+  const supabasePublic = getSupabasePublic();
+  const { data, error } = await supabasePublic
     .from('post')
     .select('*')
     .eq('id', id)
@@ -37,8 +39,8 @@ export async function getPostForServer(id: string): Promise<{ data: Post | null 
 export async function getPostsBySeriesForServer(
   seriesId: string
 ): Promise<{ data: Post[] }> {
-  const supabaseForServer = getSupabaseForServer();
-  const { data, error } = await supabaseForServer
+  const supabasePublic = getSupabasePublic();
+  const { data, error } = await supabasePublic
     .from('post')
     .select('*')
     .eq('seriesId', seriesId)
