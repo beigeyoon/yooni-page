@@ -21,7 +21,7 @@ export default function ProjectCard({ content, links, imgHref }: Props) {
       <div className="relative h-[280px] w-full overflow-hidden">
         <Image
           src={imgHref}
-          alt="project-image"
+          alt={`${title} 프로젝트 이미지`}
           fill
           style={{ objectFit: 'cover' }}
           className="grayscale transition-all duration-300 group-hover:grayscale-0"

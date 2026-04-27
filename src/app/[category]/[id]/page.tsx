@@ -4,11 +4,12 @@ import {
   HydrationBoundary,
   QueryClient
 } from '@tanstack/react-query';
-import { getPostForServer } from '@/lib/api/posts';
+import { getPostForServer } from '@/lib/api/posts.server';
 import PageReady from '@/components/Loading/PageReady';
 import { metaDataKeywords } from '@/constants/metadataKeywords';
 import { Metadata } from 'next';
 import type { Post } from '@/types';
+import { notFound } from 'next/navigation';
 
 // 포스트 내용에서 키워드 추출 함수
 function extractKeywords(content: string, title: string, category: string): string[] {
@@ -164,22 +165,24 @@ function generateStructuredData(post: Post, category: string) {
   };
 }
 
+function serializeJsonLd(data: object) {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
+}
+
 const Post = async ({ params }: { params: Promise<{ category: string; id: string }> }) => {
   const { category, id } = await params;
 
-  const queryClient = new QueryClient();
+  const postData = await getPostForServer(id);
+  const post = postData?.data as Post | null;
 
-  await queryClient.prefetchQuery({
-    queryKey: ['post', id],
-    queryFn: () => getPostForServer(id)
-  });
+  if (!post) {
+    notFound();
+  }
+
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(['posts', id], { data: post });
 
   const dehydratedState = dehydrate(queryClient);
-
-  // 구조화된 데이터 추가
-  const postData = await getPostForServer(id);
-  const post = postData?.data;
-  
   const structuredData = post ? generateStructuredData(post, category) : null;
 
   return (
@@ -189,7 +192,7 @@ const Post = async ({ params }: { params: Promise<{ category: string; id: string
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData)
+            __html: serializeJsonLd(structuredData)
           }}
         />
       )}

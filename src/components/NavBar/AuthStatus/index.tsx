@@ -4,7 +4,7 @@ import { LoginButton } from './LoginButton';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'next-auth/react';
 import { Label } from '@/components/ui/label';
-import { User, Pencil } from 'lucide-react';
+import { User, Pencil, Shield } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 
@@ -17,12 +17,20 @@ export default function AuthStatus() {
       {status === 'authenticated' ? (
         <div className="flex items-center gap-2 max-sm:flex-col max-sm:pb-4">
           {isAdmin && (
-            <Button
-              onClick={() => router.push('/editor')}
-              variant="ghost"
-              className="p-2 text-neutral-400">
-              <Pencil className="w-4" />
-            </Button>
+            <>
+              <Button
+                onClick={() => router.push('/editor')}
+                variant="ghost"
+                className="p-2 text-neutral-400">
+                <Pencil className="w-4" />
+              </Button>
+              <Button
+                onClick={() => router.push('/admin')}
+                variant="ghost"
+                className="p-2 text-neutral-400">
+                <Shield className="w-4" />
+              </Button>
+            </>
           )}
           <Label className="flex items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-neutral-400 max-sm:hidden">
             <User className="w-4" />

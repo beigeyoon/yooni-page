@@ -1,41 +1,59 @@
-import { NextRequest, NextResponse } from "next/server";
-import { supabaseForServer } from "@/lib/supabaseForServer";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authOptions";
+import { NextRequest, NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import { getAppSession, isAdminEmail } from '@/lib/auth';
 
 export async function GET() {
-  const { data, error } = await supabaseForServer
-    .from('thought')
-    .select('*')
+  try {
+    const data = await prisma.thought.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ data }, { status: 200 });
+  } catch {
+    return NextResponse.json(
+      { error: '서버 오류가 발생했습니다.' },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json({ data }, { status: 200 });
-};
+}
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user?.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-    return NextResponse.json(
-      { error: "❌ 업로드 권한이 없습니다." },
-      { status: 401 }
-    );
-  };
+  try {
+    const session = await getAppSession();
 
-  const body = await request.json();
-  
-  const { data, error } = await supabaseForServer
-    .from("thought")
-    .insert([{ ...body }]);
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!session || !isAdminEmail(session.user?.email)) {
+      return NextResponse.json(
+        { error: '❌ 업로드 권한이 없습니다.' },
+        { status: 401 }
+      );
     }
-  
+
+    const body = await request.json();
+    const content = typeof body.content === 'string' ? body.content.trim() : '';
+
+    if (!content) {
+      return NextResponse.json(
+        { error: '생각 내용이 필요합니다.' },
+        { status: 400 }
+      );
+    }
+
+    const data = await prisma.thought.create({
+      data: {
+        content
+      }
+    });
+
     return NextResponse.json(
-      { message: "✅ Comment created successfully", data },
+      { message: '✅ Thought created successfully', data },
       { status: 201 }
     );
-};
+  } catch {
+    return NextResponse.json(
+      { error: '서버 오류가 발생했습니다.' },
+      { status: 500 }
+    );
+  }
+}

@@ -8,6 +8,7 @@ import { getSeries } from '@/lib/api/series';
 import { FileWarning, SquarePen } from 'lucide-react';
 import handleTimeStirng from '@/utils/handleTimeStirng';
 import { useAdjacentPosts } from '@/hooks/useAdjacentPosts';
+import DOMPurify from 'isomorphic-dompurify';
 import { Category } from '@/types';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,7 @@ import Comment from '@/components/Comment';
 import { DeleteButton } from '@/components/DeleteButton';
 import Link from 'next/link';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
+import optimizePostHtml from '@/utils/optimizePostHtml';
 
 const PostContent = () => {
   const router = useRouteWithLoading();
@@ -60,11 +62,14 @@ const PostContent = () => {
       return;
     }
 
-    const response = await deletePost(post!.id);
-    if (response.message) {
-      router.push(`/${post!.category}`);
-    } else {
-      console.error('❌ 포스트 삭제 실패:', response.error);
+    try {
+      const response = await deletePost(post!.id);
+      if (response.message) {
+        router.push(`/${post!.category}`);
+      }
+    } catch (error) {
+      console.error('❌ 포스트 삭제 실패:', error);
+      alert(error instanceof Error ? error.message : '포스트 삭제에 실패했습니다.');
     }
   };
 
@@ -77,6 +82,9 @@ const PostContent = () => {
       </div>
     );
   }
+
+  const sanitizedContent = optimizePostHtml(DOMPurify.sanitize(post.content));
+
   return (
     <div className="mx-auto flex max-w-[780px] flex-col py-8 max-sm:overflow-hidden max-sm:px-4">
       <div className="mb-10 flex items-center justify-between font-bold text-neutral-400">
@@ -123,7 +131,7 @@ const PostContent = () => {
 
       <div
         className="post-content prose max-w-none py-16 text-base leading-relaxed text-neutral-700"
-        dangerouslySetInnerHTML={{ __html: post.content }}
+        dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
 
       <Comment

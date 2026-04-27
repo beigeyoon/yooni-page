@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import { supabaseForServer } from '@/lib/supabaseForServer';
+import { getSupabasePublic } from '@/lib/supabasePublic';
 
 export async function GET() {
   try {
+    const supabasePublic = getSupabasePublic();
     // 모든 공개된 포스트 가져오기
-    const { data: posts, error } = await supabaseForServer
+    const { data: posts, error } = await supabasePublic
       .from('post')
       .select('id, title, category, createdAt')
       .eq('isPublished', true)
@@ -12,11 +13,14 @@ export async function GET() {
 
     if (error) {
       console.error('Sitemap generation error:', error);
-      return NextResponse.json({ error: 'Failed to generate sitemap' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Failed to generate sitemap' },
+        { status: 500 }
+      );
     }
 
     const baseUrl = 'https://yooni.seoul.kr';
-    
+
     // XML sitemap 생성
     const currentDate = new Date().toISOString();
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -63,22 +67,29 @@ export async function GET() {
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
-${posts?.map(post => `  <url>
+${posts
+  ?.map(
+    post => `  <url>
     <loc>${baseUrl}/${post.category}/${post.id}</loc>
     <lastmod>${new Date(post.createdAt).toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>`).join('\n')}
+  </url>`
+  )
+  .join('\n')}
 </urlset>`;
 
     return new NextResponse(sitemap, {
       headers: {
         'Content-Type': 'application/xml',
-        'Cache-Control': 'public, max-age=3600, s-maxage=3600',
-      },
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600'
+      }
     });
   } catch (error) {
     console.error('Sitemap generation error:', error);
-    return NextResponse.json({ error: 'Failed to generate sitemap' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to generate sitemap' },
+      { status: 500 }
+    );
   }
-} 
+}

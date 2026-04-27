@@ -26,24 +26,27 @@ const CommentForm = ({
     if (!content.trim()) return;
 
     setIsSubmitting(true);
-    const response = await createComment({
-      content,
-      postId,
-      userId: session?.user?.id as string,
-      userName: session?.user?.name as string,
-      userImage: session?.user?.image as string
-    });
-
-    if (response.message) {
-      setContent('');
-      queryClient.invalidateQueries({
-        queryKey: ['comments', postId]
+    try {
+      const response = await createComment({
+        content,
+        postId,
+        userId: session?.user?.id as string,
+        userName: session?.user?.name as string,
+        userImage: session?.user?.image as string
       });
-    } else {
-      console.error('❌ 댓글 등록 실패:', response.error);
-    }
 
-    setIsSubmitting(false);
+      if (response.message) {
+        setContent('');
+        queryClient.invalidateQueries({
+          queryKey: ['comments', postId]
+        });
+      }
+    } catch (error) {
+      console.error('❌ 댓글 등록 실패:', error);
+      alert(error instanceof Error ? error.message : '댓글 등록에 실패했습니다.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (status !== 'authenticated') {

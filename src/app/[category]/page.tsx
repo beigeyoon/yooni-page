@@ -1,5 +1,5 @@
 import PostList from '@/containers/PostList';
-import { getPostsForServer } from '@/lib/api/posts';
+import { getPostsForServer } from '@/lib/api/posts.server';
 import { Category } from '@/types';
 import {
   dehydrate,

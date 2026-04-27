@@ -20,13 +20,16 @@ const CommentItem = ({
       return;
     }
 
-    const response = await deleteComment(comment.id);
-    if (response.message) {
-      queryClient.invalidateQueries({
-        queryKey: ['comments', comment.postId]
-      });
-    } else {
-      console.error('❌ 댓글 삭제 실패:', response.error);
+    try {
+      const response = await deleteComment(comment.id);
+      if (response.message) {
+        queryClient.invalidateQueries({
+          queryKey: ['comments', comment.postId]
+        });
+      }
+    } catch (error) {
+      console.error('❌ 댓글 삭제 실패:', error);
+      alert(error instanceof Error ? error.message : '댓글 삭제에 실패했습니다.');
     }
   };
   return (
