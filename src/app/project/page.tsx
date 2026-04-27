@@ -8,8 +8,6 @@ export default function Projects() {
         <ProjectCard
           key={idx}
           content={item}
-          links={item.links}
-          imgHref={item.imgHref}
         />
       ))}
     </div>
