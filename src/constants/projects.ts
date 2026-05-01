@@ -11,6 +11,25 @@ export const PROJECTS_CONTENT: Array<{
   };
 }> = [
   {
+    title: 'Fetch Diff',
+    summary: 'IT/AI 업계 동향을 매일 정리해 발행하는 LLM 기반 1인 미디어',
+    imgHref: '/images/fetch-diff.png',
+    detail: {
+      description: [
+        'IT 업계 국내외 RSS 피드 수집',
+        'LLM 기반 콘텐츠 생성 및 발행',
+        '관리를 위한 admin 페이지 구축',
+        'Astro, React(admin), Zustand, Cloudflare, Wrangler, Cron',
+      ],
+      links: [
+        {
+          title: '배포 링크',
+          src: 'https://fetch-diff.com',
+        },
+      ],
+    },
+  },
+  {
     title: 'Yooti',
     summary: '시간 기반 아이템 통합 관리 캘린더 앱',
     imgHref: '/images/yooti-app.png',
