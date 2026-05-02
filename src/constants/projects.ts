@@ -12,7 +12,7 @@ export const PROJECTS_CONTENT: Array<{
 }> = [
   {
     title: 'Fetch Diff',
-    summary: 'IT/AI 업계 동향을 매일 정리해 발행하는 LLM 기반 1인 미디어',
+    summary: 'IT/AI 업계 동향을 발행하는 LLM 기반 1인 미디어',
     imgHref: '/images/fetch-diff.png',
     detail: {
       description: [
