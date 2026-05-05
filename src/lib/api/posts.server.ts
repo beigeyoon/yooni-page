@@ -52,3 +52,23 @@ export async function getPostsBySeriesForServer(
 
   return { data: data ?? [] };
 }
+
+export async function getSeriesForServer(seriesId: string) {
+  const supabasePublic = getSupabasePublic();
+  const { data, error } = await supabasePublic
+    .from('series')
+    .select('id, title, description, category')
+    .eq('id', seriesId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error('시리즈 정보를 불러오는데 실패했습니다.');
+  }
+
+  return data as {
+    id: string;
+    title: string;
+    description?: string;
+    category: string;
+  } | null;
+}

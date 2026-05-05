@@ -22,12 +22,15 @@ const silkscreen = Silkscreen({
 
 export const metadata: Metadata = {
   title: '유니의 블로그 | 프론트엔드 개발자 유니',
-  description: '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
-  keywords: '프론트엔드 개발자, Next.js, React, 웹 개발, 기술 블로그, 유니, yooni, 프론트엔드, 개발자 포트폴리오',
-  authors: [{ name: '윤이' }],
+  description:
+    '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
+  keywords:
+    '프론트엔드 개발자, Next.js, React, 웹 개발, 기술 블로그, 유니, yooni, 프론트엔드, 개발자 포트폴리오',
+  authors: [{ name: '유니' }],
   openGraph: {
     title: '유니의 블로그 | 프론트엔드 개발자 유니',
-    description: '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
+    description:
+      '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
     type: 'website',
     url: 'https://yooni.seoul.kr',
     siteName: '유니의 블로그',
@@ -43,7 +46,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     title: '유니의 블로그 | 프론트엔드 개발자 유니',
-    description: '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
+    description:
+      '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
     card: 'summary_large_image',
     images: [
       'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png'
@@ -62,9 +66,9 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
-      'noarchive': false,
-    },
-  },
+      noarchive: false
+    }
+  }
 };
 
 export default async function Home() {
@@ -99,8 +103,46 @@ export default async function Home() {
       .slice(0, 3);
   }
 
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: '유니의 블로그',
+    alternateName: 'Yooni Blog',
+    url: 'https://yooni.seoul.kr',
+    inLanguage: 'ko-KR',
+    description:
+      '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
+    author: {
+      '@type': 'Person',
+      name: 'Yoon Yeokyung',
+      alternateName: ['yooni', '유니', 'Yooni', 'yeokyung'],
+      url: 'https://yooni.seoul.kr/about'
+    }
+  };
+
+  const personJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Yoon Yeokyung',
+    alternateName: ['yooni', '유니', 'Yooni', 'yeokyung'],
+    jobTitle: 'Frontend Developer',
+    url: 'https://yooni.seoul.kr/about',
+    worksFor: { '@type': 'Organization', name: 'MARKNCOMPANY' }
+  };
+
+  const serializeJsonLd = (data: object) =>
+    JSON.stringify(data).replace(/</g, '\\u003c');
+
   return (
     <HydrationBoundary state={dehydratedState}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(personJsonLd) }}
+      />
       <div className="mx-auto max-w-[940px] pb-12">
         <section className="flex flex-col items-center px-12 pb-16 pt-8 text-center max-sm:px-0">
           <Image
