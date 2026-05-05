@@ -2,12 +2,16 @@
   "name": "yooni-page",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.15.1",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "analyze": "ANALYZE=true npm run build",
+    "analyze": "ANALYZE=true next build",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -24,6 +28,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-query": "^5.66.9",
     "@tanstack/react-query-next-experimental": "^5.76.1",
+    "@tiptap/core": "^2.11.5",
     "@tiptap/extension-code-block-lowlight": "^2.12.0",
     "@tiptap/extension-color": "^2.14.0",
     "@tiptap/extension-image": "^2.11.5",
