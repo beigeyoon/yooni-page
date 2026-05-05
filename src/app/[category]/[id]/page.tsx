@@ -8,7 +8,7 @@ import { getPostForServer } from '@/lib/api/posts.server';
 import PageReady from '@/components/Loading/PageReady';
 import { metaDataKeywords } from '@/constants/metadataKeywords';
 import { Metadata } from 'next';
-import type { Post } from '@/types';
+import { isValidCategory, type Post } from '@/types';
 import { notFound } from 'next/navigation';
 
 // 포스트 내용에서 키워드 추출 함수
@@ -59,10 +59,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { category, id } = await params;
 
+  if (!isValidCategory(category)) {
+    return { title: '페이지를 찾을 수 없음' };
+  }
+
   const postData = await getPostForServer(id);
   const post = postData?.data;
 
-  if (!post) {
+  if (!post || post.category !== category) {
     return {
       title: '게시글을 찾을 수 없음',
       description: '존재하지 않는 게시글입니다.'
@@ -78,7 +82,7 @@ export async function generateMetadata({
     title: `${post.title} | 유니의 블로그`,
     description,
     keywords: keywords.join(', '),
-    authors: [{ name: '윤이' }],
+    authors: [{ name: '유니' }],
     category: category,
     openGraph: {
       title: post.title,
@@ -97,7 +101,7 @@ export async function generateMetadata({
       ],
       publishedTime: post.createdAt,
       modifiedTime: post.createdAt,
-      authors: ['윤이']
+      authors: ['유니']
     },
     twitter: {
       title: post.title,
@@ -138,7 +142,7 @@ function generateStructuredData(post: Post, category: string) {
     description: post.subtitle || post.content.slice(0, 200),
     author: {
       '@type': 'Person',
-      name: '윤이',
+      name: '유니',
       url: siteUrl
     },
     publisher: {
@@ -172,10 +176,14 @@ function serializeJsonLd(data: object) {
 const Post = async ({ params }: { params: Promise<{ category: string; id: string }> }) => {
   const { category, id } = await params;
 
+  if (!isValidCategory(category)) {
+    notFound();
+  }
+
   const postData = await getPostForServer(id);
   const post = postData?.data as Post | null;
 
-  if (!post) {
+  if (!post || post.category !== category) {
     notFound();
   }
 

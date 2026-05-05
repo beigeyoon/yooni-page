@@ -1,12 +1,13 @@
 import PostList from '@/containers/PostList';
 import { getPostsForServer } from '@/lib/api/posts.server';
-import { Category } from '@/types';
+import { Category, isValidCategory } from '@/types';
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient
 } from '@tanstack/react-query';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 // 카테고리별 메타데이터 생성 함수
 export async function generateMetadata({
@@ -15,6 +16,10 @@ export async function generateMetadata({
   params: Promise<{ category: Category }>;
 }): Promise<Metadata> {
   const { category } = await params;
+
+  if (!isValidCategory(category)) {
+    return { title: '페이지를 찾을 수 없음' };
+  }
 
   const categoryInfo = {
     dev: {
@@ -47,7 +52,7 @@ export async function generateMetadata({
     title: info.title,
     description: info.description,
     keywords: info.keywords,
-    authors: [{ name: '윤이' }],
+    authors: [{ name: '유니' }],
     category: category,
     openGraph: {
       title: info.title,
@@ -98,6 +103,10 @@ const Posts = async ({
   params: Promise<{ category: Category }>;
 }) => {
   const { category } = await params;
+
+  if (!isValidCategory(category)) {
+    notFound();
+  }
 
   const queryClient = new QueryClient();
 

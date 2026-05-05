@@ -34,9 +34,7 @@ export const metadata: Metadata = {
       'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_2.png'
     ]
   },
-  alternates: {
-    canonical: 'https://yooni.seoul.kr'
-  },
+  metadataBase: new URL('https://yooni.seoul.kr'),
   robots: {
     index: true,
     follow: true,
