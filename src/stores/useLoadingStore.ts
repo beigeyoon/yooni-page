@@ -6,7 +6,6 @@ type State = {
   isRouting: boolean;
   showLoading: boolean;
   setIsRouting: (isRouting: boolean) => void;
-  setShowLoading: (showLoading: boolean) => void;
 };
 
 export const useLoadingStore = create<State>((set) => ({
@@ -29,9 +28,5 @@ export const useLoadingStore = create<State>((set) => ({
         delayTimer = null;
       }, 300);
     }
-  },
-
-  setShowLoading: (showLoading) => {
-    set({ showLoading });
   }
 }));

@@ -1,16 +1,5 @@
-'use client';
+import LoadingOverlay from '@/components/Loading/LoadingOverlay';
 
-import { useEffect } from 'react';
-import { useLoadingStore } from '@/stores/useLoadingStore';
-
-export default function GlobalRouteLoading() {
-  const setShowLoading = useLoadingStore(state => state.setShowLoading);
-
-  useEffect(() => {
-    setShowLoading(true);
-    
-    return () => setShowLoading(false);
-  }, [setShowLoading]);
-
-  return null;
+export default function RouteLoading() {
+  return <LoadingOverlay />;
 }
