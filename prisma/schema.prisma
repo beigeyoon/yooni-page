@@ -65,6 +65,7 @@ model post {
   category    String
   isPublished Boolean   @default(false)
   seriesId    String?   @db.Uuid
+  seriesOrder Int?
   comments    comment[]
   series      series?   @relation("SeriesToPost", fields: [seriesId], references: [id])
   user        user      @relation(fields: [userId], references: [id], onDelete: Cascade)

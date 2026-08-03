@@ -15,6 +15,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { createPost, getPostForPreview, updatePost } from '@/lib/api/posts';
 import { PostFormValues as FormValues } from '@/types';
 import { useQuery } from '@tanstack/react-query';
@@ -61,6 +62,7 @@ const Editor = () => {
       subtitle: post?.subtitle || '',
       category: post?.category || undefined,
       seriesId: post?.seriesId || undefined,
+      seriesOrder: post?.seriesOrder ?? undefined,
       isPublished: post?.isPublished || false
     }
   });
@@ -72,6 +74,7 @@ const Editor = () => {
 
   // 시리즈 목록 추출 (선택된 카테고리에 해당하는 것만)
   const selectedCategory = watch('category');
+  const selectedSeriesId = watch('seriesId');
   const filteredSeriesList = Array.isArray(seriesData?.data) 
     ? seriesData.data.filter((series: Series) => series.category === selectedCategory)
     : [];
@@ -88,6 +91,7 @@ const Editor = () => {
         subtitle: post.subtitle,
         category: post.category,
         seriesId: post.seriesId || undefined,
+        seriesOrder: post.seriesOrder ?? undefined,
         isPublished: post.isPublished
       });
     }
@@ -217,6 +221,28 @@ const Editor = () => {
               </div>
             )}
           />
+          {selectedSeriesId && (
+            <div className="space-y-1">
+              <Label htmlFor="seriesOrder" className="text-sm text-neutral-600">
+                시리즈 순번
+              </Label>
+              <Input
+                id="seriesOrder"
+                type="number"
+                min={1}
+                step={1}
+                placeholder="1"
+                className="w-[140px]"
+                {...register('seriesOrder', {
+                  setValueAs: value => {
+                    if (value === '' || value === null || value === undefined) return null;
+                    const num = Number(value);
+                    return Number.isFinite(num) ? Math.round(num) : null;
+                  }
+                })}
+              />
+            </div>
+          )}
           <Button
             value="save"
             type="submit"

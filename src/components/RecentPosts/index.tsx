@@ -1,17 +1,12 @@
-'use client';
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
+import Link from 'next/link';
 import { Post } from '@/types';
 import handleTimeStirng from '@/utils/handleTimeStirng';
-import { useMemo } from 'react';
-import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
+
+const CATEGORY_LABELS: Record<string, string> = {
+  dev: '개발',
+  travel: '여행',
+  talk: '이야기'
+};
 
 export function RecentPosts({
   category,
@@ -20,63 +15,33 @@ export function RecentPosts({
   category: string;
   posts: Post[];
 }) {
-  const router = useRouteWithLoading();
-
-  const onClickPost = (id: string) => {
-    router.push(`/${category}/${id}`);
-  };
-
-  const categoryInKorean = (category: string) => {
-    switch (category) {
-      case 'dev':
-        return '개발';
-      case 'travel':
-        return '여행';
-      case 'talk':
-        return '얘기';
-      default:
-        return '';
-    }
-  };
-
-  const filteredPosts = useMemo(
-    () => posts?.filter(post => post.isPublished),
-    [posts]
-  );
+  const filteredPosts = posts?.filter(post => post.isPublished) ?? [];
 
   return (
-    <Table>
-      <TableHeader className="border-b border-b-zinc-400">
-        <TableRow className="border-none hover:bg-transparent">
-          <TableHead className="border-none text-[16px] hover:bg-transparent">
-            {categoryInKorean(category)}
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {filteredPosts?.length === 0 && (
-          <TableRow className="hover:bg-transparent">
-            <TableCell
-              colSpan={2}
-              className="py-6 text-center hover:bg-transparent">
-              최근 포스트가 없습니다.
-            </TableCell>
-          </TableRow>
-        )}
-        {filteredPosts?.map(post => (
-          <TableRow
-            key={post.id}
-            className="flex w-full cursor-pointer justify-between hover:bg-zinc-100"
-            onClick={() => onClickPost(post.id)}>
-            <TableCell className="overflow-hidden truncate whitespace-nowrap font-semibold max-sm:max-w-[230px] md:max-w-[170px]">
-              {post.title}
-            </TableCell>
-            <TableCell className="text-[10px] sm:min-w-[82px]">
-              {handleTimeStirng(post.createdAt)}
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="flex-1">
+      <h3 className="border-b border-b-zinc-400 px-4 py-3 text-[16px] font-medium">
+        {CATEGORY_LABELS[category] ?? ''}
+      </h3>
+      {filteredPosts.length === 0 ? (
+        <p className="py-6 text-center">최근 포스트가 없습니다.</p>
+      ) : (
+        <ul>
+          {filteredPosts.map(post => (
+            <li key={post.id}>
+              <Link
+                href={`/${category}/${post.id}`}
+                className="flex w-full items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-100">
+                <span className="overflow-hidden truncate whitespace-nowrap font-semibold max-sm:max-w-[230px] md:max-w-[170px]">
+                  {post.title}
+                </span>
+                <span className="text-[10px] sm:min-w-[82px]">
+                  {handleTimeStirng(post.createdAt)}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

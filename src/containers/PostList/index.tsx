@@ -10,9 +10,9 @@ import { useQuery } from '@tanstack/react-query';
 import { FileWarning } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemo } from 'react';
-import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 import PhotoPreview from '@/components/PhotoPreview';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const PostList = ({
   category,
@@ -21,7 +21,6 @@ const PostList = ({
   category: Category;
   seriesId?: string;
 }) => {
-  const router = useRouteWithLoading();
   const { isAdmin } = useAuth();
 
   const { data: postsData, isLoading: postsLoading } = useQuery({
@@ -33,7 +32,7 @@ const PostList = ({
     }
   });
 
-  const { data: seriesData, isLoading: seriesLoading } = useQuery({
+  const { data: seriesData } = useQuery({
     queryKey: ['series'],
     queryFn: getSeries,
     select: (data: { data: Series[] }) => {
@@ -59,20 +58,15 @@ const PostList = ({
     return seriesList.find((series: Series) => series.id === seriesId);
   }, [seriesData, seriesId]);
 
-  const handlePostClick = (id: string) => {
-    router.push(`/${category}/${id}`);
-  };
-
-  const handleSeriesClick = (seriesId: string) => {
-    router.push(`/${category}/series/${seriesId}`);
-  };
-
   const posts = useMemo(
     () => (isAdmin ? postsData : postsData?.filter(post => post.isPublished)),
     [postsData, isAdmin]
   );
 
-  if (postsLoading || seriesLoading) {
+  // 시리즈 목록은 부가 정보이므로 글 목록 렌더를 막지 않는다.
+  // 여기서 seriesLoading까지 기다리면 시리즈를 prefetch하지 않는 페이지에서는
+  // 초기 HTML이 통째로 스피너가 되어 크롤러가 글 목록을 전혀 못 본다.
+  if (postsLoading) {
     return (
       <div className="flex w-full flex-col items-center gap-4 pt-10">
         <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-neutral-700"></div>
@@ -127,11 +121,13 @@ const PostList = ({
             {seriesByCategory.map((series: Series) => (
               <Button
                 key={series.id}
+                asChild
                 variant="outline"
                 size="sm"
-                onClick={() => handleSeriesClick(series.id)}
                 className="rounded-full border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-900">
-                {series.title}
+                <Link href={`/${category}/series/${series.id}`}>
+                  {series.title}
+                </Link>
               </Button>
             ))}
           </div>
@@ -139,14 +135,14 @@ const PostList = ({
       )}
 
       {/* 포스트 목록 */}
-      <div className="flex flex-col-reverse justify-center">
+      <div className="flex flex-col justify-center">
         {posts?.map(post => {
           if (category !== 'photo') {
             return (
               <PostPreview
                 key={post.id}
                 post={post}
-                onClick={() => handlePostClick(post.id)}
+                href={`/${category}/${post.id}`}
               />
             );
           } else

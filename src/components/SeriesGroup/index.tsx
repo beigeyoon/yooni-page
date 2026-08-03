@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getSeries } from '@/lib/api/series';
 import { Series } from '@/types';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { BookOpen } from 'lucide-react';
 import {
   Tooltip,
@@ -14,17 +14,11 @@ import {
 } from '@/components/ui/tooltip';
 
 const SeriesGroup = () => {
-  const router = useRouter();
-
   const { data: seriesData, isLoading } = useQuery({
     queryKey: ['series'],
     queryFn: getSeries,
     select: (data: { data: Series[] }) => data.data
   });
-
-  const handleSeriesClick = (series: Series) => {
-    router.push(`/${series.category}/series/${series.id}`);
-  };
 
   if (isLoading) {
     return (
@@ -79,12 +73,14 @@ const SeriesGroup = () => {
                     <Tooltip key={seriesItem.id}>
                       <TooltipTrigger asChild>
                         <Button
+                          asChild
                           variant="outline"
                           size="sm"
-                          onClick={() => handleSeriesClick(seriesItem)}
                           className="rounded-full border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700 transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-900"
                         >
-                          {seriesItem.title}
+                          <Link href={`/${seriesItem.category}/series/${seriesItem.id}`}>
+                            {seriesItem.title}
+                          </Link>
                         </Button>
                       </TooltipTrigger>
                       {seriesItem.description && (
