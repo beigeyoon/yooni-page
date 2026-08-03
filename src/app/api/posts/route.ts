@@ -79,6 +79,14 @@ export async function GET(request: NextRequest) {
       if (seriesId) {
         query = query.eq('seriesId', seriesId);
       }
+
+      // 시리즈 조회는 1편부터, 그 외에는 최신순
+      query = seriesId
+        ? query
+            .order('seriesOrder', { ascending: true, nullsFirst: false })
+            .order('createdAt', { ascending: true })
+        : query.order('createdAt', { ascending: false });
+
       const { data, error } = await query;
       if (error) {
         return NextResponse.json(

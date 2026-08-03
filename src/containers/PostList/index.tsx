@@ -139,7 +139,7 @@ const PostList = ({
       )}
 
       {/* 포스트 목록 */}
-      <div className="flex flex-col-reverse justify-center">
+      <div className="flex flex-col justify-center">
         {posts?.map(post => {
           if (category !== 'photo') {
             return (

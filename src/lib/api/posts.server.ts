@@ -9,7 +9,8 @@ export async function getPostsForServer(
     .from('post')
     .select('*')
     .eq('category', category)
-    .eq('isPublished', true);
+    .eq('isPublished', true)
+    .order('createdAt', { ascending: false });
 
   if (error) {
     throw new Error('게시글 목록을 불러오는데 실패했습니다.');
@@ -44,7 +45,9 @@ export async function getPostsBySeriesForServer(
     .from('post')
     .select('*')
     .eq('seriesId', seriesId)
-    .eq('isPublished', true);
+    .eq('isPublished', true)
+    .order('seriesOrder', { ascending: true, nullsFirst: false })
+    .order('createdAt', { ascending: true });
 
   if (error) {
     throw new Error('게시글 목록을 불러오는데 실패했습니다.');
