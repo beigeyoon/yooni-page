@@ -59,10 +59,6 @@ const PostList = ({
     return seriesList.find((series: Series) => series.id === seriesId);
   }, [seriesData, seriesId]);
 
-  const handlePostClick = (id: string) => {
-    router.push(`/${category}/${id}`);
-  };
-
   const handleSeriesClick = (seriesId: string) => {
     router.push(`/${category}/series/${seriesId}`);
   };
@@ -146,7 +142,7 @@ const PostList = ({
               <PostPreview
                 key={post.id}
                 post={post}
-                onClick={() => handlePostClick(post.id)}
+                href={`/${category}/${post.id}`}
               />
             );
           } else
