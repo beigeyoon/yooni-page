@@ -14,6 +14,25 @@
 
 ## 시작 전 필독
 
+### 환경변수 — 빌드와 prisma 명령 전에 반드시 읽을 것
+
+이 프로젝트에는 `.env`가 없고 `.env.development`만 있다.
+`next build`는 프로덕션 모드로 돌기 때문에 `.env.development`를 자동으로 읽지 않고,
+Prisma CLI도 마찬가지다. 그냥 `pnpm build`를 돌리면 sitemap 프리렌더 단계에서
+`Supabase 공개 환경변수가 설정되지 않았습니다`로 실패한다. **코드 문제가 아니다.**
+
+계획 전체에서 `pnpm build` 또는 `prisma` 명령이 나오면 아래처럼 환경변수를 먼저 주입한다.
+
+```bash
+set -a && . ./.env.development && set +a && pnpm build
+```
+
+```bash
+set -a && . ./.env.development && set +a && pnpm exec prisma db push
+```
+
+`pnpm lint`와 `pnpm test`는 환경변수가 필요 없다.
+
 ### 검증 방식
 
 이 프로젝트에는 테스트 프레임워크가 없다. 대부분의 작업은 `pnpm lint` + `pnpm build` + 수동 확인으로 검증한다.
