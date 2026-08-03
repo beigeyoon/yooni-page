@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabaseForServer';
 import { getSupabasePublic } from '@/lib/supabasePublic';
 import { getAppSession, isAdminEmail } from '@/lib/auth';
 import { isValidCategory } from '@/types';
+import { orderByNewest, orderBySeriesSequence } from '@/lib/api/postOrder';
 
 // 정수가 아닌 값(소수, 빈 문자열, 숫자가 아닌 문자열)은 순번 없음으로 취급한다.
 function parseSeriesOrder(value: unknown): number | null {
@@ -81,11 +82,7 @@ export async function GET(request: NextRequest) {
       }
 
       // 시리즈 조회는 1편부터, 그 외에는 최신순
-      query = seriesId
-        ? query
-            .order('seriesOrder', { ascending: true, nullsFirst: false })
-            .order('createdAt', { ascending: true })
-        : query.order('createdAt', { ascending: false });
+      query = seriesId ? orderBySeriesSequence(query) : orderByNewest(query);
 
       const { data, error } = await query;
       if (error) {

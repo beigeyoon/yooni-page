@@ -1,16 +1,18 @@
 import { Category, Post } from '@/types';
 import { getSupabasePublic } from '@/lib/supabasePublic';
+import { orderByNewest, orderBySeriesSequence } from '@/lib/api/postOrder';
 
 export async function getPostsForServer(
   category: Category
 ): Promise<{ data: Post[] }> {
   const supabasePublic = getSupabasePublic();
-  const { data, error } = await supabasePublic
-    .from('post')
-    .select('*')
-    .eq('category', category)
-    .eq('isPublished', true)
-    .order('createdAt', { ascending: false });
+  const { data, error } = await orderByNewest(
+    supabasePublic
+      .from('post')
+      .select('*')
+      .eq('category', category)
+      .eq('isPublished', true)
+  );
 
   if (error) {
     throw new Error('게시글 목록을 불러오는데 실패했습니다.');
@@ -41,13 +43,13 @@ export async function getPostsBySeriesForServer(
   seriesId: string
 ): Promise<{ data: Post[] }> {
   const supabasePublic = getSupabasePublic();
-  const { data, error } = await supabasePublic
-    .from('post')
-    .select('*')
-    .eq('seriesId', seriesId)
-    .eq('isPublished', true)
-    .order('seriesOrder', { ascending: true, nullsFirst: false })
-    .order('createdAt', { ascending: true });
+  const { data, error } = await orderBySeriesSequence(
+    supabasePublic
+      .from('post')
+      .select('*')
+      .eq('seriesId', seriesId)
+      .eq('isPublished', true)
+  );
 
   if (error) {
     throw new Error('게시글 목록을 불러오는데 실패했습니다.');
