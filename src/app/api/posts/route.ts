@@ -4,15 +4,20 @@ import { getSupabasePublic } from '@/lib/supabasePublic';
 import { getAppSession, isAdminEmail } from '@/lib/auth';
 import { isValidCategory } from '@/types';
 
-function getPostPayload(body: Record<string, unknown>) {
-  const rawOrder = body.seriesOrder;
-  const parsedOrder =
-    typeof rawOrder === 'number' && Number.isInteger(rawOrder)
-      ? rawOrder
-      : typeof rawOrder === 'string' && rawOrder.trim() !== '' && Number.isInteger(Number(rawOrder))
-        ? Number(rawOrder)
-        : null;
+// 정수가 아닌 값(소수, 빈 문자열, 숫자가 아닌 문자열)은 순번 없음으로 취급한다.
+function parseSeriesOrder(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isInteger(value)) return value;
+  if (
+    typeof value === 'string' &&
+    value.trim() !== '' &&
+    Number.isInteger(Number(value))
+  ) {
+    return Number(value);
+  }
+  return null;
+}
 
+function getPostPayload(body: Record<string, unknown>) {
   const seriesId =
     typeof body.seriesId === 'string' && body.seriesId.length > 0
       ? body.seriesId
@@ -24,7 +29,7 @@ function getPostPayload(body: Record<string, unknown>) {
     category: typeof body.category === 'string' ? body.category : '',
     seriesId,
     // 시리즈에 속하지 않으면 순번은 의미가 없다
-    seriesOrder: seriesId ? parsedOrder : null,
+    seriesOrder: seriesId ? parseSeriesOrder(body.seriesOrder) : null,
     content: typeof body.content === 'string' ? body.content.trim() : '',
     isPublished: body.isPublished === true
   };
