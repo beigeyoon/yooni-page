@@ -5,14 +5,26 @@ import { getAppSession, isAdminEmail } from '@/lib/auth';
 import { isValidCategory } from '@/types';
 
 function getPostPayload(body: Record<string, unknown>) {
+  const rawOrder = body.seriesOrder;
+  const parsedOrder =
+    typeof rawOrder === 'number' && Number.isInteger(rawOrder)
+      ? rawOrder
+      : typeof rawOrder === 'string' && rawOrder.trim() !== '' && Number.isInteger(Number(rawOrder))
+        ? Number(rawOrder)
+        : null;
+
+  const seriesId =
+    typeof body.seriesId === 'string' && body.seriesId.length > 0
+      ? body.seriesId
+      : null;
+
   return {
     title: typeof body.title === 'string' ? body.title.trim() : '',
     subtitle: typeof body.subtitle === 'string' ? body.subtitle.trim() : null,
     category: typeof body.category === 'string' ? body.category : '',
-    seriesId:
-      typeof body.seriesId === 'string' && body.seriesId.length > 0
-        ? body.seriesId
-        : null,
+    seriesId,
+    // 시리즈에 속하지 않으면 순번은 의미가 없다
+    seriesOrder: seriesId ? parsedOrder : null,
     content: typeof body.content === 'string' ? body.content.trim() : '',
     isPublished: body.isPublished === true
   };
