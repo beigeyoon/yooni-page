@@ -10,9 +10,9 @@ import { useQuery } from '@tanstack/react-query';
 import { FileWarning } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemo } from 'react';
-import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 import PhotoPreview from '@/components/PhotoPreview';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const PostList = ({
   category,
@@ -21,7 +21,6 @@ const PostList = ({
   category: Category;
   seriesId?: string;
 }) => {
-  const router = useRouteWithLoading();
   const { isAdmin } = useAuth();
 
   const { data: postsData, isLoading: postsLoading } = useQuery({
@@ -58,10 +57,6 @@ const PostList = ({
     const seriesList = seriesData || [];
     return seriesList.find((series: Series) => series.id === seriesId);
   }, [seriesData, seriesId]);
-
-  const handleSeriesClick = (seriesId: string) => {
-    router.push(`/${category}/series/${seriesId}`);
-  };
 
   const posts = useMemo(
     () => (isAdmin ? postsData : postsData?.filter(post => post.isPublished)),
@@ -123,11 +118,13 @@ const PostList = ({
             {seriesByCategory.map((series: Series) => (
               <Button
                 key={series.id}
+                asChild
                 variant="outline"
                 size="sm"
-                onClick={() => handleSeriesClick(series.id)}
                 className="rounded-full border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-900">
-                {series.title}
+                <Link href={`/${category}/series/${series.id}`}>
+                  {series.title}
+                </Link>
               </Button>
             ))}
           </div>
