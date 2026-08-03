@@ -33,6 +33,23 @@ set -a && . ./.env.development && set +a && pnpm exec prisma db push
 
 `pnpm lint`와 `pnpm test`는 환경변수가 필요 없다.
 
+### 실행 중 발견된 것 — 설계 문서의 진단이 두 군데 틀렸다
+
+설계 문서는 코드를 정적으로 읽고 작성했고, 실제로 서버를 띄워 초기 HTML을 확인하지 않았다.
+실행 단계에서 두 가지가 드러났고 계획에 없던 수정으로 처리했다.
+
+1. **글 본문이 초기 HTML에 아예 없었다.** `src/utils/optimizePostHtml.ts`가 `DOMParser`를 쓰는데
+   Node에는 없다. SSR 중 예외 → React가 본문 Suspense 경계를 폐기 → 모든 글 페이지가
+   크롤러에게 스피너만 노출. 2026-04-24 커밋 `84bf005`에서 유입된 문제다.
+   문자열 치환 방식으로 다시 써서 해결(`61e24a0`).
+
+2. **카테고리·시리즈 페이지도 스피너만 있었다.** `PostList`가 `postsLoading || seriesLoading`으로
+   전체 렌더를 막는데 `['series']`를 prefetch하는 페이지가 없었다.
+   게이트를 `postsLoading`으로 좁히고(`c1db09e`), 카테고리 페이지에 `['series']` prefetch를
+   추가했다(`3d7f3d9`). 후자는 Task 15 Step 1의 일부를 앞당긴 것이다.
+
+교훈: **이 계획의 수동 확인 단계를 건너뛰지 말 것.** 빌드가 통과해도 페이지는 비어 있을 수 있다.
+
 ### 검증 방식
 
 이 프로젝트에는 테스트 프레임워크가 없다. 대부분의 작업은 `pnpm lint` + `pnpm build` + 수동 확인으로 검증한다.
