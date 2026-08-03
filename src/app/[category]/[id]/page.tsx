@@ -4,8 +4,15 @@ import {
   HydrationBoundary,
   QueryClient
 } from '@tanstack/react-query';
-import { getPostForServer } from '@/lib/api/posts.server';
+import {
+  getPostForServer,
+  getPostsBySeriesForServer,
+  getPostsForServer,
+  getSeriesForServer
+} from '@/lib/api/posts.server';
 import PageReady from '@/components/Loading/PageReady';
+import SeriesToc from '@/components/SeriesToc';
+import SeriesNav from '@/components/SeriesNav';
 import { metaDataKeywords } from '@/constants/metadataKeywords';
 import { Metadata } from 'next';
 import { isValidCategory, type Post } from '@/types';
@@ -191,20 +198,76 @@ const Post = async ({ params }: { params: Promise<{ category: string; id: string
   queryClient.setQueryData(['posts', id], { data: post });
 
   const dehydratedState = dehydrate(queryClient);
-  const structuredData = post ? generateStructuredData(post, category) : null;
+  const structuredData = generateStructuredData(post, category);
+
+  // 시리즈 소속이면 목차 + 시리즈 내 이전/다음 편,
+  // 아니면 카테고리 기준 이전/다음 글
+  let toc: React.ReactNode = null;
+  let nav: React.ReactNode = null;
+
+  if (post.seriesId) {
+    const [series, seriesPosts] = await Promise.all([
+      getSeriesForServer(post.seriesId),
+      getPostsBySeriesForServer(post.seriesId)
+    ]);
+
+    if (series) {
+      const list = seriesPosts.data;
+      const currentIndex = list.findIndex(p => p.id === post.id);
+
+      toc = (
+        <SeriesToc
+          series={series}
+          posts={list}
+          currentPostId={post.id}
+        />
+      );
+      nav = (
+        <SeriesNav
+          prevPost={currentIndex > 0 ? list[currentIndex - 1] : null}
+          nextPost={
+            currentIndex >= 0 && currentIndex < list.length - 1
+              ? list[currentIndex + 1]
+              : null
+          }
+          prevLabel="이전 편"
+          nextLabel="다음 편"
+        />
+      );
+    }
+  }
+
+  if (!nav) {
+    // 카테고리 목록은 최신순이므로, 배열에서 뒤가 더 오래된 글이다
+    const categoryPosts = await getPostsForServer(category);
+    const list = categoryPosts.data;
+    const currentIndex = list.findIndex(p => p.id === post.id);
+
+    nav = (
+      <SeriesNav
+        prevPost={
+          currentIndex >= 0 && currentIndex < list.length - 1
+            ? list[currentIndex + 1]
+            : null
+        }
+        nextPost={currentIndex > 0 ? list[currentIndex - 1] : null}
+      />
+    );
+  }
 
   return (
     <HydrationBoundary state={dehydratedState}>
       <PageReady />
-      {structuredData && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: serializeJsonLd(structuredData)
-          }}
-        />
-      )}
-      <PostContent />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(structuredData)
+        }}
+      />
+      <PostContent
+        toc={toc}
+        nav={nav}
+      />
     </HydrationBoundary>
   );
 };

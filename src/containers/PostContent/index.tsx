@@ -7,20 +7,24 @@ import { deletePost, getPost } from '@/lib/api/posts';
 import { getSeries } from '@/lib/api/series';
 import { FileWarning, SquarePen } from 'lucide-react';
 import handleTimeStirng from '@/utils/handleTimeStirng';
-import { useAdjacentPosts } from '@/hooks/useAdjacentPosts';
 import DOMPurify from 'isomorphic-dompurify';
-import { Category } from '@/types';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { useEffect } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import Comment from '@/components/Comment';
 import { DeleteButton } from '@/components/DeleteButton';
 import Link from 'next/link';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 import optimizePostHtml from '@/utils/optimizePostHtml';
 
-const PostContent = () => {
+const PostContent = ({
+  toc,
+  nav
+}: {
+  toc?: ReactNode;
+  nav?: ReactNode;
+}) => {
   const router = useRouteWithLoading();
   const { isAdmin, session, status } = useAuth();
   const params = useParams();
@@ -41,11 +45,6 @@ const PostContent = () => {
 
   // 현재 포스트의 시리즈 정보 찾기
   const currentSeries = seriesData?.find(series => series.id === post?.seriesId);
-
-  const { prevPost, nextPost } = useAdjacentPosts(
-    id,
-    post?.category as Category
-  );
 
   useEffect(() => {
     if (!post || isAdmin || post.isPublished) return;
@@ -134,33 +133,15 @@ const PostContent = () => {
         dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
 
+      {toc && <div className="mb-12">{toc}</div>}
+
       <Comment
         postId={post.id}
         session={session}
         status={status}
       />
 
-      <div className="flex justify-between py-12 text-sm text-neutral-400">
-        {prevPost ? (
-          <button
-            onClick={() => router.push(`/${prevPost.category}/${prevPost.id}`)}
-            className="hover:text-neutral-700">
-            ← 이전 글: {prevPost.title}
-          </button>
-        ) : (
-          <span />
-        )}
-
-        {nextPost ? (
-          <button
-            onClick={() => router.push(`/${nextPost.category}/${nextPost.id}`)}
-            className="hover:text-neutral-700">
-            다음 글: {nextPost.title} →
-          </button>
-        ) : (
-          <span />
-        )}
-      </div>
+      {nav}
     </div>
   );
 };
