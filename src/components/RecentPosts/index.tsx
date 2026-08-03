@@ -5,7 +5,7 @@ import handleTimeStirng from '@/utils/handleTimeStirng';
 const CATEGORY_LABELS: Record<string, string> = {
   dev: '개발',
   travel: '여행',
-  talk: '얘기'
+  talk: '이야기'
 };
 
 export function RecentPosts({

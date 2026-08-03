@@ -1,5 +1,8 @@
 import PostList from '@/containers/PostList';
-import { getPostsForServer } from '@/lib/api/posts.server';
+import {
+  getAllSeriesForServer,
+  getPostsForServer
+} from '@/lib/api/posts.server';
 import { Category, isValidCategory } from '@/types';
 import {
   dehydrate,
@@ -110,10 +113,19 @@ const Posts = async ({
 
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ['posts', category],
-    queryFn: () => getPostsForServer(category)
-  });
+  // 시리즈 목록도 함께 prefetch한다. 이게 없으면 시리즈 버튼이 초기 HTML에서 빠져
+  // 크롤러가 시리즈 페이지로 가는 링크를 못 보고, 클라이언트에서 뒤늦게 나타나며
+  // 글 목록을 아래로 밀어낸다.
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ['posts', category],
+      queryFn: () => getPostsForServer(category)
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ['series'],
+      queryFn: getAllSeriesForServer
+    })
+  ]);
 
   const dehydratedState = dehydrate(queryClient);
 
