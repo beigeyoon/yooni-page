@@ -52,16 +52,10 @@ async function main() {
   const takenSeries = await collectTakenSlugs('series');
   const takenPosts = await collectTakenSlugs('post');
 
-  const seriesRows = await prisma.series.findMany({
-    where: { slug: null },
-    select: { id: true, title: true },
-    orderBy: { createdAt: 'asc' }
-  });
-  const postRows = await prisma.post.findMany({
-    where: { slug: null },
-    select: { id: true, title: true },
-    orderBy: { createdAt: 'asc' }
-  });
+  // slug는 이제 NOT NULL 컬럼이라(Task 12) null인 행은 DB 제약상 존재할 수 없다.
+  // 백필은 이미 끝났으므로 이 두 조회는 항상 빈 배열을 반환한다.
+  const seriesRows: { id: string; title: string }[] = [];
+  const postRows: { id: string; title: string }[] = [];
 
   console.log(
     `대상: 시리즈 ${seriesRows.length}건, 글 ${postRows.length}건` +
