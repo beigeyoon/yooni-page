@@ -17,8 +17,6 @@ import { metaDataKeywords } from '@/constants/metadataKeywords';
 import { Metadata } from 'next';
 import { isValidCategory, type Post } from '@/types';
 import { notFound } from 'next/navigation';
-import DOMPurify from 'isomorphic-dompurify';
-import optimizePostHtml from '@/utils/optimizePostHtml';
 
 // 포스트 내용에서 키워드 추출 함수
 function extractKeywords(content: string, title: string, category: string): string[] {
@@ -267,7 +265,6 @@ const Post = async ({ params }: { params: Promise<{ category: string; id: string
         }}
       />
       <PostContent
-        content={optimizePostHtml(DOMPurify.sanitize(post.content))}
         toc={toc}
         nav={nav}
       />

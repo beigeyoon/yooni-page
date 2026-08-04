@@ -7,6 +7,7 @@ import { deletePost, getPost } from '@/lib/api/posts';
 import { getSeries } from '@/lib/api/series';
 import { FileWarning, SquarePen } from 'lucide-react';
 import handleTimeStirng from '@/utils/handleTimeStirng';
+import DOMPurify from 'isomorphic-dompurify';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
@@ -15,16 +16,12 @@ import Comment from '@/components/Comment';
 import { DeleteButton } from '@/components/DeleteButton';
 import Link from 'next/link';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
+import optimizePostHtml from '@/utils/optimizePostHtml';
 
-// content는 서버에서 sanitize·최적화를 마친 HTML이 내려온다.
-// 여기서 DOMPurify를 부르면 jsdom이 클라이언트 컴포넌트의 SSR 번들에 딸려 들어가
-// 배포 환경에서 에셋을 못 찾고 죽는다(자세한 내용은 next.config.ts 주석).
 const PostContent = ({
-  content,
   toc,
   nav
 }: {
-  content: string;
   toc?: ReactNode;
   nav?: ReactNode;
 }) => {
@@ -85,6 +82,8 @@ const PostContent = ({
     );
   }
 
+  const sanitizedContent = optimizePostHtml(DOMPurify.sanitize(post.content));
+
   return (
     <div className="mx-auto flex max-w-[780px] flex-col py-8 max-sm:overflow-hidden max-sm:px-4">
       <div className="mb-10 flex items-center justify-between font-bold text-neutral-400">
@@ -131,7 +130,7 @@ const PostContent = ({
 
       <div
         className="post-content prose max-w-none py-16 text-base leading-relaxed text-neutral-700"
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
 
       {toc && <div className="mb-12">{toc}</div>}
