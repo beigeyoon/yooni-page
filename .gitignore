@@ -41,4 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 # .gitignore
-scripts/backup.json
+# DB 백업본. 글 본문과 댓글이 그대로 들어 있으므로 커밋하지 않는다.
+scripts/backup*.json
