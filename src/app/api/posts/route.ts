@@ -4,6 +4,7 @@ import { getSupabasePublic } from '@/lib/supabasePublic';
 import { getAppSession, isAdminEmail } from '@/lib/auth';
 import { isValidCategory } from '@/types';
 import { orderByNewest, orderBySeriesSequence } from '@/lib/api/postOrder';
+import { buildSlugCandidate, resolveUniqueSlug } from '@/utils/generateSlug';
 
 // 정수가 아닌 값(소수, 빈 문자열, 숫자가 아닌 문자열)은 순번 없음으로 취급한다.
 function parseSeriesOrder(value: unknown): number | null {
@@ -127,9 +128,21 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    const slug = await resolveUniqueSlug(
+      buildSlugCandidate(payload.title, 'post'),
+      async candidate => {
+        const { data: existing } = await supabaseAdmin
+          .from('post')
+          .select('id')
+          .eq('slug', candidate)
+          .maybeSingle();
+        return existing !== null;
+      }
+    );
+
     const { data, error } = await supabaseAdmin
       .from('post')
-      .insert([{ ...payload, userId }]);
+      .insert([{ ...payload, userId, slug }]);
 
     if (error) {
       return NextResponse.json(

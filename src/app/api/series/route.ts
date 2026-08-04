@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabaseForServer';
 import { getSupabasePublic } from '@/lib/supabasePublic';
 import { getAppSession, isAdminEmail } from '@/lib/auth';
 import { isValidCategory } from '@/types';
+import { buildSlugCandidate, resolveUniqueSlug } from '@/utils/generateSlug';
 
 function getSeriesPayload(body: Record<string, unknown>) {
   const title = typeof body.title === 'string' ? body.title.trim() : '';
@@ -62,9 +63,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const slug = await resolveUniqueSlug(
+      buildSlugCandidate(payload.title, 'series'),
+      async candidate => {
+        const { data: existing } = await supabaseAdmin
+          .from('series')
+          .select('id')
+          .eq('slug', candidate)
+          .maybeSingle();
+        return existing !== null;
+      }
+    );
+
     const { data, error } = await supabaseAdmin
       .from('series')
-      .insert([payload]);
+      .insert([{ ...payload, slug }]);
 
     if (error) {
       return NextResponse.json(
