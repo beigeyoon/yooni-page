@@ -13,7 +13,8 @@
     "lint": "next lint",
     "analyze": "ANALYZE=true next build",
     "postinstall": "prisma generate",
-    "test": "vitest run"
+    "test": "vitest run",
+    "backfill-slugs": "tsx scripts/backfill-slugs.ts"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
@@ -73,6 +74,7 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.3.0",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.23.5",
     "typescript": "^5.8.3",
     "vitest": "^4.1.10"
   }
