@@ -13,6 +13,12 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // isomorphic-dompurify는 서버에서 jsdom을 쓰는데, jsdom은 실행 중에
+  // default-stylesheet.css를 fs로 직접 읽는다. 서버 번들에 말려 들어가면
+  // 그 에셋 경로가 .next/server/browser/로 재작성되지만 파일은 emit되지 않아
+  // 배포 환경에서 ENOENT로 죽고, 글 본문이 통째로 렌더되지 않는다.
+  // 번들에서 제외해 node_modules에서 그대로 로드되게 한다.
+  serverExternalPackages: ['isomorphic-dompurify', 'jsdom'],
   images: {
     remotePatterns: [
       {
