@@ -49,7 +49,7 @@ model session {
 model series {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title       String
-  slug        String?
+  slug        String   @unique
   description String?
   createdAt   DateTime @default(now())
   category    String
@@ -59,7 +59,7 @@ model series {
 model post {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title       String    @db.VarChar(255)
-  slug        String?
+  slug        String   @unique
   subtitle    String?
   content     String
   createdAt   DateTime  @default(now())
