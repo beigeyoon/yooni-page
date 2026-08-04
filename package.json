@@ -13,8 +13,7 @@
     "lint": "next lint",
     "analyze": "ANALYZE=true next build",
     "postinstall": "prisma generate",
-    "test": "vitest run",
-    "backfill-slugs": "tsx scripts/backfill-slugs.ts"
+    "test": "vitest run"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
