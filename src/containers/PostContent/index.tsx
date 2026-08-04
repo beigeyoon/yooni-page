@@ -7,7 +7,6 @@ import { deletePost, getPost } from '@/lib/api/posts';
 import { getSeries } from '@/lib/api/series';
 import { FileWarning, SquarePen } from 'lucide-react';
 import handleTimeStirng from '@/utils/handleTimeStirng';
-import DOMPurify from 'isomorphic-dompurify';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
@@ -16,12 +15,16 @@ import Comment from '@/components/Comment';
 import { DeleteButton } from '@/components/DeleteButton';
 import Link from 'next/link';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
-import optimizePostHtml from '@/utils/optimizePostHtml';
+
+// content는 서버에서 정화·최적화를 마친 HTML이 내려온다.
+// 정화기를 여기(클라이언트 컴포넌트)에 두면 그 의존성이 SSR 번들에 딸려 들어간다.
 
 const PostContent = ({
+  content,
   toc,
   nav
 }: {
+  content: string;
   toc?: ReactNode;
   nav?: ReactNode;
 }) => {
@@ -82,8 +85,6 @@ const PostContent = ({
     );
   }
 
-  const sanitizedContent = optimizePostHtml(DOMPurify.sanitize(post.content));
-
   return (
     <div className="mx-auto flex max-w-[780px] flex-col py-8 max-sm:overflow-hidden max-sm:px-4">
       <div className="mb-10 flex items-center justify-between font-bold text-neutral-400">
@@ -130,7 +131,7 @@ const PostContent = ({
 
       <div
         className="post-content prose max-w-none py-16 text-base leading-relaxed text-neutral-700"
-        dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+        dangerouslySetInnerHTML={{ __html: content }}
       />
 
       {toc && <div className="mb-12">{toc}</div>}
