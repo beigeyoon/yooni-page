@@ -9,8 +9,9 @@ async function main() {
   const users = await prisma.user.findMany();
   const comments = await prisma.comment.findMany();
   const thoughts = await prisma.thought.findMany();
+  const series = await prisma.series.findMany();
 
-  const backupData = { posts, users, comments, thoughts };
+  const backupData = { posts, users, comments, thoughts, series };
 
   const filePath = path.join(__dirname, 'backup.json');
   fs.writeFileSync(filePath, JSON.stringify(backupData, null, 2), 'utf-8');
