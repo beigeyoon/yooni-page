@@ -1,13 +1,20 @@
-// 라우트와 충돌하는 슬러그. /dev/series 가 시리즈 라우트로 잡히는 것을 막는다.
+// 라우트와 충돌하는 슬러그.
+//
+// 실제로 충돌하는 건 'series' 하나뿐이다. 글 주소는 /[category]/[slug] 이고
+// 시리즈 목록은 /[category]/series/[seriesSlug] 이므로, slug가 'series'이면
+// 정적 세그먼트가 우선해서 그 글에 영원히 접근할 수 없게 된다.
+// 나머지는 /about, /project 처럼 루트에 있어 카테고리 하위와 겹치지 않지만,
+// 앞으로 /[category] 아래에 정적 경로가 추가될 경우를 대비해 함께 막아둔다.
+//
+// 확장자가 붙은 이름(sitemap.xml 등)은 넣어봐야 소용이 없다.
+// slugify가 마침표를 먼저 지워서 'sitemapxml'이 되므로 이 목록에 걸리지 않는다.
 const RESERVED_SLUGS = new Set([
   'series',
   'admin',
   'editor',
   'about',
   'project',
-  'api',
-  'sitemap.xml',
-  'robots.txt'
+  'api'
 ]);
 
 const MAX_SLUG_LENGTH = 80;
