@@ -14,6 +14,12 @@ export async function getPost(id: string): Promise<{ data: Post }> {
   });
 };
 
+export async function getPostBySlug(slug: string): Promise<{ data: Post }> {
+  return await apiFetch(`/api/posts?slug=${encodeURIComponent(slug)}`, {
+    method: 'GET',
+  });
+};
+
 export async function getPostForPreview(id: string): Promise<{ data: Post }> {
   return await apiFetch(`/api/posts?id=${id}&preview=true`, {
     method: 'GET',

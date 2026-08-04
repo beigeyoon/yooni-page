@@ -35,6 +35,7 @@ export interface PostPayload extends PostFormValues {
 
 export interface Post {
   id: string;
+  slug: string;
   title: string;
   subtitle: string;
   category: Category;
@@ -76,6 +77,7 @@ export interface SeriesFormValues {
 
 export interface Series {
   id: string;
+  slug: string;
   title: string;
   description?: string;
   category: string;

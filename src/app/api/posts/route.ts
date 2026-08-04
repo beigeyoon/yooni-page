@@ -43,6 +43,7 @@ export async function GET(request: NextRequest) {
     const isAdmin = isAdminEmail(session?.user?.email);
     const { searchParams } = new URL(request.url);
     const postId = searchParams.get('id');
+    const postSlug = searchParams.get('slug');
     const category = searchParams.get('category');
     const seriesId = searchParams.get('seriesId');
     const canPreviewUnpublished =
@@ -50,6 +51,27 @@ export async function GET(request: NextRequest) {
     const supabase = canPreviewUnpublished
       ? getSupabaseAdmin()
       : getSupabasePublic();
+
+    if (postSlug) {
+      const { data, error } = await supabase
+        .from('post')
+        .select('*')
+        .eq('slug', postSlug)
+        .maybeSingle();
+      if (error) {
+        return NextResponse.json(
+          { error: '게시글을 불러오는데 실패했습니다.' },
+          { status: 500 }
+        );
+      }
+      if (!data || (!data.isPublished && !canPreviewUnpublished)) {
+        return NextResponse.json(
+          { error: '게시글을 찾을 수 없습니다.' },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({ data }, { status: 200 });
+    }
 
     if (postId) {
       const { data, error } = await supabase

@@ -75,7 +75,7 @@ export async function getSeriesForServer(seriesId: string) {
   const supabasePublic = getSupabasePublic();
   const { data, error } = await supabasePublic
     .from('series')
-    .select('id, title, description, category')
+    .select('id, slug, title, description, category')
     .eq('id', seriesId)
     .maybeSingle();
 
@@ -85,6 +85,46 @@ export async function getSeriesForServer(seriesId: string) {
 
   return data as {
     id: string;
+    slug: string;
+    title: string;
+    description?: string;
+    category: string;
+  } | null;
+}
+
+export async function getPostBySlugForServer(
+  slug: string
+): Promise<{ data: Post | null }> {
+  const supabasePublic = getSupabasePublic();
+  const { data, error } = await supabasePublic
+    .from('post')
+    .select('*')
+    .eq('slug', slug)
+    .eq('isPublished', true)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error('게시글을 불러오는데 실패했습니다.');
+  }
+
+  return { data: data ?? null };
+}
+
+export async function getSeriesBySlugForServer(slug: string) {
+  const supabasePublic = getSupabasePublic();
+  const { data, error } = await supabasePublic
+    .from('series')
+    .select('id, slug, title, description, category')
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error('시리즈 정보를 불러오는데 실패했습니다.');
+  }
+
+  return data as {
+    id: string;
+    slug: string;
     title: string;
     description?: string;
     category: string;
