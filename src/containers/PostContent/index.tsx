@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { Post, Series } from '@/types';
-import { deletePost, getPost } from '@/lib/api/posts';
+import { deletePost, getPostBySlug } from '@/lib/api/posts';
 import { getSeries } from '@/lib/api/series';
 import { FileWarning, SquarePen } from 'lucide-react';
 import handleTimeStirng from '@/utils/handleTimeStirng';
@@ -15,6 +15,7 @@ import Comment from '@/components/Comment';
 import { DeleteButton } from '@/components/DeleteButton';
 import Link from 'next/link';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
+import decodeSlugParam from '@/utils/decodeSlugParam';
 
 // content는 서버에서 정화·최적화를 마친 HTML이 내려온다.
 // 정화기를 여기(클라이언트 컴포넌트)에 두면 그 의존성이 SSR 번들에 딸려 들어간다.
@@ -31,11 +32,15 @@ const PostContent = ({
   const router = useRouteWithLoading();
   const { isAdmin, session, status } = useAuth();
   const params = useParams();
-  const { id } = params as { id: string };
+  // useParams는 인코딩된 세그먼트를 줄 수 있다.
+  // 서버가 심어둔 캐시 키(['posts', 디코딩된 슬러그])와 어긋나면
+  // 하이드레이션 직후 불필요한 재조회가 일어나고, 그 조회마저 실패한다.
+  const { slug } = params as { slug: string };
+  const decodedSlug = decodeSlugParam(slug);
 
   const { data: post, isLoading } = useQuery({
-    queryKey: ['posts', id],
-    queryFn: () => getPost(id),
+    queryKey: ['posts', decodedSlug],
+    queryFn: () => getPostBySlug(decodedSlug),
     select: (data: { data: Post }) => data.data
   });
 
@@ -91,7 +96,7 @@ const PostContent = ({
         <div>
           <Link href={`/${post.category}`} className='mr-2 hover:underline'>#{post.category}</Link>
           {currentSeries && (
-            <Link href={`/${post.category}/series/${currentSeries.id}`} className='hover:underline'>
+            <Link href={`/${post.category}/series/${currentSeries.slug}`} className='hover:underline'>
               #{currentSeries.title}
             </Link>
           )}

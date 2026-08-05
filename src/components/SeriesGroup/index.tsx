@@ -78,7 +78,7 @@ const SeriesGroup = () => {
                           size="sm"
                           className="rounded-full border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700 transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-900"
                         >
-                          <Link href={`/${seriesItem.category}/series/${seriesItem.id}`}>
+                          <Link href={`/${seriesItem.category}/series/${seriesItem.slug}`}>
                             {seriesItem.title}
                           </Link>
                         </Button>

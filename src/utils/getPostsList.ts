@@ -7,10 +7,11 @@ function getPostsList(posts: Post[], category: Category) {
   return posts
     .filter((post) => post.category === category)
     .map((post) => {
-    const { id, title, subtitle, content, createdAt, isPublished } = post;
+    const { id, slug, title, subtitle, content, createdAt, isPublished } = post;
 
     const result = {
       id,
+      slug,
       title,
       subtitle,
       createdAt: handleTimeStirng(createdAt),

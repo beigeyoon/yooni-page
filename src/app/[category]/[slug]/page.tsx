@@ -5,6 +5,7 @@ import {
   QueryClient
 } from '@tanstack/react-query';
 import {
+  getPostBySlugForServer,
   getPostForServer,
   getPostsBySeriesForServer,
   getPostsForServer,
@@ -16,9 +17,11 @@ import SeriesNav from '@/components/SeriesNav';
 import { metaDataKeywords } from '@/constants/metadataKeywords';
 import { Metadata } from 'next';
 import { isValidCategory, type Post } from '@/types';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import sanitizePostHtml from '@/utils/sanitizePostHtml';
 import optimizePostHtml from '@/utils/optimizePostHtml';
+import isUuid from '@/utils/isUuid';
+import decodeSlugParam from '@/utils/decodeSlugParam';
 
 // 포스트 내용에서 키워드 추출 함수
 function extractKeywords(content: string, title: string, category: string): string[] {
@@ -64,15 +67,22 @@ function generateDescription(content: string, subtitle?: string): string {
 export async function generateMetadata({
   params
 }: {
-  params: Promise<{ category: string; id: string }>;
+  params: Promise<{ category: string; slug: string }>;
 }): Promise<Metadata> {
-  const { category, id } = await params;
+  const { category, slug: rawSlug } = await params;
+  const slug = decodeSlugParam(rawSlug);
 
   if (!isValidCategory(category)) {
     return { title: '페이지를 찾을 수 없음' };
   }
 
-  const postData = await getPostForServer(id);
+  // 레거시 UUID URL은 페이지 컴포넌트가 슬러그로 영구 리다이렉트한다.
+  // 여기서 메타데이터를 붙여봐야 리다이렉트로 버려지므로 최소한만 돌려준다.
+  if (isUuid(slug)) {
+    return { title: '유니의 블로그' };
+  }
+
+  const postData = await getPostBySlugForServer(slug);
   const post = postData?.data;
 
   if (!post || post.category !== category) {
@@ -85,7 +95,7 @@ export async function generateMetadata({
   const keywords = extractKeywords(post.content, post.title, category);
   const description = generateDescription(post.content, post.subtitle);
   const siteUrl = 'https://yooni.seoul.kr';
-  const postUrl = `${siteUrl}/${category}/${id}`;
+  const postUrl = `${siteUrl}/${category}/${post.slug}`;
 
   return {
     title: `${post.title} | 유니의 블로그`,
@@ -142,7 +152,7 @@ export async function generateMetadata({
 // 구조화된 데이터 생성 함수
 function generateStructuredData(post: Post, category: string) {
   const siteUrl = 'https://yooni.seoul.kr';
-  const postUrl = `${siteUrl}/${category}/${post.id}`;
+  const postUrl = `${siteUrl}/${category}/${post.slug}`;
   
   return {
     '@context': 'https://schema.org',
@@ -182,14 +192,29 @@ function serializeJsonLd(data: object) {
   return JSON.stringify(data).replace(/</g, '\\u003c');
 }
 
-const Post = async ({ params }: { params: Promise<{ category: string; id: string }> }) => {
-  const { category, id } = await params;
+const Post = async ({
+  params
+}: {
+  params: Promise<{ category: string; slug: string }>;
+}) => {
+  const { category, slug: rawSlug } = await params;
+  const slug = decodeSlugParam(rawSlug);
 
   if (!isValidCategory(category)) {
     notFound();
   }
 
-  const postData = await getPostForServer(id);
+  // 예전 UUID URL로 들어온 요청은 검색 색인을 잃지 않도록 슬러그로 영구 이동시킨다.
+  // permanentRedirect는 내부적으로 예외를 던지므로 try/catch로 감싸면 안 된다.
+  if (isUuid(slug)) {
+    const legacy = await getPostForServer(slug);
+    if (legacy?.data?.slug) {
+      permanentRedirect(`/${category}/${legacy.data.slug}`);
+    }
+    notFound();
+  }
+
+  const postData = await getPostBySlugForServer(slug);
   const post = postData?.data as Post | null;
 
   if (!post || post.category !== category) {
@@ -197,7 +222,7 @@ const Post = async ({ params }: { params: Promise<{ category: string; id: string
   }
 
   const queryClient = new QueryClient();
-  queryClient.setQueryData(['posts', id], { data: post });
+  queryClient.setQueryData(['posts', slug], { data: post });
 
   const dehydratedState = dehydrate(queryClient);
   const structuredData = generateStructuredData(post, category);

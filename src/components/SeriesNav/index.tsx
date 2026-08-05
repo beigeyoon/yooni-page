@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Post } from '@/types';
 
-type NavPost = Pick<Post, 'id' | 'title' | 'category'>;
+type NavPost = Pick<Post, 'id' | 'slug' | 'title' | 'category'>;
 
 export default function SeriesNav({
   prevPost,
@@ -20,7 +20,7 @@ export default function SeriesNav({
       className="flex justify-between gap-4 py-12 text-sm text-neutral-400">
       {prevPost ? (
         <Link
-          href={`/${prevPost.category}/${prevPost.id}`}
+          href={`/${prevPost.category}/${prevPost.slug}`}
           className="hover:text-neutral-700">
           ← {prevLabel}: {prevPost.title}
         </Link>
@@ -30,7 +30,7 @@ export default function SeriesNav({
 
       {nextPost ? (
         <Link
-          href={`/${nextPost.category}/${nextPost.id}`}
+          href={`/${nextPost.category}/${nextPost.slug}`}
           className="text-right hover:text-neutral-700">
           {nextLabel}: {nextPost.title} →
         </Link>

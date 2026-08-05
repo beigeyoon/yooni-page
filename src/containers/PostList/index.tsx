@@ -125,7 +125,7 @@ const PostList = ({
                 variant="outline"
                 size="sm"
                 className="rounded-full border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-900">
-                <Link href={`/${category}/series/${series.id}`}>
+                <Link href={`/${category}/series/${series.slug}`}>
                   {series.title}
                 </Link>
               </Button>
@@ -142,7 +142,7 @@ const PostList = ({
               <PostPreview
                 key={post.id}
                 post={post}
-                href={`/${category}/${post.id}`}
+                href={`/${category}/${post.slug}`}
               />
             );
           } else

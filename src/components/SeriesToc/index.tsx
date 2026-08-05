@@ -6,8 +6,8 @@ export default function SeriesToc({
   posts,
   currentPostId
 }: {
-  series: Pick<Series, 'id' | 'title' | 'category'>;
-  posts: Pick<Post, 'id' | 'title'>[];
+  series: Pick<Series, 'id' | 'slug' | 'title' | 'category'>;
+  posts: Pick<Post, 'id' | 'slug' | 'title'>[];
   currentPostId: string;
 }) {
   if (posts.length === 0) return null;
@@ -20,7 +20,7 @@ export default function SeriesToc({
         Series
       </p>
       <Link
-        href={`/${series.category}/series/${series.id}`}
+        href={`/${series.category}/series/${series.slug}`}
         className="text-lg font-bold text-neutral-800 hover:underline">
         {series.title}
       </Link>
@@ -42,7 +42,7 @@ export default function SeriesToc({
                 </span>
               ) : (
                 <Link
-                  href={`/${series.category}/${post.id}`}
+                  href={`/${series.category}/${post.slug}`}
                   className="text-neutral-600 hover:text-neutral-900 hover:underline">
                   {post.title}
                 </Link>

@@ -7,6 +7,7 @@ export function PostPreview({
 }: {
   post: {
     id: string;
+    slug: string;
     title: string;
     subtitle: string;
     createdAt: string;
