@@ -2,8 +2,6 @@
 
 import { PostPreview } from '@/components/PostPreview';
 import { getPosts, getPostsBySeries } from '@/lib/api/posts';
-import { getSeries } from '@/lib/api/series';
-import { Series } from '@/types';
 import { Category, Post } from '@/types';
 import getPostsList from '@/utils/getPostsList';
 import { useQuery } from '@tanstack/react-query';
@@ -11,8 +9,6 @@ import { FileWarning } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemo } from 'react';
 import PhotoPreview from '@/components/PhotoPreview';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 
 const PostList = ({
   category,
@@ -32,40 +28,11 @@ const PostList = ({
     }
   });
 
-  const { data: seriesData } = useQuery({
-    queryKey: ['series'],
-    queryFn: getSeries,
-    select: (data: { data: Series[] }) => {
-      return data.data;
-    }
-  });
-
-  // 현재 카테고리에 해당하는 시리즈들 필터링 (시리즈 페이지가 아닐 때만)
-  const seriesByCategory = useMemo(() => {
-    if (seriesId) return []; // 시리즈 페이지에서는 시리즈 버튼 숨김
-    const seriesList = seriesData || [];
-    if (!Array.isArray(seriesList)) return [];
-    const filtered = seriesList.filter(
-      (series: Series) => series.category === category
-    );
-    return filtered;
-  }, [seriesData, category, seriesId]);
-
-  // 현재 시리즈 정보 (시리즈 페이지일 때만)
-  const selectedSeriesInfo = useMemo(() => {
-    if (!seriesId) return null;
-    const seriesList = seriesData || [];
-    return seriesList.find((series: Series) => series.id === seriesId);
-  }, [seriesData, seriesId]);
-
   const posts = useMemo(
     () => (isAdmin ? postsData : postsData?.filter(post => post.isPublished)),
     [postsData, isAdmin]
   );
 
-  // 시리즈 목록은 부가 정보이므로 글 목록 렌더를 막지 않는다.
-  // 여기서 seriesLoading까지 기다리면 시리즈를 prefetch하지 않는 페이지에서는
-  // 초기 HTML이 통째로 스피너가 되어 크롤러가 글 목록을 전혀 못 본다.
   if (postsLoading) {
     return (
       <div className="flex w-full flex-col items-center gap-4 pt-10">
@@ -87,53 +54,7 @@ const PostList = ({
   }
 
   return (
-    <div className="mx-auto flex max-w-[780px] flex-col pt-8">
-      {/* 시리즈 페이지일 때 시리즈 정보 표시 */}
-      {seriesId && selectedSeriesInfo && (
-        <div className="mb-8 rounded-lg bg-gradient-to-r from-neutral-50 to-neutral-100 p-6 shadow-sm">
-          <div className="mb-3 flex items-center gap-3">
-            <div className="h-2 w-2 rounded-full bg-neutral-400"></div>
-            <span className="text-sm font-medium uppercase tracking-wide text-neutral-500">
-              Series
-            </span>
-          </div>
-          <h1 className="mb-2 text-3xl font-bold text-neutral-800">
-            {selectedSeriesInfo.title}
-          </h1>
-          {selectedSeriesInfo.description && (
-            <p className="leading-relaxed text-neutral-600">
-              {selectedSeriesInfo.description}
-            </p>
-          )}
-        </div>
-      )}
-
-      {/* 시리즈 필터링 버튼들 (일반 페이지에서만) */}
-      {!seriesId && seriesByCategory.length > 0 && (
-        <div className="mx-4 mb-8">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="h-1.5 w-1.5 rounded-full bg-neutral-300"></div>
-            <span className="text-sm font-medium uppercase tracking-wide text-neutral-500">
-              Series
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {seriesByCategory.map((series: Series) => (
-              <Button
-                key={series.id}
-                asChild
-                variant="outline"
-                size="sm"
-                className="rounded-full border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-900">
-                <Link href={`/${category}/series/${series.slug}`}>
-                  {series.title}
-                </Link>
-              </Button>
-            ))}
-          </div>
-        </div>
-      )}
-
+    <div className="mx-auto flex max-w-[780px] flex-col">
       {/* 포스트 목록 */}
       <div className="flex flex-col justify-center">
         {posts?.map(post => {

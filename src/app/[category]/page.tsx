@@ -1,4 +1,5 @@
 import PostList from '@/containers/PostList';
+import SeriesFilter from '@/components/SeriesFilter';
 import {
   getAllSeriesForServer,
   getPostsForServer
@@ -11,6 +12,13 @@ import {
 } from '@tanstack/react-query';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
+const CATEGORY_HEADINGS: Record<Category, string> = {
+  dev: '개발',
+  travel: '여행',
+  talk: '이야기',
+  photo: '사진'
+};
 
 // 카테고리별 메타데이터 생성 함수
 export async function generateMetadata({
@@ -129,8 +137,24 @@ const Posts = async ({
 
   const dehydratedState = dehydrate(queryClient);
 
+  const allSeries = queryClient.getQueryData(['series']) as Awaited<
+    ReturnType<typeof getAllSeriesForServer>
+  >;
+  const categorySeries = allSeries.data.filter(s => s.category === category);
+
   return (
     <HydrationBoundary state={dehydratedState}>
+      <div className="mx-auto max-w-[780px] px-4 pt-8">
+        <h1 className="text-3xl font-bold text-neutral-800">
+          {CATEGORY_HEADINGS[category]}
+        </h1>
+      </div>
+      <div className="mx-auto max-w-[780px]">
+        <SeriesFilter
+          category={category}
+          series={categorySeries}
+        />
+      </div>
       <PostList category={category} />
     </HydrationBoundary>
   );

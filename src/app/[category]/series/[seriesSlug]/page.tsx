@@ -104,6 +104,24 @@ const SeriesPosts = async ({
 
   return (
     <HydrationBoundary state={dehydratedState}>
+      <div className="mx-auto max-w-[780px] pt-8 max-sm:px-4">
+        <div className="mb-8 rounded-lg bg-gradient-to-r from-neutral-50 to-neutral-100 p-6 shadow-sm">
+          <div className="mb-3 flex items-center gap-3">
+            <div className="h-2 w-2 rounded-full bg-neutral-400"></div>
+            <span className="text-sm font-medium uppercase tracking-wide text-neutral-500">
+              Series
+            </span>
+          </div>
+          <h1 className="mb-2 text-3xl font-bold text-neutral-800">
+            {series.title}
+          </h1>
+          {series.description && (
+            <p className="leading-relaxed text-neutral-600">
+              {series.description}
+            </p>
+          )}
+        </div>
+      </div>
       <PostList category={category} seriesId={series.id} />
     </HydrationBoundary>
   );
