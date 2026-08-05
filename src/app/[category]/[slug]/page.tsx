@@ -14,7 +14,6 @@ import {
 import PageReady from '@/components/Loading/PageReady';
 import SeriesToc from '@/components/SeriesToc';
 import SeriesNav from '@/components/SeriesNav';
-import { metaDataKeywords } from '@/constants/metadataKeywords';
 import { Metadata } from 'next';
 import { isValidCategory, type Post } from '@/types';
 import { notFound, permanentRedirect } from 'next/navigation';
@@ -23,29 +22,28 @@ import optimizePostHtml from '@/utils/optimizePostHtml';
 import isUuid from '@/utils/isUuid';
 import decodeSlugParam from '@/utils/decodeSlugParam';
 
-// 포스트 내용에서 키워드 추출 함수
-function extractKeywords(content: string, title: string, category: string): string[] {
-  const baseKeywords = metaDataKeywords;
-  const contentKeywords = content
-    .replace(/[^\w\s가-힣]/g, ' ')
-    .split(/\s+/)
-    .filter(word => word.length > 1)
-    .slice(0, 10);
-  
-  const titleKeywords = title.split(/\s+/);
-  const categoryKeywords = [category, '블로그', '개발', '여행', '사진', '이야기'];
-  
-  return [...new Set([...baseKeywords, ...contentKeywords, ...titleKeywords, ...categoryKeywords])];
-}
+const SITE_URL = 'https://yooni.seoul.kr';
+const OG_IMAGE =
+  'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png';
+
+const CATEGORY_LABELS: Record<string, string> = {
+  dev: '개발',
+  travel: '여행',
+  talk: '이야기',
+  photo: '사진'
+};
 
 // 포스트 내용에서 설명 생성 함수
 function generateDescription(content: string, subtitle?: string): string {
   if (subtitle) {
     return subtitle;
   }
-  
+
   // HTML 태그 제거
-  const cleanContent = content.replace(/<[^>]*>/g, '');
+  const cleanContent = content
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
   // 첫 200자 추출 (한글 기준)
   const description = cleanContent.slice(0, 200);
   
@@ -92,15 +90,14 @@ export async function generateMetadata({
     };
   }
 
-  const keywords = extractKeywords(post.content, post.title, category);
   const description = generateDescription(post.content, post.subtitle);
-  const siteUrl = 'https://yooni.seoul.kr';
-  const postUrl = `${siteUrl}/${category}/${post.slug}`;
+  const postUrl = `${SITE_URL}/${category}/${post.slug}`;
 
   return {
     title: `${post.title} | 유니의 블로그`,
     description,
-    keywords: keywords.join(', '),
+    // 루트 레이아웃의 손으로 작성한 keywords가 상속되지 않도록 명시적으로 비운다.
+    keywords: null,
     authors: [{ name: '유니' }],
     category: category,
     openGraph: {
@@ -112,7 +109,7 @@ export async function generateMetadata({
       locale: 'ko_KR',
       images: [
         {
-          url: 'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png',
+          url: OG_IMAGE,
           width: 1200,
           height: 630,
           alt: post.title
@@ -126,9 +123,7 @@ export async function generateMetadata({
       title: post.title,
       description,
       card: 'summary_large_image',
-      images: [
-        'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png'
-      ]
+      images: [OG_IMAGE]
     },
     alternates: {
       canonical: postUrl
@@ -150,41 +145,75 @@ export async function generateMetadata({
 }
 
 // 구조화된 데이터 생성 함수
-function generateStructuredData(post: Post, category: string) {
-  const siteUrl = 'https://yooni.seoul.kr';
-  const postUrl = `${siteUrl}/${category}/${post.slug}`;
-  
-  return {
+function generateStructuredData(
+  post: Post,
+  category: string,
+  series: { slug: string; title: string } | null,
+  position: number | null
+) {
+  const postUrl = `${SITE_URL}/${category}/${post.slug}`;
+
+  const data: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.title,
-    description: post.subtitle || post.content.slice(0, 200),
-    author: {
-      '@type': 'Person',
-      name: '유니',
-      url: siteUrl
-    },
+    description: post.subtitle || generateDescription(post.content),
+    author: { '@type': 'Person', name: '유니', url: SITE_URL },
     publisher: {
       '@type': 'Organization',
       name: '유니의 블로그',
-      url: siteUrl,
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png'
-      }
+      url: SITE_URL,
+      logo: { '@type': 'ImageObject', url: OG_IMAGE }
     },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': postUrl
-    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
     datePublished: post.createdAt,
     dateModified: post.createdAt,
-    image: {
-      '@type': 'ImageObject',
-      url: 'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png'
-    },
-    articleSection: category,
-    keywords: extractKeywords(post.content, post.title, category).join(', ')
+    image: { '@type': 'ImageObject', url: OG_IMAGE },
+    articleSection: category
+  };
+
+  if (series) {
+    data.isPartOf = {
+      '@type': 'CreativeWorkSeries',
+      name: series.title,
+      url: `${SITE_URL}/${category}/series/${series.slug}`
+    };
+    if (position !== null) {
+      data.position = position;
+    }
+  }
+
+  return data;
+}
+
+function generateBreadcrumb(
+  post: Post,
+  category: string,
+  series: { slug: string; title: string } | null
+) {
+  const items: { name: string; url: string }[] = [
+    { name: '홈', url: SITE_URL },
+    { name: CATEGORY_LABELS[category] ?? category, url: `${SITE_URL}/${category}` }
+  ];
+
+  if (series) {
+    items.push({
+      name: series.title,
+      url: `${SITE_URL}/${category}/series/${series.slug}`
+    });
+  }
+
+  items.push({ name: post.title, url: `${SITE_URL}/${category}/${post.slug}` });
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url
+    }))
   };
 }
 
@@ -225,12 +254,13 @@ const Post = async ({
   queryClient.setQueryData(['posts', slug], { data: post });
 
   const dehydratedState = dehydrate(queryClient);
-  const structuredData = generateStructuredData(post, category);
 
   // 시리즈 소속이면 목차 + 시리즈 내 이전/다음 편,
   // 아니면 카테고리 기준 이전/다음 글
   let toc: React.ReactNode = null;
   let nav: React.ReactNode = null;
+  let seriesInfo: { slug: string; title: string } | null = null;
+  let position: number | null = null;
 
   if (post.seriesId) {
     const [series, seriesPosts] = await Promise.all([
@@ -241,6 +271,9 @@ const Post = async ({
     if (series) {
       const list = seriesPosts.data;
       const currentIndex = list.findIndex(p => p.id === post.id);
+
+      seriesInfo = { slug: series.slug, title: series.title };
+      position = currentIndex >= 0 ? currentIndex + 1 : null;
 
       toc = (
         <SeriesToc
@@ -263,6 +296,14 @@ const Post = async ({
       );
     }
   }
+
+  const structuredData = generateStructuredData(
+    post,
+    category,
+    seriesInfo,
+    position
+  );
+  const breadcrumbData = generateBreadcrumb(post, category, seriesInfo);
 
   if (!nav) {
     // 카테고리 목록은 최신순이므로, 배열에서 뒤가 더 오래된 글이다
@@ -289,6 +330,12 @@ const Post = async ({
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: serializeJsonLd(structuredData)
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(breadcrumbData)
         }}
       />
       <PostContent

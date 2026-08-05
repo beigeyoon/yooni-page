@@ -4,7 +4,7 @@ import {
   getSeriesBySlugForServer,
   getSeriesForServer
 } from '@/lib/api/posts.server';
-import { Category, isValidCategory } from '@/types';
+import { Category, isValidCategory, type Post } from '@/types';
 import {
   dehydrate,
   HydrationBoundary,
@@ -18,6 +18,66 @@ import decodeSlugParam from '@/utils/decodeSlugParam';
 const SITE_URL = 'https://yooni.seoul.kr';
 const OG_IMAGE =
   'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png';
+
+const CATEGORY_LABELS: Record<string, string> = {
+  dev: '개발',
+  travel: '여행',
+  talk: '이야기',
+  photo: '사진'
+};
+
+function generateSeriesJsonLd(
+  series: { slug: string; title: string; description?: string },
+  category: string,
+  posts: Post[]
+) {
+  const seriesUrl = `${SITE_URL}/${category}/series/${series.slug}`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: series.title,
+    description: series.description ?? `${series.title} 시리즈의 글 모음입니다.`,
+    url: seriesUrl,
+    inLanguage: 'ko-KR',
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: posts.length,
+      itemListElement: posts.map((post, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: post.title,
+        url: `${SITE_URL}/${category}/${post.slug}`
+      }))
+    }
+  };
+}
+
+function generateSeriesBreadcrumb(
+  series: { slug: string; title: string },
+  category: string
+) {
+  const items: { name: string; url: string }[] = [
+    { name: '홈', url: SITE_URL },
+    { name: CATEGORY_LABELS[category] ?? category, url: `${SITE_URL}/${category}` },
+    { name: series.title, url: `${SITE_URL}/${category}/series/${series.slug}` }
+  ];
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url
+    }))
+  };
+}
+
+function serializeJsonLd(data: object) {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
+}
 
 export async function generateMetadata({
   params
@@ -46,6 +106,10 @@ export async function generateMetadata({
   return {
     title,
     description,
+    // 지정하지 않으면 layout.tsx의 사이트 전역 keywords를 상속한다.
+    // 그러면 여행 시리즈 페이지가 "프론트엔드 개발자, Next.js" 같은 키워드를 달게 된다.
+    // null이 상속을 끊는 방법이다(생략이나 undefined로는 끊기지 않는다).
+    keywords: null,
     openGraph: {
       title,
       description,
@@ -93,17 +157,29 @@ const SeriesPosts = async ({
   }
 
   // 조회는 여전히 id 기준이다. 슬러그는 URL에만 쓴다.
-  const queryClient = new QueryClient();
+  const seriesPosts = await getPostsBySeriesForServer(series.id);
 
-  await queryClient.prefetchQuery({
-    queryKey: ['posts', series.id],
-    queryFn: () => getPostsBySeriesForServer(series.id)
-  });
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(['posts', series.id], seriesPosts);
 
   const dehydratedState = dehydrate(queryClient);
+  const seriesJsonLd = generateSeriesJsonLd(series, category, seriesPosts.data);
+  const breadcrumbJsonLd = generateSeriesBreadcrumb(series, category);
 
   return (
     <HydrationBoundary state={dehydratedState}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(seriesJsonLd)
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(breadcrumbJsonLd)
+        }}
+      />
       <div className="mx-auto max-w-[780px] pt-8 max-sm:px-4">
         <div className="mb-8 rounded-lg bg-gradient-to-r from-neutral-50 to-neutral-100 p-6 shadow-sm">
           <div className="mb-3 flex items-center gap-3">
