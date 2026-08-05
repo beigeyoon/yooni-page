@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { getSupabasePublic } from '@/lib/supabasePublic';
 import { CATEGORIES } from '@/types';
+import { parseDbTimestamp } from '@/utils/dbTimestamp';
 
 export const revalidate = 3600;
 
@@ -51,7 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const postEntries: MetadataRoute.Sitemap = posts.map(post => ({
     url: `${SITE_URL}/${post.category}/${post.slug}`,
-    lastModified: new Date(post.createdAt),
+    lastModified: parseDbTimestamp(post.createdAt),
     changeFrequency: 'monthly',
     priority: 0.7
   }));
@@ -61,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const latestPostDateBySeries = new Map<string, Date>();
   for (const post of posts) {
     if (!post.seriesId) continue;
-    const date = new Date(post.createdAt);
+    const date = parseDbTimestamp(post.createdAt);
     const current = latestPostDateBySeries.get(post.seriesId);
     if (!current || date > current) {
       latestPostDateBySeries.set(post.seriesId, date);
@@ -73,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${SITE_URL}/${series.category}/series/${series.slug}`,
       lastModified:
         latestPostDateBySeries.get(series.id) ??
-        (series.createdAt ? new Date(series.createdAt) : now),
+        (series.createdAt ? parseDbTimestamp(series.createdAt) : now),
       changeFrequency: 'weekly',
       // 시리즈를 토픽 허브로 밀기 위해 개별 글보다 높게 둔다
       priority: 0.9

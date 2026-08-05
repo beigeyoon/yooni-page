@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { getAllPostsForPreview } from '@/lib/api/posts';
 import { Post } from '@/types';
 import handleTimeStirng from '@/utils/handleTimeStirng';
+import { parseDbTimestamp } from '@/utils/dbTimestamp';
 import { useQuery } from '@tanstack/react-query';
 import { Eye, FileWarning, Plus, SquarePen } from 'lucide-react';
 import Link from 'next/link';
@@ -25,7 +26,9 @@ export default function AdminPostsManager() {
       data.data
         .filter(post => !post.isPublished)
         .sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        (a, b) =>
+          parseDbTimestamp(b.createdAt).getTime() -
+          parseDbTimestamp(a.createdAt).getTime()
       ),
   });
 

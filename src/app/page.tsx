@@ -13,6 +13,7 @@ import {
 } from '@tanstack/react-query';
 import Image from 'next/image';
 import { Metadata } from 'next';
+import { parseDbTimestamp } from '@/utils/dbTimestamp';
 
 const silkscreen = Silkscreen({
   subsets: ['latin'],
@@ -96,7 +97,8 @@ export default async function Home() {
     const posts = cached.data as Post[];
     posts.sort(
       (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        parseDbTimestamp(b.createdAt).getTime() -
+        parseDbTimestamp(a.createdAt).getTime()
     );
     postsByCategory[category] = posts
       .filter(post => post.isPublished)

@@ -19,6 +19,7 @@ import { isValidCategory, type Post } from '@/types';
 import { notFound, permanentRedirect } from 'next/navigation';
 import sanitizePostHtml from '@/utils/sanitizePostHtml';
 import optimizePostHtml from '@/utils/optimizePostHtml';
+import { toIsoString } from '@/utils/dbTimestamp';
 import isUuid from '@/utils/isUuid';
 import decodeSlugParam from '@/utils/decodeSlugParam';
 
@@ -115,8 +116,8 @@ export async function generateMetadata({
           alt: post.title
         }
       ],
-      publishedTime: post.createdAt,
-      modifiedTime: post.createdAt,
+      publishedTime: toIsoString(post.createdAt),
+      modifiedTime: toIsoString(post.createdAt),
       authors: ['유니']
     },
     twitter: {
@@ -166,8 +167,8 @@ function generateStructuredData(
       logo: { '@type': 'ImageObject', url: OG_IMAGE }
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
-    datePublished: post.createdAt,
-    dateModified: post.createdAt,
+    datePublished: toIsoString(post.createdAt),
+    dateModified: toIsoString(post.createdAt),
     image: { '@type': 'ImageObject', url: OG_IMAGE },
     articleSection: category
   };
