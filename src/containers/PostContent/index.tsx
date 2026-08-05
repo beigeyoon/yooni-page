@@ -115,10 +115,11 @@ const PostContent = ({
       </div>
 
       <div className="border-b border-neutral-400 pb-10">
-        <div className="mb-2 text-4xl font-extrabold text-neutral-700">
+        {/* 글 제목은 이 페이지의 h1이다. 시각적 결과는 이전과 같고 태그만 바뀐다. */}
+        <h1 className="mb-2 text-4xl font-extrabold text-neutral-700">
           {post.title}
-        </div>
-        <div className="mb-10 text-xl text-neutral-500">{post.subtitle}</div>
+        </h1>
+        <p className="mb-10 text-xl text-neutral-500">{post.subtitle}</p>
         <div className="flex items-center gap-3">
           <Image
             src="/images/yooni_icon.webp"
