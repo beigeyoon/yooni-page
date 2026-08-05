@@ -236,10 +236,11 @@ const Post = async ({
 
   // 예전 UUID URL로 들어온 요청은 검색 색인을 잃지 않도록 슬러그로 영구 이동시킨다.
   // permanentRedirect는 내부적으로 예외를 던지므로 try/catch로 감싸면 안 된다.
+  // 슬러그에 한글이 들어가므로 인코딩하지 않으면 Location 헤더에 실을 수 없다.
   if (isUuid(slug)) {
     const legacy = await getPostForServer(slug);
     if (legacy?.data?.slug) {
-      permanentRedirect(`/${category}/${legacy.data.slug}`);
+      permanentRedirect(`/${category}/${encodeURIComponent(legacy.data.slug)}`);
     }
     notFound();
   }
