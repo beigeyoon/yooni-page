@@ -1,5 +1,3 @@
-export const dynamic = 'auto';
-
 import { RecentPosts } from '@/components/RecentPosts';
 import { getPostsForServer } from '@/lib/api/posts.server';
 import { Category, Post } from '@/types';
@@ -14,6 +12,10 @@ import {
 import Image from 'next/image';
 import { Metadata } from 'next';
 import { parseDbTimestamp } from '@/utils/dbTimestamp';
+
+// 즉시 무효화(revalidateContent)가 평소 갱신을 담당하고,
+// 이 주기는 무효화가 실패했을 때를 위한 백스톱이다.
+export const revalidate = 3600;
 
 const silkscreen = Silkscreen({
   subsets: ['latin'],

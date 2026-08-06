@@ -13,6 +13,10 @@ import {
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+// 즉시 무효화(revalidateContent)가 평소 갱신을 담당하고,
+// 이 주기는 무효화가 실패했을 때를 위한 백스톱이다.
+export const revalidate = 3600;
+
 const CATEGORY_HEADINGS: Record<Category, string> = {
   dev: '개발',
   travel: '여행',

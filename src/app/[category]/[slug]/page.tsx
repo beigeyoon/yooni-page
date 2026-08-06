@@ -23,6 +23,10 @@ import { toIsoString } from '@/utils/dbTimestamp';
 import isUuid from '@/utils/isUuid';
 import decodeSlugParam from '@/utils/decodeSlugParam';
 
+// 즉시 무효화(revalidateContent)가 평소 갱신을 담당하고,
+// 이 주기는 무효화가 실패했을 때를 위한 백스톱이다.
+export const revalidate = 3600;
+
 const SITE_URL = 'https://yooni.seoul.kr';
 const OG_IMAGE =
   'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png';
