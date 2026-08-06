@@ -4,6 +4,7 @@ import { getSupabasePublic } from '@/lib/supabasePublic';
 import { getAppSession, isAdminEmail } from '@/lib/auth';
 import { isValidCategory } from '@/types';
 import { buildSlugCandidate, resolveUniqueSlug } from '@/utils/generateSlug';
+import { revalidateContent } from '@/lib/revalidateContent';
 
 function getSeriesPayload(body: Record<string, unknown>) {
   const title = typeof body.title === 'string' ? body.title.trim() : '';
@@ -86,6 +87,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    revalidateContent({ category: payload.category, seriesSlug: slug });
+
     return NextResponse.json(
       { message: '✅ Series created successfully', data },
       { status: 201 }
@@ -127,6 +130,13 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    // 카테고리가 바뀌었을 수 있어, 무효화하려면 이전 위치를 알아야 한다.
+    const { data: before } = await getSupabasePublic()
+      .from('series')
+      .select('slug, category')
+      .eq('id', id)
+      .maybeSingle();
+
     const { data, error } = await supabaseAdmin
       .from('series')
       .update(payload)
@@ -136,6 +146,14 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(
         { error: '시리즈 수정에 실패했습니다.' },
         { status: 500 }
+      );
+    }
+
+    // 시리즈 슬러그도 배정 후 불변이므로 양쪽에 같은 값을 쓴다.
+    if (before) {
+      revalidateContent(
+        { category: before.category, seriesSlug: before.slug },
+        { category: payload.category, seriesSlug: before.slug }
       );
     }
 
@@ -172,6 +190,18 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    // 시리즈를 지우면 소속 글들의 목차와 이전/다음 편도 사라지므로 함께 낡는다.
+    const supabasePublic = getSupabasePublic();
+
+    const [{ data: target }, { data: seriesPosts }] = await Promise.all([
+      supabasePublic
+        .from('series')
+        .select('slug, category')
+        .eq('id', id)
+        .maybeSingle(),
+      supabasePublic.from('post').select('slug, category').eq('seriesId', id)
+    ]);
+
     const { data, error } = await supabaseAdmin
       .from('series')
       .delete()
@@ -181,6 +211,16 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: '시리즈 삭제에 실패했습니다.' },
         { status: 500 }
+      );
+    }
+
+    if (target) {
+      revalidateContent(
+        { category: target.category, seriesSlug: target.slug },
+        ...(seriesPosts ?? []).map(post => ({
+          category: post.category,
+          slug: post.slug
+        }))
       );
     }
 
