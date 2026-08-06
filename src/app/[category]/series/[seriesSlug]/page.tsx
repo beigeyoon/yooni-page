@@ -14,10 +14,23 @@ import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import isUuid from '@/utils/isUuid';
 import decodeSlugParam from '@/utils/decodeSlugParam';
+import { getSupabasePublic } from '@/lib/supabasePublic';
 
 // 즉시 무효화(revalidateContent)가 평소 갱신을 담당하고,
 // 이 주기는 무효화가 실패했을 때를 위한 백스톱이다.
 export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const supabasePublic = getSupabasePublic();
+  const { data } = await supabasePublic
+    .from('series')
+    .select('slug, category');
+
+  return (data ?? []).map(series => ({
+    category: series.category,
+    seriesSlug: series.slug
+  }));
+}
 
 const SITE_URL = 'https://yooni.seoul.kr';
 const OG_IMAGE =
