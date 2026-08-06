@@ -5,6 +5,7 @@ import { getAppSession, isAdminEmail } from '@/lib/auth';
 import { isValidCategory } from '@/types';
 import { orderByNewest, orderBySeriesSequence } from '@/lib/api/postOrder';
 import { buildSlugCandidate, resolveUniqueSlug } from '@/utils/generateSlug';
+import { revalidateContent } from '@/lib/revalidateContent';
 
 // 정수가 아닌 값(소수, 빈 문자열, 숫자가 아닌 문자열)은 순번 없음으로 취급한다.
 function parseSeriesOrder(value: unknown): number | null {
@@ -35,6 +36,19 @@ function getPostPayload(body: Record<string, unknown>) {
     content: typeof body.content === 'string' ? body.content.trim() : '',
     isPublished: body.isPublished === true
   };
+}
+
+// 무효화 경로에는 시리즈 슬러그가 필요한데 글 레코드는 seriesId만 갖고 있다.
+async function findSeriesSlug(seriesId: string | null): Promise<string | null> {
+  if (!seriesId) return null;
+
+  const { data } = await getSupabasePublic()
+    .from('series')
+    .select('slug')
+    .eq('id', seriesId)
+    .maybeSingle();
+
+  return data?.slug ?? null;
 }
 
 export async function GET(request: NextRequest) {
@@ -173,6 +187,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    revalidateContent({
+      category: payload.category,
+      slug,
+      seriesSlug: await findSeriesSlug(payload.seriesId)
+    });
+
     return NextResponse.json(
       { message: '✅ Post created successfully', data },
       { status: 201 }
@@ -215,6 +235,13 @@ export async function PUT(request: NextRequest) {
         { status: 400 }
       );
     }
+    // 수정으로 카테고리나 시리즈가 바뀌었을 수 있어, 무효화하려면 이전 위치를 알아야 한다.
+    const { data: before } = await getSupabasePublic()
+      .from('post')
+      .select('slug, category, seriesId')
+      .eq('id', id)
+      .maybeSingle();
+
     const { data, error } = await supabaseAdmin
       .from('post')
       .update(payload)
@@ -226,6 +253,20 @@ export async function PUT(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    // 슬러그는 배정 후 불변이므로 수정 전후가 같다.
+    revalidateContent(
+      {
+        category: before?.category ?? payload.category,
+        slug: before?.slug,
+        seriesSlug: await findSeriesSlug(before?.seriesId ?? null)
+      },
+      {
+        category: payload.category,
+        slug: before?.slug,
+        seriesSlug: await findSeriesSlug(payload.seriesId)
+      }
+    );
 
     return NextResponse.json(
       { message: '✅ Post updated successfully', data },
@@ -260,6 +301,13 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    // 지우고 나면 어느 경로를 무효화해야 하는지 알 수 없다.
+    const { data: target } = await getSupabasePublic()
+      .from('post')
+      .select('slug, category, seriesId')
+      .eq('id', postId)
+      .maybeSingle();
+
     const { data, error } = await supabaseAdmin
       .from('post')
       .delete()
@@ -270,6 +318,14 @@ export async function DELETE(request: NextRequest) {
         { error: '게시글 삭제에 실패했습니다.' },
         { status: 500 }
       );
+    }
+
+    if (target) {
+      revalidateContent({
+        category: target.category,
+        slug: target.slug,
+        seriesSlug: await findSeriesSlug(target.seriesId)
+      });
     }
 
     return NextResponse.json(
