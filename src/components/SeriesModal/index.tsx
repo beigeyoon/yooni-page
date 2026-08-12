@@ -45,7 +45,7 @@ export default function SeriesModal({ trigger, series, onSuccess }: SeriesModalP
     handleSubmit,
     reset,
     control,
-    formState: { errors }
+    formState: { errors, isSubmitting }
   } = useForm<SeriesPayload>({
     defaultValues: {
       title: series?.title || '',
@@ -149,8 +149,10 @@ export default function SeriesModal({ trigger, series, onSuccess }: SeriesModalP
             >
               취소
             </Button>
-            <Button type="submit">
-              {series ? '수정' : '생성'}
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting
+                ? series ? '수정 중...' : '생성 중...'
+                : series ? '수정' : '생성'}
             </Button>
           </div>
         </form>
