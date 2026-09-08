@@ -4,6 +4,9 @@ import { buildSeriesPostLocations, parseSeriesPostIds } from './seriesPosts';
 
 const A = '11111111-1111-4111-8111-111111111111';
 const B = '22222222-2222-4222-8222-222222222222';
+// A/B are digit-only, so A.toUpperCase() === A; use a hex-letter id here so
+// the test actually exercises case-insensitive comparison.
+const C = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 
 describe('parseSeriesPostIds', () => {
   it('UUID 문자열 배열이면 그대로 돌려준다', () => {
@@ -18,8 +21,10 @@ describe('parseSeriesPostIds', () => {
   });
 
   it('배열이 아니면 거부한다', () => {
-    const result = parseSeriesPostIds({ postIds: A });
-    expect(result.ok).toBe(false);
+    expect(parseSeriesPostIds({ postIds: A })).toEqual({
+      ok: false,
+      error: 'postIds는 문자열 배열이어야 합니다.'
+    });
   });
 
   it('문자열이 아닌 항목이 있으면 거부한다', () => {
@@ -27,11 +32,24 @@ describe('parseSeriesPostIds', () => {
   });
 
   it('UUID가 아닌 항목이 있으면 거부한다', () => {
-    expect(parseSeriesPostIds({ postIds: ['abc'] }).ok).toBe(false);
+    expect(parseSeriesPostIds({ postIds: ['abc'] })).toEqual({
+      ok: false,
+      error: '올바르지 않은 글 id가 있습니다.'
+    });
   });
 
   it('중복이 있으면 거부한다', () => {
-    expect(parseSeriesPostIds({ postIds: [A, A] }).ok).toBe(false);
+    expect(parseSeriesPostIds({ postIds: [A, A] })).toEqual({
+      ok: false,
+      error: '같은 글이 두 번 들어 있습니다.'
+    });
+  });
+
+  it('대소문자만 다른 중복도 거부한다', () => {
+    expect(parseSeriesPostIds({ postIds: [C, C.toUpperCase()] })).toEqual({
+      ok: false,
+      error: '같은 글이 두 번 들어 있습니다.'
+    });
   });
 
   it('본문이 null이어도 터지지 않고 거부한다', () => {

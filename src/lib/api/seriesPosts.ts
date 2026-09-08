@@ -19,7 +19,7 @@ export function parseSeriesPostIds(body: unknown): ParsedSeriesPostIds {
   if (!postIds.every(id => isUuid(id))) {
     return { ok: false, error: '올바르지 않은 글 id가 있습니다.' };
   }
-  if (new Set(postIds).size !== postIds.length) {
+  if (new Set(postIds.map(id => id.toLowerCase())).size !== postIds.length) {
     return { ok: false, error: '같은 글이 두 번 들어 있습니다.' };
   }
   return { ok: true, postIds };
