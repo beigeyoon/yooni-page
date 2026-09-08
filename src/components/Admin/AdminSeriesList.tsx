@@ -68,7 +68,7 @@ function DeleteSeriesButton({
   };
 
   return (
-    <div className="flex flex-col items-end gap-1">
+    <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button
@@ -102,16 +102,17 @@ function DeleteSeriesButton({
           </div>
         </DialogContent>
       </Dialog>
+      {/* 비활성화 이유는 화면에 띄우지 않고 보조기기에만 전달한다. */}
       {blocked && (
         <span
           id={helperId}
-          className="text-xs text-neutral-500">
+          className="sr-only">
           {memberCount === null
             ? '글 수를 확인하지 못했습니다.'
             : `글 ${memberCount}건. 먼저 빼야 삭제할 수 있습니다.`}
         </span>
       )}
-    </div>
+    </>
   );
 }
 
