@@ -19,9 +19,9 @@ export function RecentPosts({
   const filteredPosts = posts?.filter(post => post.isPublished) ?? [];
 
   return (
-    // min-w-0이 없으면 flex 아이템이 min-width:auto라 내용보다 작아지지 못해
-    // 열이 컨테이너 밖으로 밀려난다. 표를 목록으로 바꾸면서 필요해진 부분이다.
-    <div className="min-w-0 flex-1">
+    // 카테고리 블록은 세로로 쌓이며 각각 전체 폭을 쓴다.
+    // 제목 말줄임은 아래 li > a 의 flex 자식(min-w-0 flex-1)이 담당한다.
+    <div className="w-full">
       <h3 className="border-b border-b-zinc-400 px-4 py-3 text-[16px] font-medium">
         {CATEGORY_LABELS[category] ?? ''}
       </h3>
