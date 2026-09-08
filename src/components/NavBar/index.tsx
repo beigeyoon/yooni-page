@@ -38,11 +38,11 @@ export function NavBar() {
                 href="/"
                 className="mx-2 max-sm:flex max-sm:items-center">
                 <Image
-                  src="/images/yooni-favicon.png"
+                  src="/images/yooni-logo.png"
                   alt="main-logo"
-                  height={38}
                   width={42}
-                  className="min-h-[38px] min-w-[38px] hover:opacity-50 max-sm:mr-3 max-sm:inline-block"
+                  height={34}
+                  className="hover:opacity-50 max-sm:mr-3 max-sm:inline-block"
                 />
                 <span className="text-md font-bold leading-none sm:hidden">
                   Yooni
