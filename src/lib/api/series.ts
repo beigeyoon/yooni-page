@@ -1,12 +1,6 @@
 import { apiFetch } from '../apiClient';
 import { Series, SeriesPayload } from '@/types';
 
-
-
-export interface SeriesResponse {
-  data: Series[];
-}
-
 export async function getSeries(): Promise<{ data: Series[] }> {
   return await apiFetch('/api/series', {
     method: 'GET',

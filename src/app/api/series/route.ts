@@ -124,6 +124,12 @@ export async function PUT(request: NextRequest) {
         { status: 400 }
       );
     }
+    if (!isUuid(id)) {
+      return NextResponse.json(
+        { error: '시리즈를 찾을 수 없습니다.' },
+        { status: 404 }
+      );
+    }
 
     if (!payload.title || !isValidCategory(payload.category)) {
       return NextResponse.json(
@@ -138,6 +144,21 @@ export async function PUT(request: NextRequest) {
       .select('slug, category')
       .eq('id', id)
       .maybeSingle();
+
+    // 카테고리가 바뀌면 소속 글의 목차 링크(/카테고리/슬러그)와 시리즈 URL이 어긋난다.
+    // 글이 하나라도 있으면 막는다. 초안도 센다.
+    if (before && before.category !== payload.category) {
+      const memberCount = await prisma.post.count({ where: { seriesId: id } });
+      if (memberCount > 0) {
+        return NextResponse.json(
+          {
+            error:
+              '소속 글이 있어 카테고리를 바꿀 수 없습니다. 글을 먼저 시리즈에서 빼세요.'
+          },
+          { status: 409 }
+        );
+      }
+    }
 
     const { data, error } = await supabaseAdmin
       .from('series')

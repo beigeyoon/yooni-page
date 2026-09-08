@@ -26,7 +26,7 @@ export default function SeriesPostPicker({
 }: {
   candidates: Post[];
   seriesById: Map<string, Series>;
-  currentSeriesId?: string;
+  currentSeriesId: string;
   onAdd: (postId: string) => void;
   disabled?: boolean;
 }) {

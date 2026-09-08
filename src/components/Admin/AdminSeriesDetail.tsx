@@ -139,10 +139,13 @@ export default function AdminSeriesDetail({ idOrSlug }: { idOrSlug: string }) {
 
   if (seriesLoading || postsLoading) {
     return (
-      <div className="flex w-full flex-col items-center gap-4 py-20">
+      <>
+        <PageReady />
+        <div className="flex w-full flex-col items-center gap-4 py-20">
         <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-neutral-700"></div>
-        <p className="text-sm text-neutral-500">시리즈를 불러오는 중입니다.</p>
-      </div>
+          <p className="text-sm text-neutral-500">시리즈를 불러오는 중입니다.</p>
+        </div>
+      </>
     );
   }
 
@@ -207,6 +210,7 @@ export default function AdminSeriesDetail({ idOrSlug }: { idOrSlug: string }) {
           </div>
           <SeriesModal
             series={series}
+            lockCategory={rows.length > 0}
             trigger={
               <Button variant="outline">
                 <SquarePen />

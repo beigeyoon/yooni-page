@@ -49,7 +49,6 @@ export async function PUT(request: NextRequest) {
     const { postIds } = parsed;
 
     const memberSelect = {
-      id: true,
       slug: true,
       category: true,
       seriesId: true

@@ -118,14 +118,24 @@ function DeleteSeriesButton({
 export default function AdminSeriesList() {
   const { canAccessAdmin } = useAdminGate();
 
-  const { data: seriesList, isLoading: seriesLoading } = useQuery({
+  const {
+    data: seriesList,
+    isLoading: seriesLoading,
+    isError: seriesError,
+    refetch: refetchSeries
+  } = useQuery({
     queryKey: ['series'],
     queryFn: getSeries,
     enabled: canAccessAdmin,
     select: (data: { data: Series[] }) => sortSeries(data.data)
   });
 
-  const { data: posts, isLoading: postsLoading } = useQuery({
+  const {
+    data: posts,
+    isLoading: postsLoading,
+    isError: postsError,
+    refetch: refetchPosts
+  } = useQuery({
     queryKey: ['posts', 'preview', 'all'],
     queryFn: getAllPostsForPreview,
     enabled: canAccessAdmin,
@@ -171,6 +181,18 @@ export default function AdminSeriesList() {
           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-neutral-700"></div>
           <p className="text-sm text-neutral-500">시리즈를 불러오는 중입니다.</p>
         </div>
+      ) : seriesError || postsError ? (
+        <div className="flex w-full flex-col items-center gap-4 rounded-lg border border-dashed border-neutral-300 py-20 text-neutral-500">
+          <p>시리즈 정보를 불러오지 못했습니다.</p>
+          <Button
+            variant="outline"
+            onClick={() => {
+              void refetchSeries();
+              void refetchPosts();
+            }}>
+            다시 시도
+          </Button>
+        </div>
       ) : !seriesList || seriesList.length === 0 ? (
         <div className="flex w-full flex-col items-center gap-4 rounded-lg border border-dashed border-neutral-300 py-20 text-neutral-500">
           <FileWarning width={40} />
@@ -207,6 +229,7 @@ export default function AdminSeriesList() {
                       <div className="flex items-start justify-end gap-2">
                         <SeriesModal
                           series={series}
+                          lockCategory={count > 0}
                           trigger={
                             <Button
                               variant="outline"

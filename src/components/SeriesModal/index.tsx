@@ -34,9 +34,11 @@ interface SeriesModalProps {
     category: string;
   };
   onSuccess?: () => void;
+  // 소속 글이 있는 시리즈는 카테고리를 바꿀 수 없다(서버도 409로 막는다).
+  lockCategory?: boolean;
 }
 
-export default function SeriesModal({ trigger, series, onSuccess }: SeriesModalProps) {
+export default function SeriesModal({ trigger, series, onSuccess, lockCategory }: SeriesModalProps) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   
@@ -115,7 +117,8 @@ export default function SeriesModal({ trigger, series, onSuccess }: SeriesModalP
               render={({ field }) => (
                 <Select
                   onValueChange={field.onChange}
-                  value={field.value}>
+                  value={field.value}
+                  disabled={lockCategory}>
                   <SelectTrigger>
                     <SelectValue placeholder="카테고리 선택" />
                   </SelectTrigger>
@@ -130,6 +133,11 @@ export default function SeriesModal({ trigger, series, onSuccess }: SeriesModalP
                 </Select>
               )}
             />
+            {lockCategory && (
+              <p className="text-xs text-neutral-500">
+                소속 글이 있어 카테고리는 바꿀 수 없습니다.
+              </p>
+            )}
             {errors.category && (
               <p className="text-sm text-red-500">{errors.category.message}</p>
             )}
