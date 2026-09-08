@@ -96,7 +96,7 @@ function DeleteSeriesButton({
             <Button
               variant="destructive"
               onClick={handleDelete}
-              disabled={isDeleting}>
+              disabled={isDeleting || blocked}>
               {isDeleting ? <LoaderCircle className="animate-spin" /> : '삭제'}
             </Button>
           </div>

@@ -208,17 +208,19 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // 시리즈를 지우면 소속 글들의 목차와 이전/다음 편도 사라지므로 함께 낡는다.
-    const supabasePublic = getSupabasePublic();
+    // 위 가드로 소속 글이 없음이 보장되므로 낡는 페이지는 시리즈 페이지(홈·카테고리 포함)뿐이다.
+    const { data: target } = await getSupabasePublic()
+      .from('series')
+      .select('slug, category')
+      .eq('id', id)
+      .maybeSingle();
 
-    const [{ data: target }, { data: seriesPosts }] = await Promise.all([
-      supabasePublic
-        .from('series')
-        .select('slug, category')
-        .eq('id', id)
-        .maybeSingle(),
-      supabasePublic.from('post').select('slug, category').eq('seriesId', id)
-    ]);
+    if (!target) {
+      return NextResponse.json(
+        { error: '시리즈를 찾을 수 없습니다.' },
+        { status: 404 }
+      );
+    }
 
     const { data, error } = await supabaseAdmin
       .from('series')
@@ -232,15 +234,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    if (target) {
-      revalidateContent(
-        { category: target.category, seriesSlug: target.slug },
-        ...(seriesPosts ?? []).map(post => ({
-          category: post.category,
-          slug: post.slug
-        }))
-      );
-    }
+    revalidateContent({ category: target.category, seriesSlug: target.slug });
 
     return NextResponse.json(
       { message: '✅ Series deleted successfully', data },
