@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FileWarning, LoaderCircle, Plus, SquarePen, Trash2 } from 'lucide-react';
@@ -45,21 +45,23 @@ function DeleteSeriesButton({
   memberCount
 }: {
   series: Series;
-  memberCount: number;
+  memberCount: number | null;
 }) {
   const [open, setOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
-  const blocked = memberCount > 0;
+  const helperId = useId();
+  const blocked = memberCount === null || memberCount > 0;
 
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
       await deleteSeries(series.id);
-      await queryClient.invalidateQueries({ queryKey: ['series'] });
       setOpen(false);
+      await queryClient.invalidateQueries({ queryKey: ['series'] });
     } catch (error) {
       alert(error instanceof Error ? error.message : '시리즈 삭제에 실패했습니다.');
+      await queryClient.invalidateQueries({ queryKey: ['posts', 'preview', 'all'] });
     } finally {
       setIsDeleting(false);
     }
@@ -72,7 +74,8 @@ function DeleteSeriesButton({
           <Button
             variant="outline"
             size="sm"
-            disabled={blocked}>
+            disabled={blocked}
+            aria-describedby={blocked ? helperId : undefined}>
             <Trash2 />
             삭제
           </Button>
@@ -100,8 +103,12 @@ function DeleteSeriesButton({
         </DialogContent>
       </Dialog>
       {blocked && (
-        <span className="text-xs text-neutral-400">
-          글 {memberCount}건. 먼저 빼야 삭제할 수 있습니다.
+        <span
+          id={helperId}
+          className="text-xs text-neutral-500">
+          {memberCount === null
+            ? '글 수를 확인하지 못했습니다.'
+            : `글 ${memberCount}건. 먼저 빼야 삭제할 수 있습니다.`}
         </span>
       )}
     </div>
@@ -170,7 +177,7 @@ export default function AdminSeriesList() {
           <p>시리즈가 없습니다.</p>
         </div>
       ) : (
-        <div className="rounded-xl border border-neutral-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white">
           <Table>
             <TableHeader>
               <TableRow>
@@ -194,7 +201,7 @@ export default function AdminSeriesList() {
                       </Link>
                     </TableCell>
                     <TableCell>{series.category}</TableCell>
-                    <TableCell className="text-right">{count}</TableCell>
+                    <TableCell className="text-right">{posts ? count : '—'}</TableCell>
                     <TableCell>{formatDisplayDate(series.createdAt)}</TableCell>
                     <TableCell>
                       <div className="flex items-start justify-end gap-2">
@@ -211,7 +218,7 @@ export default function AdminSeriesList() {
                         />
                         <DeleteSeriesButton
                           series={series}
-                          memberCount={count}
+                          memberCount={posts ? count : null}
                         />
                       </div>
                     </TableCell>

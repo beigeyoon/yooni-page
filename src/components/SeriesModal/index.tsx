@@ -67,7 +67,9 @@ export default function SeriesModal({ trigger, series, onSuccess }: SeriesModalP
       await queryClient.refetchQueries({ queryKey: ['series'] });
       
       setOpen(false);
-      reset();
+      // 수정 모달은 마운트 시점 값이 아니라 방금 저장한 값을 기본값으로 삼아야 다음에 열 때 최신 값이 보인다.
+      // 생성 모달은 비운다.
+      reset(series ? data : undefined);
       onSuccess?.();
     } catch (error) {
       console.error('시리즈 저장 실패:', error);
