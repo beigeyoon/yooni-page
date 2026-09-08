@@ -5,6 +5,8 @@ import { getAppSession, isAdminEmail } from '@/lib/auth';
 import { isValidCategory } from '@/types';
 import { buildSlugCandidate, resolveUniqueSlug } from '@/utils/generateSlug';
 import { revalidateContent } from '@/lib/revalidateContent';
+import prisma from '@/lib/prisma';
+import isUuid from '@/utils/isUuid';
 
 function getSeriesPayload(body: Record<string, unknown>) {
   const title = typeof body.title === 'string' ? body.title.trim() : '';
@@ -187,6 +189,22 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: '시리즈 id가 필요합니다.' },
         { status: 400 }
+      );
+    }
+
+    if (!isUuid(id)) {
+      return NextResponse.json(
+        { error: '시리즈를 찾을 수 없습니다.' },
+        { status: 404 }
+      );
+    }
+
+    // 소속 글이 있으면 지우지 않는다. 화면에서도 막지만 서버가 최종 방어선이다. 초안도 센다.
+    const memberCount = await prisma.post.count({ where: { seriesId: id } });
+    if (memberCount > 0) {
+      return NextResponse.json(
+        { error: '소속 글이 있어 삭제할 수 없습니다. 글을 먼저 시리즈에서 빼세요.' },
+        { status: 409 }
       );
     }
 
