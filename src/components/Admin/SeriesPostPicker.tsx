@@ -20,10 +20,12 @@ import { getPostDate } from '@/utils/postDate';
 export default function SeriesPostPicker({
   candidates,
   seriesById,
+  currentSeriesId,
   onAdd
 }: {
   candidates: Post[];
   seriesById: Map<string, Series>;
+  currentSeriesId?: string;
   onAdd: (postId: string) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -38,7 +40,7 @@ export default function SeriesPostPicker({
           글 추가
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[560px]">
+      <DialogContent className="sm:max-w-[560px]">
         <DialogHeader>
           <DialogTitle>글 추가</DialogTitle>
           <DialogDescription>
@@ -50,17 +52,22 @@ export default function SeriesPostPicker({
             추가할 수 있는 글이 없습니다.
           </p>
         ) : (
-          <ul className="flex flex-col divide-y">
+          <ul className="flex max-h-[60vh] flex-col divide-y overflow-y-auto">
             {candidates.map(post => {
-              const otherSeries = post.seriesId
-                ? seriesById.get(post.seriesId)
-                : undefined;
+              const otherSeries =
+                post.seriesId && post.seriesId !== currentSeriesId
+                  ? seriesById.get(post.seriesId)
+                  : undefined;
               return (
                 <li
                   key={post.id}
                   className="flex items-center gap-3 py-2">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">{post.title}</p>
+                    <p
+                      className="truncate font-medium"
+                      title={post.title}>
+                      {post.title}
+                    </p>
                     <p className="text-xs text-neutral-500">
                       <span
                         className={
@@ -75,6 +82,7 @@ export default function SeriesPostPicker({
                   </div>
                   <Button
                     size="sm"
+                    aria-label={`${post.title} 추가`}
                     onClick={() => onAdd(post.id)}>
                     추가
                   </Button>

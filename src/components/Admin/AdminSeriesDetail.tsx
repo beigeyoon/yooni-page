@@ -178,6 +178,7 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
           <SeriesPostPicker
             candidates={candidates}
             seriesById={seriesById}
+            currentSeriesId={seriesId}
             onAdd={id => setOrder(prev => appendItem(prev, id))}
           />
           <div className="flex items-center gap-2 max-sm:justify-end">
