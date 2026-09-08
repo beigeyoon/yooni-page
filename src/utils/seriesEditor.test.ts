@@ -26,6 +26,31 @@ describe('sortSeriesPosts', () => {
     sortSeriesPosts(posts);
     expect(posts.map(p => p.id)).toEqual(['b', 'a']);
   });
+
+  it('순번 0은 실제 순번으로 본다', () => {
+    const posts = [
+      { id: 'n', seriesOrder: null, createdAt: '2026-01-01T00:00:00', publishedAt: '2026-01-01T00:00:00' },
+      { id: 'one', seriesOrder: 1, createdAt: '2026-01-01T00:00:00', publishedAt: '2026-01-01T00:00:00' },
+      { id: 'zero', seriesOrder: 0, createdAt: '2026-01-01T00:00:00', publishedAt: '2026-01-01T00:00:00' }
+    ];
+    expect(sortSeriesPosts(posts).map(p => p.id)).toEqual(['zero', 'one', 'n']);
+  });
+
+  it('seriesOrder가 undefined면 null과 같이 뒤로 보낸다', () => {
+    const posts = [
+      { id: 'undef', createdAt: '2026-01-01T00:00:00', publishedAt: '2026-01-01T00:00:00' },
+      { id: 'one', seriesOrder: 1, createdAt: '2026-01-01T00:00:00', publishedAt: '2026-01-01T00:00:00' }
+    ];
+    expect(sortSeriesPosts(posts).map(p => p.id)).toEqual(['one', 'undef']);
+  });
+
+  it('순번이 같으면 게시일 순', () => {
+    const posts = [
+      { id: 'late', seriesOrder: 1, createdAt: '2026-01-05T00:00:00', publishedAt: '2026-01-05T00:00:00' },
+      { id: 'early', seriesOrder: 1, createdAt: '2026-01-01T00:00:00', publishedAt: '2026-01-01T00:00:00' }
+    ];
+    expect(sortSeriesPosts(posts).map(p => p.id)).toEqual(['early', 'late']);
+  });
 });
 
 describe('moveItem', () => {
@@ -41,6 +66,12 @@ describe('moveItem', () => {
     const ids = ['a', 'b', 'c'];
     expect(moveItem(ids, 0, 'up')).toBe(ids);
     expect(moveItem(ids, 2, 'down')).toBe(ids);
+  });
+
+  it('옮겨도 원본 배열은 바뀌지 않는다', () => {
+    const ids = ['a', 'b', 'c'];
+    moveItem(ids, 0, 'down');
+    expect(ids).toEqual(['a', 'b', 'c']);
   });
 });
 
@@ -58,6 +89,11 @@ describe('appendItem', () => {
 describe('removeItem', () => {
   it('해당 id를 뺀다', () => {
     expect(removeItem(['a', 'b', 'c'], 'b')).toEqual(['a', 'c']);
+  });
+
+  it('없는 id를 빼면 그대로다', () => {
+    const ids = ['a', 'b', 'c'];
+    expect(removeItem(ids, 'z')).toBe(ids);
   });
 });
 

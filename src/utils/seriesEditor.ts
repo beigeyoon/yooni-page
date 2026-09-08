@@ -7,8 +7,8 @@ type OrderablePost = {
   publishedAt?: string | null;
 };
 
-// 공개 시리즈 페이지(lib/api/postOrder.ts)와 같은 규칙.
-// 순번 오름차순, 순번 없는 글은 뒤로, 그 안에서는 게시일(초안은 저장일) 오름차순.
+// 공개 시리즈 페이지(src/lib/api/postOrder.ts)와 같은 규칙: 순번 오름차순, 순번 없는 글은 뒤로, 그 안에서는 게시일 오름차순.
+// 다만 초안은 공개 쿼리에 나오지 않으므로 여기서만 저장일로 끼워 넣는다.
 export function sortSeriesPosts<T extends OrderablePost>(posts: T[]): T[] {
   return [...posts].sort((a, b) => {
     const ao = a.seriesOrder ?? null;
@@ -42,7 +42,7 @@ export function appendItem(ids: string[], id: string): string[] {
 }
 
 export function removeItem(ids: string[], id: string): string[] {
-  return ids.filter(item => item !== id);
+  return ids.includes(id) ? ids.filter(item => item !== id) : ids;
 }
 
 export function isSameOrder(a: string[], b: string[]): boolean {
