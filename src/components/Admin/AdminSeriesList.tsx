@@ -204,11 +204,14 @@ export default function AdminSeriesList() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>제목</TableHead>
-                <TableHead>카테고리</TableHead>
-                <TableHead className="text-right">글 수</TableHead>
-                <TableHead>생성일</TableHead>
-                <TableHead className="text-right">동작</TableHead>
+                {/* 제목 열이 남는 폭을 다 가져가고 나머지는 내용 폭만큼만 쓴다. */}
+                <TableHead className="w-full">제목</TableHead>
+                <TableHead className="whitespace-nowrap">카테고리</TableHead>
+                <TableHead className="whitespace-nowrap text-right">글 수</TableHead>
+                <TableHead className="whitespace-nowrap">생성일</TableHead>
+                <TableHead className="whitespace-nowrap">
+                  <span className="sr-only">동작</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -223,9 +226,13 @@ export default function AdminSeriesList() {
                         {series.title}
                       </Link>
                     </TableCell>
-                    <TableCell>{series.category}</TableCell>
-                    <TableCell className="text-right">{posts ? count : '—'}</TableCell>
-                    <TableCell>{formatDisplayDate(series.createdAt)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{series.category}</TableCell>
+                    <TableCell className="whitespace-nowrap text-right">
+                      {posts ? count : '—'}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {formatDisplayDate(series.createdAt)}
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-start justify-end gap-2">
                         <SeriesModal
