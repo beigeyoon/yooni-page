@@ -21,7 +21,7 @@ const PhotoPreview = ({
     title: string;
     subtitle: string;
     content?: string;
-    createdAt: string;
+    publishedAt: string;
     isPublished: boolean;
   };
 }) => {

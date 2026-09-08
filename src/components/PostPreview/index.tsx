@@ -10,12 +10,12 @@ export function PostPreview({
     slug: string;
     title: string;
     subtitle: string;
-    createdAt: string;
+    publishedAt: string;
     isPublished: boolean;
   };
   href: string;
 }) {
-  const { title, subtitle, createdAt, isPublished } = post;
+  const { title, subtitle, publishedAt, isPublished } = post;
   return (
     <Link
       href={href}
@@ -29,7 +29,7 @@ export function PostPreview({
           )}
           <span className="inline-block max-w-full truncate align-baseline">{title}</span>
         </div>
-        <span className="min-w-[88px] text-sm">{createdAt}</span>
+        <span className="min-w-[88px] text-sm">{publishedAt}</span>
       </div>
       <div className="text-md">{subtitle}</div>
     </Link>

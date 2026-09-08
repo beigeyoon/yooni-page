@@ -45,6 +45,8 @@ export interface Post {
   isPublished: boolean;
   userId: string;
   createdAt: string;
+  // 최초 게시 시각. 초안은 null. 화면에 노출하는 날짜는 이 값이다.
+  publishedAt: string | null;
 };
 
 export interface CommentFormValues {

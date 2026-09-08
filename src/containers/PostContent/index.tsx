@@ -7,6 +7,7 @@ import { deletePost, getPostBySlug } from '@/lib/api/posts';
 import { getSeries } from '@/lib/api/series';
 import { FileWarning, SquarePen } from 'lucide-react';
 import handleTimeStirng from '@/utils/handleTimeStirng';
+import { getPostDate } from '@/utils/postDate';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
@@ -130,7 +131,7 @@ const PostContent = ({
           />
           <span className="font-bold">Yooni</span>
           <span className="text-neutral-700">
-            {handleTimeStirng(post.createdAt)}
+            {handleTimeStirng(getPostDate(post))}
           </span>
         </div>
       </div>

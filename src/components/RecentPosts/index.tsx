@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Post } from '@/types';
 import handleTimeStirng from '@/utils/handleTimeStirng';
+import { getPostDate } from '@/utils/postDate';
 
 const CATEGORY_LABELS: Record<string, string> = {
   dev: '개발',
@@ -38,7 +39,7 @@ export function RecentPosts({
                   {post.title}
                 </span>
                 <span className="shrink-0 text-[10px]">
-                  {handleTimeStirng(post.createdAt)}
+                  {handleTimeStirng(getPostDate(post))}
                 </span>
               </Link>
             </li>

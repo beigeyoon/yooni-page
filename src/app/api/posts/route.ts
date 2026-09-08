@@ -6,6 +6,7 @@ import { isValidCategory } from '@/types';
 import { orderByNewest, orderBySeriesSequence } from '@/lib/api/postOrder';
 import { buildSlugCandidate, resolveUniqueSlug } from '@/utils/generateSlug';
 import { revalidateContent } from '@/lib/revalidateContent';
+import { withPublishedAt } from '@/lib/api/publishedAt';
 
 // 정수가 아닌 값(소수, 빈 문자열, 숫자가 아닌 문자열)은 순번 없음으로 취급한다.
 function parseSeriesOrder(value: unknown): number | null {
@@ -178,7 +179,7 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabaseAdmin
       .from('post')
-      .insert([{ ...payload, userId, slug }]);
+      .insert([{ ...withPublishedAt(payload, null), userId, slug }]);
 
     if (error) {
       return NextResponse.json(
@@ -236,15 +237,16 @@ export async function PUT(request: NextRequest) {
       );
     }
     // 수정으로 카테고리나 시리즈가 바뀌었을 수 있어, 무효화하려면 이전 위치를 알아야 한다.
-    const { data: before } = await getSupabasePublic()
+    // 게시일 판단에도 이전 값이 필요하다. 초안은 공개 키로 보이지 않으므로 관리자 키로 읽는다.
+    const { data: before } = await supabaseAdmin
       .from('post')
-      .select('slug, category, seriesId')
+      .select('slug, category, seriesId, publishedAt')
       .eq('id', id)
       .maybeSingle();
 
     const { data, error } = await supabaseAdmin
       .from('post')
-      .update(payload)
+      .update(withPublishedAt(payload, before?.publishedAt))
       .eq('id', id);
 
     if (error) {
