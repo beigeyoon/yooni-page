@@ -14,6 +14,7 @@ export const ABOUT_CONTENT: Array<{
   {
     title: 'Personality',
     desc: [
+      '산재된 것을 구조화하여 도구화',
       '스스로에 대한 믿음을 기반으로 한 도전의 반복',
       '도전에 대한 철저한 책임감',
       '다양한 창구를 적극적으로 활용하는 소통 스킬',
