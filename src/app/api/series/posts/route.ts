@@ -54,24 +54,16 @@ export async function PUT(request: NextRequest) {
       category: true,
       seriesId: true
     } as const;
-    type MemberRow = {
-      id: string;
-      slug: string;
-      category: string;
-      seriesId: string | null;
-    };
 
     const [previousMembers, nextMembers] = await Promise.all([
       prisma.post.findMany({
         where: { seriesId: series.id },
         select: memberSelect
       }),
-      postIds.length > 0
-        ? prisma.post.findMany({
-            where: { id: { in: postIds } },
-            select: memberSelect
-          })
-        : Promise.resolve<MemberRow[]>([])
+      prisma.post.findMany({
+        where: { id: { in: postIds } },
+        select: memberSelect
+      })
     ]);
 
     if (nextMembers.length !== postIds.length) {
@@ -101,6 +93,7 @@ export async function PUT(request: NextRequest) {
     ]);
 
     // 글을 빼앗긴 다른 시리즈의 페이지도 낡는다.
+    // 그 시리즈에 남은 글들도 목차와 이전/다음 편이 바뀌므로 함께 무효화한다.
     const otherSeriesIds = [
       ...new Set(
         nextMembers
@@ -108,18 +101,24 @@ export async function PUT(request: NextRequest) {
           .filter((id): id is string => !!id && id !== series.id)
       )
     ];
-    const otherSeries =
+    const [otherSeries, otherSeriesPosts] =
       otherSeriesIds.length > 0
-        ? await prisma.series.findMany({
-            where: { id: { in: otherSeriesIds } },
-            select: { slug: true, category: true }
-          })
-        : [];
+        ? await Promise.all([
+            prisma.series.findMany({
+              where: { id: { in: otherSeriesIds } },
+              select: { slug: true, category: true }
+            }),
+            prisma.post.findMany({
+              where: { seriesId: { in: otherSeriesIds } },
+              select: { slug: true, category: true }
+            })
+          ])
+        : [[], []];
 
     revalidateContent(
       ...buildSeriesPostLocations(
         series,
-        [...previousMembers, ...nextMembers],
+        [...previousMembers, ...nextMembers, ...otherSeriesPosts],
         otherSeries
       )
     );
