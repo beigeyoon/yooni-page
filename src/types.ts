@@ -83,7 +83,8 @@ export interface Series {
   title: string;
   description?: string;
   category: string;
-  createdAt: Date;
+  // Supabase REST가 돌려주는 값이라 Date가 아니라 문자열이다. 해석은 utils/dbTimestamp.ts.
+  createdAt: string;
 };
 
 export interface SeriesPayload extends SeriesFormValues {

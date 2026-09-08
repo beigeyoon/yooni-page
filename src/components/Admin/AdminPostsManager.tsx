@@ -2,7 +2,7 @@
 
 import PageReady from '@/components/Loading/PageReady';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/useAuth';
+import { useAdminGate } from '@/hooks/useAdminGate';
 import { getAllPostsForPreview } from '@/lib/api/posts';
 import { Post } from '@/types';
 import handleTimeStirng from '@/utils/handleTimeStirng';
@@ -10,13 +10,9 @@ import { parseDbTimestamp } from '@/utils/dbTimestamp';
 import { useQuery } from '@tanstack/react-query';
 import { Eye, FileWarning, Plus, SquarePen } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 
 export default function AdminPostsManager() {
-  const { isAdmin, status } = useAuth();
-  const router = useRouteWithLoading();
-  const canAccessAdmin = status === 'authenticated' && !!isAdmin;
+  const { canAccessAdmin } = useAdminGate();
 
   const { data: posts, isLoading } = useQuery({
     queryKey: ['posts', 'preview', 'all'],
@@ -31,13 +27,6 @@ export default function AdminPostsManager() {
           parseDbTimestamp(a.createdAt).getTime()
       ),
   });
-
-  useEffect(() => {
-    if (status === 'loading') return;
-    if (!canAccessAdmin) {
-      router.push('/');
-    }
-  }, [canAccessAdmin, router, status]);
 
   if (!canAccessAdmin) return <></>;
 

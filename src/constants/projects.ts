@@ -11,11 +11,12 @@ export const PROJECTS_CONTENT: Array<{
   };
 }> = [
   {
-    title: 'Fetch Diff',
-    summary: 'IT/AI 업계 동향을 발행하는 LLM 기반 1인 미디어',
+    title: 'Fetch Diff (paused)',
+    summary: 'IT/AI 동향을 발행하는 LLM 기반 1인 미디어 (일시 중단)',
     imgHref: '/images/fetch-diff.png',
     detail: {
       description: [
+        '유입이 적은 이슈로 일시 중단',
         'IT 업계 국내외 RSS 피드 수집',
         'LLM 기반 콘텐츠 생성 및 발행',
         '관리를 위한 admin 페이지 구축',
@@ -31,24 +32,24 @@ export const PROJECTS_CONTENT: Array<{
   },
   {
     title: 'Yooti',
-    summary: '시간 기반 아이템 통합 관리 캘린더 앱',
+    summary: '시간 기반 아이템 통합 관리 캘린더',
     imgHref: '/images/yooti-app.png',
     detail: {
       description: [
         '할일/이벤트/루틴/기념일/기간/마감일 통합 관리',
         'TestFlight 베타 테스트 중',
-        '2026 애플 앱스토어 출시 예정',
+        '2026 애플 앱스토어 출시 완료',
         'React-native, Expo, Swift, Typescript',
       ],
       links: [
         {
-          title: '웹버전 공유용 배포 링크',
-          src: 'https://gorgeous-monstera-ba69a1.netlify.app',
+          title: '앱스토어 링크',
+          src: 'https://apps.apple.com/kr/app/yooti-%EC%9C%A0%ED%8B%B0-%EC%BA%98%EB%A6%B0%EB%8D%94-%ED%95%A0%EC%9D%BC-%EB%A3%A8%ED%8B%B4-%EA%B8%B0%EB%85%90%EC%9D%BC/id6759519192'
         },
-        {
-          title: 'Github 레포지토리 링크',
-          src: 'https://github.com/beigeyoon/yooni-page',
-        },
+        // {
+        //   title: '웹버전 공유용 배포 링크',
+        //   src: 'https://gorgeous-monstera-ba69a1.netlify.app',
+        // },
       ],
     },
   },

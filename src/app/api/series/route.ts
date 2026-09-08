@@ -5,6 +5,8 @@ import { getAppSession, isAdminEmail } from '@/lib/auth';
 import { isValidCategory } from '@/types';
 import { buildSlugCandidate, resolveUniqueSlug } from '@/utils/generateSlug';
 import { revalidateContent } from '@/lib/revalidateContent';
+import prisma from '@/lib/prisma';
+import isUuid from '@/utils/isUuid';
 
 function getSeriesPayload(body: Record<string, unknown>) {
   const title = typeof body.title === 'string' ? body.title.trim() : '';
@@ -122,6 +124,12 @@ export async function PUT(request: NextRequest) {
         { status: 400 }
       );
     }
+    if (!isUuid(id)) {
+      return NextResponse.json(
+        { error: '시리즈를 찾을 수 없습니다.' },
+        { status: 404 }
+      );
+    }
 
     if (!payload.title || !isValidCategory(payload.category)) {
       return NextResponse.json(
@@ -136,6 +144,21 @@ export async function PUT(request: NextRequest) {
       .select('slug, category')
       .eq('id', id)
       .maybeSingle();
+
+    // 카테고리가 바뀌면 소속 글의 목차 링크(/카테고리/슬러그)와 시리즈 URL이 어긋난다.
+    // 글이 하나라도 있으면 막는다. 초안도 센다.
+    if (before && before.category !== payload.category) {
+      const memberCount = await prisma.post.count({ where: { seriesId: id } });
+      if (memberCount > 0) {
+        return NextResponse.json(
+          {
+            error:
+              '소속 글이 있어 카테고리를 바꿀 수 없습니다. 글을 먼저 시리즈에서 빼세요.'
+          },
+          { status: 409 }
+        );
+      }
+    }
 
     const { data, error } = await supabaseAdmin
       .from('series')
@@ -190,17 +213,35 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // 시리즈를 지우면 소속 글들의 목차와 이전/다음 편도 사라지므로 함께 낡는다.
-    const supabasePublic = getSupabasePublic();
+    if (!isUuid(id)) {
+      return NextResponse.json(
+        { error: '시리즈를 찾을 수 없습니다.' },
+        { status: 404 }
+      );
+    }
 
-    const [{ data: target }, { data: seriesPosts }] = await Promise.all([
-      supabasePublic
-        .from('series')
-        .select('slug, category')
-        .eq('id', id)
-        .maybeSingle(),
-      supabasePublic.from('post').select('slug, category').eq('seriesId', id)
-    ]);
+    // 소속 글이 있으면 지우지 않는다. 화면에서도 막지만 서버가 최종 방어선이다. 초안도 센다.
+    const memberCount = await prisma.post.count({ where: { seriesId: id } });
+    if (memberCount > 0) {
+      return NextResponse.json(
+        { error: '소속 글이 있어 삭제할 수 없습니다. 글을 먼저 시리즈에서 빼세요.' },
+        { status: 409 }
+      );
+    }
+
+    // 위 가드로 소속 글이 없음이 보장되므로 낡는 페이지는 시리즈 페이지(홈·카테고리 포함)뿐이다.
+    const { data: target } = await getSupabasePublic()
+      .from('series')
+      .select('slug, category')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (!target) {
+      return NextResponse.json(
+        { error: '시리즈를 찾을 수 없습니다.' },
+        { status: 404 }
+      );
+    }
 
     const { data, error } = await supabaseAdmin
       .from('series')
@@ -214,15 +255,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    if (target) {
-      revalidateContent(
-        { category: target.category, seriesSlug: target.slug },
-        ...(seriesPosts ?? []).map(post => ({
-          category: post.category,
-          slug: post.slug
-        }))
-      );
-    }
+    revalidateContent({ category: target.category, seriesSlug: target.slug });
 
     return NextResponse.json(
       { message: '✅ Series deleted successfully', data },

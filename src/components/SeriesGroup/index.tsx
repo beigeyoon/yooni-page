@@ -57,7 +57,9 @@ const SeriesGroup = () => {
         시리즈
       </h2>
       <TooltipProvider delayDuration={0}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* 시리즈가 있는 카테고리만 렌더되므로 열을 미리 4등분하면 빈 열이 폭을 차지해
+            칩이 불필요하게 줄바꿈된다. 각 카테고리가 내용 폭만큼 차지하고 넘치면 다음 줄로 흐른다. */}
+        <div className="flex flex-wrap gap-x-12 gap-y-6">
           {categoryOrder
             .filter(category => seriesByCategory[category] && seriesByCategory[category].length > 0)
             .map((category) => (

@@ -177,7 +177,8 @@ export default async function Home() {
           <h2 className="pb-4 text-2xl font-bold text-neutral-800">
             <Newspaper className="inline-block" /> 최신 글
           </h2>
-          <div className="flex gap-8 rounded-lg bg-neutral-100/60 p-4 max-sm:flex-col">
+          {/* 카테고리를 가로 3열로 두면 제목 폭이 150px 남짓이라 대부분 말줄임된다. 세로로 쌓아 제목에 전체 폭을 준다. */}
+          <div className="flex flex-col gap-6 rounded-lg bg-neutral-100/60 p-4">
             <RecentPosts
               category="dev"
               posts={postsByCategory['dev']}
