@@ -10,14 +10,15 @@ type Orderable<T> = {
   ): T;
 };
 
-// 시리즈는 1편부터 순서대로. 순번이 없는 글은 뒤로 밀고 작성일 순으로 잇는다.
+// 시리즈는 1편부터 순서대로. 순번이 없는 글은 뒤로 밀고 게시일 순으로 잇는다.
 export function orderBySeriesSequence<T extends Orderable<T>>(query: T): T {
   return query
     .order('seriesOrder', { ascending: true, nullsFirst: false })
-    .order('createdAt', { ascending: true });
+    .order('publishedAt', { ascending: true });
 }
 
-// 시리즈가 아닌 모든 목록은 최신순.
+// 시리즈가 아닌 모든 목록은 게시일 최신순.
+// 관리자 미리보기에는 게시일이 없는 초안이 섞이므로 뒤로 보낸다.
 export function orderByNewest<T extends Orderable<T>>(query: T): T {
-  return query.order('createdAt', { ascending: false });
+  return query.order('publishedAt', { ascending: false, nullsFirst: false });
 }

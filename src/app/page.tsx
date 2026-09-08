@@ -12,6 +12,7 @@ import {
 import Image from 'next/image';
 import { Metadata } from 'next';
 import { parseDbTimestamp } from '@/utils/dbTimestamp';
+import { getPostDate } from '@/utils/postDate';
 
 // 즉시 무효화(revalidateContent)가 평소 갱신을 담당하고,
 // 이 주기는 무효화가 실패했을 때를 위한 백스톱이다.
@@ -99,8 +100,8 @@ export default async function Home() {
     const posts = cached.data as Post[];
     posts.sort(
       (a, b) =>
-        parseDbTimestamp(b.createdAt).getTime() -
-        parseDbTimestamp(a.createdAt).getTime()
+        parseDbTimestamp(getPostDate(b)).getTime() -
+        parseDbTimestamp(getPostDate(a)).getTime()
     );
     postsByCategory[category] = posts
       .filter(post => post.isPublished)

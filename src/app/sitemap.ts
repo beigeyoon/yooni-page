@@ -1,7 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { getSupabasePublic } from '@/lib/supabasePublic';
-import { CATEGORIES } from '@/types';
+import { CATEGORIES, type Post } from '@/types';
 import { parseDbTimestamp } from '@/utils/dbTimestamp';
+import { getPostDate } from '@/utils/postDate';
+import { orderByNewest } from '@/lib/api/postOrder';
 
 export const revalidate = 3600;
 
@@ -40,19 +42,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabasePublic = getSupabasePublic();
 
   const [postsResult, seriesResult] = await Promise.all([
-    supabasePublic
-      .from('post')
-      .select('slug, category, createdAt, seriesId')
-      .eq('isPublished', true)
-      .order('createdAt', { ascending: false }),
+    orderByNewest(
+      supabasePublic
+        .from('post')
+        .select('slug, category, createdAt, publishedAt, seriesId')
+        .eq('isPublished', true)
+    ),
     supabasePublic.from('series').select('id, slug, category, createdAt')
   ]);
 
-  const posts = postsResult.data ?? [];
+  // select 목록에서 컬럼이 빠지면 getPostDate가 조용히 createdAt으로 폴백하므로 타입으로 묶어둔다.
+  const posts = (postsResult.data ?? []) as Pick<
+    Post,
+    'slug' | 'category' | 'createdAt' | 'publishedAt' | 'seriesId'
+  >[];
 
   const postEntries: MetadataRoute.Sitemap = posts.map(post => ({
     url: `${SITE_URL}/${post.category}/${post.slug}`,
-    lastModified: parseDbTimestamp(post.createdAt),
+    lastModified: parseDbTimestamp(getPostDate(post)),
     changeFrequency: 'monthly',
     priority: 0.7
   }));
@@ -62,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const latestPostDateBySeries = new Map<string, Date>();
   for (const post of posts) {
     if (!post.seriesId) continue;
-    const date = parseDbTimestamp(post.createdAt);
+    const date = parseDbTimestamp(getPostDate(post));
     const current = latestPostDateBySeries.get(post.seriesId);
     if (!current || date > current) {
       latestPostDateBySeries.set(post.seriesId, date);

@@ -1,5 +1,6 @@
 import { Category, Post } from "@/types";
 import handleTimeStirng from "./handleTimeStirng";
+import { getPostDate } from "./postDate";
 
 // 정렬은 데이터 조회 계층(posts.server.ts / api/posts, 공통 규칙은 lib/api/postOrder.ts)에서
 // 이미 끝난 상태로 들어온다. 여기서 다시 정렬하면 시리즈 순서가 깨진다.
@@ -7,14 +8,14 @@ function getPostsList(posts: Post[], category: Category) {
   return posts
     .filter((post) => post.category === category)
     .map((post) => {
-    const { id, slug, title, subtitle, content, createdAt, isPublished } = post;
+    const { id, slug, title, subtitle, content, isPublished } = post;
 
     const result = {
       id,
       slug,
       title,
       subtitle,
-      createdAt: handleTimeStirng(createdAt),
+      publishedAt: handleTimeStirng(getPostDate(post)),
       isPublished,
     }
 

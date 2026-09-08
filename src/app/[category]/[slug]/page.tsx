@@ -20,6 +20,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import sanitizePostHtml from '@/utils/sanitizePostHtml';
 import optimizePostHtml from '@/utils/optimizePostHtml';
 import { toIsoString } from '@/utils/dbTimestamp';
+import { getPostDate } from '@/utils/postDate';
 import isUuid from '@/utils/isUuid';
 import decodeSlugParam from '@/utils/decodeSlugParam';
 import { getSupabasePublic } from '@/lib/supabasePublic';
@@ -134,8 +135,8 @@ export async function generateMetadata({
           alt: post.title
         }
       ],
-      publishedTime: toIsoString(post.createdAt),
-      modifiedTime: toIsoString(post.createdAt),
+      publishedTime: toIsoString(getPostDate(post)),
+      modifiedTime: toIsoString(getPostDate(post)),
       authors: ['유니']
     },
     twitter: {
@@ -185,8 +186,8 @@ function generateStructuredData(
       logo: { '@type': 'ImageObject', url: OG_IMAGE }
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
-    datePublished: toIsoString(post.createdAt),
-    dateModified: toIsoString(post.createdAt),
+    datePublished: toIsoString(getPostDate(post)),
+    dateModified: toIsoString(getPostDate(post)),
     image: { '@type': 'ImageObject', url: OG_IMAGE },
     articleSection: category
   };
