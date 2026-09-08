@@ -195,7 +195,7 @@ export default function AdminSeriesList() {
                   <TableRow key={series.id}>
                     <TableCell className="font-semibold">
                       <Link
-                        href={`/admin/series/${series.id}`}
+                        href={`/admin/series/${encodeURIComponent(series.slug)}`}
                         className="hover:underline">
                         {series.title}
                       </Link>

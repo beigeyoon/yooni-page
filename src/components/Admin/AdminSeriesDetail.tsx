@@ -22,6 +22,7 @@ import { Post, Series } from '@/types';
 import { parseDbTimestamp } from '@/utils/dbTimestamp';
 import handleTimeStirng from '@/utils/handleTimeStirng';
 import { getPostDate } from '@/utils/postDate';
+import { findSeriesByIdOrSlug } from '@/utils/findSeries';
 import {
   appendItem,
   isSameOrder,
@@ -30,7 +31,8 @@ import {
   sortSeriesPosts
 } from '@/utils/seriesEditor';
 
-export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
+// URL 세그먼트는 UUID일 수도, 공개 페이지와 같은 슬러그일 수도 있다.
+export default function AdminSeriesDetail({ idOrSlug }: { idOrSlug: string }) {
   const { canAccessAdmin } = useAdminGate();
   const queryClient = useQueryClient();
 
@@ -58,7 +60,9 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
     select: (data: { data: Post[] }) => data.data
   });
 
-  const series = seriesList?.find(item => item.id === seriesId);
+  const series = findSeriesByIdOrSlug(seriesList ?? [], idOrSlug);
+  // 아래 계산은 전부 실제 id 기준이다. 아직 못 찾았으면 null이라 소속 글도 비어 있다.
+  const seriesId = series?.id ?? null;
 
   const postById = useMemo(
     () => new Map((posts ?? []).map(post => [post.id, post])),
@@ -81,7 +85,7 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
   // 로컬 편집 상태는 글 id의 순서 배열 하나다.
   // 기준선의 내용이 바뀔 때(처음 불러올 때, 저장 후 다시 받아올 때)만 로컬 상태를 기준선으로 맞춘다.
   // 참조가 아니라 내용(key)으로 비교해야, 같은 데이터를 다시 받아왔을 때 편집 중인 상태가 날아가지 않는다.
-  const baselineKey = `${seriesId}:${baseline.join('|')}`;
+  const baselineKey = `${seriesId ?? idOrSlug}:${baseline.join('|')}`;
   const [syncedKey, setSyncedKey] = useState<string | null>(null);
   const [order, setOrder] = useState<string[]>([]);
   if (syncedKey !== baselineKey) {
@@ -117,6 +121,7 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
   }, [posts, series, visibleOrder]);
 
   const handleSave = async () => {
+    if (!seriesId) return;
     setIsSaving(true);
     try {
       await updateSeriesPosts(seriesId, visibleOrder);
@@ -215,7 +220,7 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
           <SeriesPostPicker
             candidates={candidates}
             seriesById={seriesById}
-            currentSeriesId={seriesId}
+            currentSeriesId={series.id}
             onAdd={id => updateOrder(ids => appendItem(ids, id))}
             disabled={isSaving}
           />

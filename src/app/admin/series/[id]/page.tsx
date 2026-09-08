@@ -10,7 +10,7 @@ export default async function AdminSeriesDetailPage({
   return (
     <div className="mx-auto flex max-w-[980px] flex-col gap-6 py-8 max-sm:px-4">
       <AdminNav current="/admin/series" />
-      <AdminSeriesDetail seriesId={id} />
+      <AdminSeriesDetail idOrSlug={id} />
     </div>
   );
 }
