@@ -66,6 +66,8 @@ model post {
   userId      String    @db.Uuid
   category    String
   isPublished Boolean   @default(false)
+  // 최초로 공개된 시각. 임시저장으로 내렸다가 다시 올려도 유지된다. 초안은 null.
+  publishedAt DateTime?
   seriesId    String?   @db.Uuid
   seriesOrder Int?
   comments    comment[]
