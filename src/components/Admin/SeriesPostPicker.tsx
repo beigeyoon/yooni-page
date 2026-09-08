@@ -21,12 +21,14 @@ export default function SeriesPostPicker({
   candidates,
   seriesById,
   currentSeriesId,
-  onAdd
+  onAdd,
+  disabled
 }: {
   candidates: Post[];
   seriesById: Map<string, Series>;
   currentSeriesId?: string;
   onAdd: (postId: string) => void;
+  disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -35,7 +37,9 @@ export default function SeriesPostPicker({
       open={open}
       onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button
+          variant="outline"
+          disabled={disabled}>
           <Plus />
           글 추가
         </Button>

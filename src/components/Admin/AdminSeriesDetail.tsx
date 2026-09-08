@@ -34,14 +34,24 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
   const { canAccessAdmin } = useAdminGate();
   const queryClient = useQueryClient();
 
-  const { data: seriesList, isLoading: seriesLoading } = useQuery({
+  const {
+    data: seriesList,
+    isLoading: seriesLoading,
+    isError: seriesError,
+    refetch: refetchSeries
+  } = useQuery({
     queryKey: ['series'],
     queryFn: getSeries,
     enabled: canAccessAdmin,
     select: (data: { data: Series[] }) => data.data
   });
 
-  const { data: posts, isLoading: postsLoading } = useQuery({
+  const {
+    data: posts,
+    isLoading: postsLoading,
+    isError: postsError,
+    refetch: refetchPosts
+  } = useQuery({
     queryKey: ['posts', 'preview', 'all'],
     queryFn: getAllPostsForPreview,
     enabled: canAccessAdmin,
@@ -71,7 +81,7 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
   // 로컬 편집 상태는 글 id의 순서 배열 하나다.
   // 기준선의 내용이 바뀔 때(처음 불러올 때, 저장 후 다시 받아올 때)만 로컬 상태를 기준선으로 맞춘다.
   // 참조가 아니라 내용(key)으로 비교해야, 같은 데이터를 다시 받아왔을 때 편집 중인 상태가 날아가지 않는다.
-  const baselineKey = baseline.join('|');
+  const baselineKey = `${seriesId}:${baseline.join('|')}`;
   const [syncedKey, setSyncedKey] = useState<string | null>(null);
   const [order, setOrder] = useState<string[]>([]);
   if (syncedKey !== baselineKey) {
@@ -81,14 +91,22 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
 
   const [isSaving, setIsSaving] = useState(false);
 
-  const isDirty = !isSameOrder(order, baseline);
-  const rows = order
+  // posts에서 사라진 id는 화면·저장·변경 판정 모두에서 무시한다.
+  const visibleOrder = useMemo(
+    () => order.filter(id => postById.has(id)),
+    [order, postById]
+  );
+  const isDirty = !isSameOrder(visibleOrder, baseline);
+  const rows = visibleOrder
     .map(id => postById.get(id))
     .filter((post): post is Post => !!post);
 
+  const updateOrder = (edit: (ids: string[]) => string[]) =>
+    setOrder(prev => edit(prev.filter(id => postById.has(id))));
+
   const candidates = useMemo(() => {
     if (!series) return [];
-    const inList = new Set(order);
+    const inList = new Set(visibleOrder);
     return (posts ?? [])
       .filter(post => post.category === series.category && !inList.has(post.id))
       .sort(
@@ -96,12 +114,12 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
           parseDbTimestamp(getPostDate(b)).getTime() -
           parseDbTimestamp(getPostDate(a)).getTime()
       );
-  }, [posts, series, order]);
+  }, [posts, series, visibleOrder]);
 
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await updateSeriesPosts(seriesId, order);
+      await updateSeriesPosts(seriesId, visibleOrder);
       // 글 목록(모든 카테고리·시리즈·미리보기)과 시리즈 목록이 함께 낡는다.
       await queryClient.invalidateQueries({ queryKey: ['posts'] });
       await queryClient.invalidateQueries({ queryKey: ['series'] });
@@ -120,6 +138,25 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
         <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-neutral-700"></div>
         <p className="text-sm text-neutral-500">시리즈를 불러오는 중입니다.</p>
       </div>
+    );
+  }
+
+  if (seriesError || postsError) {
+    return (
+      <>
+        <PageReady />
+        <div className="flex w-full flex-col items-center gap-4 rounded-lg border border-dashed border-neutral-300 py-20 text-neutral-500">
+          <p>시리즈 정보를 불러오지 못했습니다.</p>
+          <Button
+            variant="outline"
+            onClick={() => {
+              void refetchSeries();
+              void refetchPosts();
+            }}>
+            다시 시도
+          </Button>
+        </div>
+      </>
     );
   }
 
@@ -179,7 +216,8 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
             candidates={candidates}
             seriesById={seriesById}
             currentSeriesId={seriesId}
-            onAdd={id => setOrder(prev => appendItem(prev, id))}
+            onAdd={id => updateOrder(ids => appendItem(ids, id))}
+            disabled={isSaving}
           />
           <div className="flex items-center gap-2 max-sm:justify-end">
             {isDirty && (
@@ -233,28 +271,29 @@ export default function AdminSeriesDetail({ seriesId }: { seriesId: string }) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    aria-label="위로"
-                    disabled={index === 0}
+                    aria-label={`${post.title} 위로`}
+                    disabled={isSaving || index === 0}
                     onClick={() =>
-                      setOrder(prev => moveItem(prev, prev.indexOf(post.id), 'up'))
+                      updateOrder(ids => moveItem(ids, ids.indexOf(post.id), 'up'))
                     }>
                     <ArrowUp />
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    aria-label="아래로"
-                    disabled={index === rows.length - 1}
+                    aria-label={`${post.title} 아래로`}
+                    disabled={isSaving || index === rows.length - 1}
                     onClick={() =>
-                      setOrder(prev => moveItem(prev, prev.indexOf(post.id), 'down'))
+                      updateOrder(ids => moveItem(ids, ids.indexOf(post.id), 'down'))
                     }>
                     <ArrowDown />
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    aria-label="시리즈에서 제거"
-                    onClick={() => setOrder(prev => removeItem(prev, post.id))}>
+                    aria-label={`${post.title} 시리즈에서 제거`}
+                    disabled={isSaving}
+                    onClick={() => updateOrder(ids => removeItem(ids, post.id))}>
                     <X />
                   </Button>
                 </div>
