@@ -30,6 +30,16 @@ Fetch Diff만 3편 중 2편에 순번이 있다. 공개 시리즈 페이지는
 - `post.seriesId` 외래키는 `ON DELETE SET NULL`이다.
 - Prisma 클라이언트는 comments·thoughts 라우트에서 이미 쓰고 있다. 트랜잭션이 필요한 곳에 쓸 수 있다.
 
+### DB 권한 (2026-09-08 확인)
+
+`series` 테이블에 `service_role`의 권한이 INSERT뿐이어서 시리즈 수정(PUT)과 삭제(DELETE)가
+`42501 permission denied for table series`로 실패했다. 이 기능과 무관하게 원래 그랬고, 생성만 써서 드러나지 않았다.
+`post`와 같게 맞췄다. `service_role`은 `BYPASSRLS`라 정책은 따로 필요 없다.
+
+```sql
+GRANT UPDATE, DELETE ON TABLE public.series TO service_role;
+```
+
 ## 목표
 
 1. 관리자 화면에서 시리즈를 만들고, 고치고, 지운다.
