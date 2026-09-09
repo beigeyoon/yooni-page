@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/AppLink';
 import { Post } from '@/types';
 
 type NavPost = Pick<Post, 'id' | 'slug' | 'title' | 'category'>;

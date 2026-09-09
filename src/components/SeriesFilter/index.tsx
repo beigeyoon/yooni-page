@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/AppLink';
 import { Button } from '@/components/ui/button';
 import { Category, Series } from '@/types';
 
