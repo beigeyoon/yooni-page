@@ -24,6 +24,7 @@ import { Post, Series } from '@/types';
 import dynamic from 'next/dynamic';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 import PageReady from '@/components/Loading/PageReady';
+import { Spinner } from '@/components/Loading/Spinner';
 import SeriesModal from '@/components/SeriesModal';
 import { Plus } from 'lucide-react';
 
@@ -40,11 +41,15 @@ const Editor = () => {
   const id = searchParams.get('id');
   const isEditMode = !!id;
 
-  const { data: post } = useQuery({
+  const { data: post, isPending: postPending } = useQuery({
     queryKey: ['posts', id],
     enabled: !!id,
     queryFn: () => getPostForPreview(id!),
-    select: (data: { data: Post }) => data.data
+    select: (data: { data: Post }) => data.data,
+    // 에디터는 최초 content만 반영하므로 캐시된 이전 본문으로 시작하면 안 된다.
+    // 이 화면을 떠나는 즉시 캐시를 버려 다시 들어올 때마다 새로 조회한다.
+    staleTime: 0,
+    gcTime: 0
   });
 
   const {
@@ -131,6 +136,17 @@ const Editor = () => {
   };
 
   if (!isAdmin) return <></>;
+  // tiptap은 content를 에디터 생성 시점에만 읽는다. 글이 도착하기 전에 에디터를 만들면
+  // 나중에 온 본문이 버려지므로, 편집 모드에서는 글 조회가 끝난 뒤에만 폼을 렌더링한다.
+  // isPending은 오프라인으로 멈춘(paused) 동안에도 true라 그때도 로딩으로 보여 준다.
+  if (isEditMode && postPending) return <Spinner />;
+  if (isEditMode && !post) {
+    return (
+      <p className="pt-10 text-center text-red-500">
+        게시글을 불러오지 못했습니다.
+      </p>
+    );
+  }
   return (
     <>
       <PageReady />
