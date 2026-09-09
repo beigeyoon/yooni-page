@@ -9,7 +9,7 @@ import handleTimeStirng from '@/utils/handleTimeStirng';
 import { parseDbTimestamp } from '@/utils/dbTimestamp';
 import { useQuery } from '@tanstack/react-query';
 import { Eye, FileWarning, Plus, SquarePen } from 'lucide-react';
-import Link from 'next/link';
+import Link from '@/components/AppLink';
 
 export default function AdminPostsManager() {
   const { canAccessAdmin } = useAdminGate();

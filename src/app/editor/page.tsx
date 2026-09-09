@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import Link from '@/components/AppLink';
 import {
   Select,
   SelectContent,

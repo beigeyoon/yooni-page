@@ -14,7 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useEffect, type ReactNode } from 'react';
 import Comment from '@/components/Comment';
 import { DeleteButton } from '@/components/DeleteButton';
-import Link from 'next/link';
+import Link from '@/components/AppLink';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 import decodeSlugParam from '@/utils/decodeSlugParam';
 

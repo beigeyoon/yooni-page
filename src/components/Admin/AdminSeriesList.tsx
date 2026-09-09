@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useMemo, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/AppLink';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FileWarning, LoaderCircle, Plus, SquarePen, Trash2 } from 'lucide-react';
 import PageReady from '@/components/Loading/PageReady';

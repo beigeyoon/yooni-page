@@ -17,7 +17,9 @@ export const useRouteWithLoading = () => {
   }, [pathname, setIsRouting]);
 
   const push = (url: string) => {
-    setIsRouting(true);
+    // 같은 경로로의 이동은 경로가 바뀌지 않아 해제 신호가 오지 않는다. 표시 없이 이동만 한다.
+    const samePathname = new URL(url, window.location.href).pathname === pathname;
+    setIsRouting(!samePathname);
     startTransition(() => {
       router.push(url);
     });

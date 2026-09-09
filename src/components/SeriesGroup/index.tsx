@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getSeries } from '@/lib/api/series';
 import { Series } from '@/types';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import Link from '@/components/AppLink';
 import { BookOpen } from 'lucide-react';
 import {
   Tooltip,
