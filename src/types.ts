@@ -49,6 +49,10 @@ export interface Post {
   publishedAt: string | null;
 };
 
+// 목록 조회 결과. 목록 페이지는 조회 결과를 통째로 HTML에 dehydrate하므로
+// 본문(content)은 대표 이미지를 뽑는 사진 목록에만 싣고 나머지 목록에서는 뺀다.
+export type PostListItem = Omit<Post, 'content'> & { content?: string };
+
 export interface CommentFormValues {
   content?: string;
 };

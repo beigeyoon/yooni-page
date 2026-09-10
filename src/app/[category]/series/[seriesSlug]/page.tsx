@@ -46,7 +46,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 function generateSeriesJsonLd(
   series: { slug: string; title: string; description?: string },
   category: string,
-  posts: Post[]
+  posts: Pick<Post, 'title' | 'slug'>[]
 ) {
   const seriesUrl = `${SITE_URL}/${category}/series/${series.slug}`;
 
@@ -177,7 +177,10 @@ const SeriesPosts = async ({
   }
 
   // 조회는 여전히 id 기준이다. 슬러그는 URL에만 쓴다.
-  const seriesPosts = await getPostsBySeriesForServer(series.id);
+  // 본문은 사진 시리즈에서만 싣는다. PhotoPreview가 대표 이미지를 본문에서 뽑기 때문이다.
+  const seriesPosts = await getPostsBySeriesForServer(series.id, {
+    withContent: series.category === 'photo'
+  });
 
   const queryClient = new QueryClient();
   queryClient.setQueryData(['posts', series.id], seriesPosts);
