@@ -1,5 +1,5 @@
 import Link from '@/components/AppLink';
-import { Post } from '@/types';
+import { PostListItem } from '@/types';
 import handleTimeStirng from '@/utils/handleTimeStirng';
 import { getPostDate } from '@/utils/postDate';
 
@@ -14,7 +14,7 @@ export function RecentPosts({
   posts
 }: {
   category: string;
-  posts: Post[];
+  posts: PostListItem[];
 }) {
   const filteredPosts = posts?.filter(post => post.isPublished) ?? [];
 

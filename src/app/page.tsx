@@ -1,6 +1,6 @@
 import { RecentPosts } from '@/components/RecentPosts';
 import { getPostsForServer } from '@/lib/api/posts.server';
-import { Category, Post } from '@/types';
+import { Category, PostListItem } from '@/types';
 import { Silkscreen } from 'next/font/google';
 import { Newspaper } from 'lucide-react';
 import SeriesGroup from '@/components/SeriesGroup';
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const categories: Category[] = ['dev', 'travel', 'talk'];
-  const postsByCategory: Record<string, Post[]> = {};
+  const postsByCategory: Record<string, PostListItem[]> = {};
 
   const queryClient = new QueryClient();
 
@@ -97,7 +97,7 @@ export default async function Home() {
       ReturnType<typeof getPostsForServer>
     >;
     if (!cached) continue;
-    const posts = cached.data as Post[];
+    const posts = cached.data as PostListItem[];
     posts.sort(
       (a, b) =>
         parseDbTimestamp(getPostDate(b)).getTime() -
