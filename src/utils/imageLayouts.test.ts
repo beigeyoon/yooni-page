@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { IMAGE_LAYOUTS, LAYOUT_COUNTS, getLayout, getLayoutsByCount } from './imageLayouts';
 
@@ -31,5 +33,18 @@ describe('getLayout', () => {
 
   it('없는 id는 undefined다', () => {
     expect(getLayout('9-z')).toBeUndefined();
+  });
+});
+
+describe('globals.css', () => {
+  const css = readFileSync(
+    fileURLToPath(new URL('../app/globals.css', import.meta.url)),
+    'utf8'
+  );
+
+  it('모든 레이아웃에 배치 규칙이 있다', () => {
+    for (const { id } of IMAGE_LAYOUTS) {
+      expect(css, id).toContain(`.image-album[data-layout='${id}']`);
+    }
   });
 });
