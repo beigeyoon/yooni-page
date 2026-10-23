@@ -2,8 +2,7 @@ import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabaseForServer';
 import { getAppSession, isAdminEmail } from '@/lib/auth';
-
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
+import { MAX_UPLOAD_BYTES } from '@/constants/upload';
 
 const IMAGE_EXTENSIONS_BY_MIME: Record<string, string> = {
   'image/jpeg': 'jpg',
@@ -48,9 +47,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (file.size > MAX_FILE_SIZE) {
+    if (file.size > MAX_UPLOAD_BYTES) {
       return NextResponse.json(
-        { error: '10MB 이하의 이미지만 업로드할 수 있습니다.' },
+        { error: '4MB 이하의 이미지만 업로드할 수 있습니다.' },
         { status: 400 }
       );
     }
