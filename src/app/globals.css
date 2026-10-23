@@ -236,9 +236,11 @@ body {
 /* 배치 창에서 레이아웃을 고른 묶음(data-layout). 레이아웃 목록은 src/utils/imageLayouts.ts.
    640px 이하에서는 위의 모바일 규칙대로 세로로 풀어 원본 비율로 보여준다. */
 @media (min-width: 641px) {
+  /* aspect-ratio가 위아래 padding을 빼고 사진 영역에만 걸리도록 content-box로 둔다. */
   .image-album[data-layout] {
     display: grid;
     gap: 10px;
+    box-sizing: content-box;
   }
 
   .image-album[data-layout] > * {
@@ -286,6 +288,7 @@ body {
   }
   .image-album[data-layout='2-c'] {
     grid-template-areas: 'a' 'b';
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: repeat(2, minmax(0, 1fr));
     aspect-ratio: 2 / 3;
   }
