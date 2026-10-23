@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { CELL_RATIO_LABEL, type CellRatio } from '@/utils/imageLayouts';
+import type { CellRatio } from '@/utils/imageLayouts';
 
 // 칸끼리 자리를 바꿀 때 쓰는 드래그 타입. 파인더에서 끌어온 파일과 구분한다.
 export const SLOT_DRAG_TYPE = 'application/x-image-slot';
@@ -108,9 +108,6 @@ export default function SlotCell({ index, ratio, item, disabled, onFiles, onSwap
       ) : (
         <span>+ 사진 놓기</span>
       )}
-      <span className="absolute left-1 top-1 rounded bg-black/60 px-1.5 text-xs text-white">
-        {CELL_RATIO_LABEL[ratio]}
-      </span>
       {item?.status === 'uploading' && (
         <span className="absolute inset-0 flex items-center justify-center bg-white/60">
           <Loader2 className="animate-spin text-neutral-600" />

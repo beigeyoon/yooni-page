@@ -13,13 +13,6 @@ export type ImageLayout = {
 
 export const LAYOUT_COUNTS: LayoutCount[] = [1, 2, 3, 4];
 
-export const CELL_RATIO_LABEL: Record<CellRatio, string> = {
-  original: '원본',
-  square: '정',
-  landscape: '가',
-  portrait: '세'
-};
-
 const S = 'square';
 const L = 'landscape';
 const P = 'portrait';

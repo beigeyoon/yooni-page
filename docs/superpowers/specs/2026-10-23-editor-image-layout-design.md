@@ -173,7 +173,7 @@ export function getLayout(id): ImageLayout | undefined;
 - 칸을 클릭하면 파일 선택 창이 열린다.
 - 사진이 든 칸은 드래그해서 다른 칸과 자리를 바꿀 수 있다.
   칸 간 이동은 커스텀 타입(`application/x-image-slot`)으로 구분해 파인더 드롭과 섞이지 않게 한다.
-- 각 칸에 비율 표시(정/가/세)와 미리보기(`URL.createObjectURL`)를 보여준다. 창을 닫거나 사진을 바꾸면 URL을 해제한다.
+- 각 칸에 미리보기(`URL.createObjectURL`)를 보여준다. 창을 닫거나 사진을 바꾸면 URL을 해제한다.
 
 상태 유지:
 
