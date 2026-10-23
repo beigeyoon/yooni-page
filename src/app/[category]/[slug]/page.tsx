@@ -24,6 +24,7 @@ import { getPostDate } from '@/utils/postDate';
 import isUuid from '@/utils/isUuid';
 import decodeSlugParam from '@/utils/decodeSlugParam';
 import { getSupabasePublic } from '@/lib/supabasePublic';
+import getPostOgImage from '@/utils/postOgImage';
 
 // 즉시 무효화(revalidateContent)가 평소 갱신을 담당하고,
 // 이 주기는 무효화가 실패했을 때를 위한 백스톱이다.
@@ -44,7 +45,7 @@ export async function generateStaticParams() {
 
 const SITE_URL = 'https://yooni.seoul.kr';
 const OG_IMAGE =
-  'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png';
+  'https://yooni.seoul.kr/images/og-default.jpg';
 
 const CATEGORY_LABELS: Record<string, string> = {
   dev: '개발',
@@ -112,6 +113,11 @@ export async function generateMetadata({
 
   const description = generateDescription(post.content, post.subtitle);
   const postUrl = `${SITE_URL}/${category}/${post.slug}`;
+  // 본문 사진은 크기를 알 수 없으므로 width/height는 기본 이미지에만 붙인다
+  const postImage = getPostOgImage(post.content, SITE_URL);
+  const ogImage = postImage
+    ? { url: postImage, alt: post.title }
+    : { url: OG_IMAGE, width: 1200, height: 630, alt: post.title };
 
   return {
     title: `${post.title} | 유니의 블로그`,
@@ -127,14 +133,7 @@ export async function generateMetadata({
       url: postUrl,
       siteName: '유니의 블로그',
       locale: 'ko_KR',
-      images: [
-        {
-          url: OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: post.title
-        }
-      ],
+      images: [ogImage],
       publishedTime: toIsoString(getPostDate(post)),
       modifiedTime: toIsoString(getPostDate(post)),
       authors: ['유니']
@@ -143,7 +142,7 @@ export async function generateMetadata({
       title: post.title,
       description,
       card: 'summary_large_image',
-      images: [OG_IMAGE]
+      images: [ogImage.url]
     },
     alternates: {
       canonical: postUrl
@@ -188,7 +187,10 @@ function generateStructuredData(
     mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
     datePublished: toIsoString(getPostDate(post)),
     dateModified: toIsoString(getPostDate(post)),
-    image: { '@type': 'ImageObject', url: OG_IMAGE },
+    image: {
+      '@type': 'ImageObject',
+      url: getPostOgImage(post.content, SITE_URL) ?? OG_IMAGE
+    },
     articleSection: category
   };
 
