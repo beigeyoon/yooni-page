@@ -62,7 +62,7 @@ export const postHtmlPolicy: sanitizeHtml.IOptions = {
   allowedAttributes: {
     a: ['href', 'class', 'rel', 'target'],
     code: ['class'],
-    div: ['class', 'data-count', 'style'],
+    div: ['class', 'data-count', 'data-layout', 'style'],
     iframe: ['src', 'width', 'height', 'frameborder', 'style', 'allow', 'allowfullscreen', 'title'],
     img: ['src', 'alt', 'width', 'height', 'loading', 'decoding', 'fetchpriority'],
     pre: ['class'],

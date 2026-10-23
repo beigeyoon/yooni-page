@@ -36,6 +36,13 @@ describe('보존해야 하는 것', () => {
     expect(out).toContain('--count');
   });
 
+  it('이미지 그룹의 data-layout을 유지한다', () => {
+    const out = sanitizePostHtml(
+      '<div class="image-album" data-count="3" data-layout="3-c"><img src="https://x.com/a.jpg"></div>'
+    );
+    expect(out).toContain('data-layout="3-c"');
+  });
+
   it('이미지의 최적화 속성을 유지한다', () => {
     const out = sanitizePostHtml(
       '<img src="https://x.com/a.jpg" alt="설명" loading="lazy" decoding="async" fetchpriority="low">'
