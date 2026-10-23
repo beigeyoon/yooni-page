@@ -4,7 +4,9 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ImageLayoutDialog from '.';
 
-(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+(
+  globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
+).IS_REACT_ACT_ENVIRONMENT = true;
 
 const uploadImage = vi.hoisted(() => vi.fn());
 vi.mock('@/utils/uploadImage', () => ({ default: uploadImage }));
@@ -19,12 +21,20 @@ const onInsert = vi.fn();
 const onOpenChange = vi.fn();
 
 beforeEach(() => {
-  uploadImage.mockImplementation(async (file: File) => ({ url: `https://x/${file.name}` }));
+  uploadImage.mockImplementation(async (file: File) => ({
+    url: `https://x/${file.name}`
+  }));
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
   act(() => {
-    root.render(<ImageLayoutDialog open onOpenChange={onOpenChange} onInsert={onInsert} />);
+    root.render(
+      <ImageLayoutDialog
+        open
+        onOpenChange={onOpenChange}
+        onInsert={onInsert}
+      />
+    );
   });
 });
 
@@ -47,7 +57,9 @@ function drop(target: HTMLElement, data: { files?: File[]; slot?: number }) {
     value: {
       files: data.files ?? [],
       getData: (type: string) =>
-        type === 'application/x-image-slot' && data.slot !== undefined ? String(data.slot) : ''
+        type === 'application/x-image-slot' && data.slot !== undefined
+          ? String(data.slot)
+          : ''
     }
   });
   act(() => {
@@ -75,11 +87,18 @@ describe('ImageLayoutDialog', () => {
 
   it('여러 장을 한 칸에 놓으면 이어지는 빈 칸을 채우고, 이미지가 아닌 파일은 거른다', async () => {
     drop(slots()[0], {
-      files: [image('a.jpg'), new File(['x'], 'memo.txt', { type: 'text/plain' }), image('b.jpg')]
+      files: [
+        image('a.jpg'),
+        new File(['x'], 'memo.txt', { type: 'text/plain' }),
+        image('b.jpg')
+      ]
     });
     await click(button('삽입'));
 
-    expect(onInsert).toHaveBeenCalledWith(['https://x/a.jpg', 'https://x/b.jpg'], '2-a');
+    expect(onInsert).toHaveBeenCalledWith(
+      ['https://x/a.jpg', 'https://x/b.jpg'],
+      '2-a'
+    );
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
@@ -88,7 +107,17 @@ describe('ImageLayoutDialog', () => {
     drop(slots()[1], { slot: 0 });
     await click(button('삽입'));
 
-    expect(onInsert).toHaveBeenCalledWith(['https://x/b.jpg', 'https://x/a.jpg'], '2-a');
+    expect(onInsert).toHaveBeenCalledWith(
+      ['https://x/b.jpg', 'https://x/a.jpg'],
+      '2-a'
+    );
+  });
+
+  it('1장은 레이아웃이 하나뿐이라 썸네일을 보여주지 않는다', async () => {
+    expect(document.querySelectorAll('[aria-pressed]')).toHaveLength(3);
+    await click(button('1장'));
+    expect(document.querySelectorAll('[aria-pressed]')).toHaveLength(0);
+    expect(slots()).toHaveLength(1);
   });
 
   it('장수와 레이아웃을 바꿔도 넣어 둔 사진은 순서대로 남는다', async () => {
@@ -96,7 +125,9 @@ describe('ImageLayoutDialog', () => {
     await click(button('3장'));
     expect(slots()).toHaveLength(3);
 
-    await click(document.querySelector<HTMLElement>('[aria-label="세로1 + 가로2"]')!);
+    await click(
+      document.querySelector<HTMLElement>('[aria-label="세로1 + 가로2"]')!
+    );
     drop(slots()[2], { files: [image('c.jpg')] });
     await click(button('삽입'));
 
@@ -107,8 +138,12 @@ describe('ImageLayoutDialog', () => {
   });
 
   it('실패한 칸은 사유를 보여주고, 다시 시도하면 그 칸만 올린다', async () => {
-    uploadImage.mockImplementationOnce(async () => ({ url: 'https://x/a.jpg' }));
-    uploadImage.mockImplementationOnce(async () => ({ error: '용량이 너무 큽니다.' }));
+    uploadImage.mockImplementationOnce(async () => ({
+      url: 'https://x/a.jpg'
+    }));
+    uploadImage.mockImplementationOnce(async () => ({
+      error: '용량이 너무 큽니다.'
+    }));
     drop(slots()[0], { files: [image('a.jpg'), image('b.jpg')] });
 
     await click(button('삽입'));
@@ -118,6 +153,9 @@ describe('ImageLayoutDialog', () => {
     await click(button('다시 시도'));
     expect(uploadImage).toHaveBeenCalledTimes(3);
     expect(uploadImage.mock.calls[2][0].name).toBe('b.jpg');
-    expect(onInsert).toHaveBeenCalledWith(['https://x/a.jpg', 'https://x/b.jpg'], '2-a');
+    expect(onInsert).toHaveBeenCalledWith(
+      ['https://x/a.jpg', 'https://x/b.jpg'],
+      '2-a'
+    );
   });
 });

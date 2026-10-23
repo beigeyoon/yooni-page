@@ -40,7 +40,14 @@ function useObjectUrl(file: File | undefined) {
   return url;
 }
 
-export default function SlotCell({ index, ratio, item, disabled, onFiles, onSwap }: Props) {
+export default function SlotCell({
+  index,
+  ratio,
+  item,
+  disabled,
+  onFiles,
+  onSwap
+}: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isOver, setIsOver] = useState(false);
   const [previewFailed, setPreviewFailed] = useState(false);
@@ -91,7 +98,8 @@ export default function SlotCell({ index, ratio, item, disabled, onFiles, onSwap
         'relative flex cursor-pointer items-center justify-center overflow-hidden rounded border-2 border-dashed border-neutral-300 bg-neutral-50 text-sm text-neutral-400',
         item && 'border-solid border-transparent',
         isOver && 'border-blue-500 bg-blue-50',
-        ratio === 'original' && !item && 'min-h-60',
+        // globals.css의 [data-layout] > * { min-height: 0 }에 지지 않도록 min-height가 아닌 height로 준다.
+        ratio === 'original' && !item && 'h-60',
         disabled && 'cursor-default'
       )}>
       {item && previewUrl && !previewFailed ? (
@@ -104,7 +112,9 @@ export default function SlotCell({ index, ratio, item, disabled, onFiles, onSwap
           className="pointer-events-none"
         />
       ) : item ? (
-        <span className="break-all px-2 text-neutral-600">{item.file.name}</span>
+        <span className="break-all px-2 text-neutral-600">
+          {item.file.name}
+        </span>
       ) : (
         <span>+ 사진 놓기</span>
       )}
