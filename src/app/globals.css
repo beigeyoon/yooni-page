@@ -234,6 +234,7 @@ body {
 }
 
 /* 배치 창에서 레이아웃을 고른 묶음(data-layout). 레이아웃 목록은 src/utils/imageLayouts.ts.
+   가로형·세로형 칸은 아이폰 기본 사진 비율(4:3, 3:4)에 맞춰 잘리지 않게 한다.
    640px 이하에서는 위의 모바일 규칙대로 세로로 풀어 원본 비율로 보여준다. */
 @media (min-width: 641px) {
   /* aspect-ratio가 위아래 padding을 빼고 사진 영역에만 걸리도록 content-box로 둔다. */
@@ -303,26 +304,24 @@ body {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     aspect-ratio: 9 / 4;
   }
-  /* 세로형과 가로형이 섞인 레이아웃은 큰 세로 사진을 2:3, 가로 사진을 3:2로 두어
-     형태 차이를 분명히 한다. 세로 1칸과 가로 2칸의 높이가 같아지는 열 폭은 8:9다. */
+  /* 세로형(3:4) 1칸과 가로형(4:3) 2칸의 높이가 같아지는 열 폭은 9:8이다. */
   .image-album[data-layout='3-c'] {
     grid-template-areas: 'a b' 'a c';
-    grid-template-columns: minmax(0, 8fr) minmax(0, 9fr);
+    grid-template-columns: minmax(0, 9fr) minmax(0, 8fr);
     grid-template-rows: repeat(2, minmax(0, 1fr));
     aspect-ratio: 17 / 12;
   }
   .image-album[data-layout='3-d'] {
     grid-template-areas: 'a c' 'b c';
-    grid-template-columns: minmax(0, 9fr) minmax(0, 8fr);
+    grid-template-columns: minmax(0, 8fr) minmax(0, 9fr);
     grid-template-rows: repeat(2, minmax(0, 1fr));
     aspect-ratio: 17 / 12;
   }
-  /* 위 사진은 3:2. */
   .image-album[data-layout='3-e'] {
     grid-template-areas: 'a a' 'b c';
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: minmax(0, 4fr) minmax(0, 3fr);
-    aspect-ratio: 6 / 7;
+    grid-template-rows: minmax(0, 3fr) minmax(0, 2fr);
+    aspect-ratio: 4 / 5;
   }
 
   .image-album[data-layout='4-a'] {
@@ -342,19 +341,18 @@ body {
     grid-template-rows: repeat(2, minmax(0, 1fr));
     aspect-ratio: 4 / 3;
   }
-  /* 위 사진은 3:2. */
   .image-album[data-layout='4-c'] {
     grid-template-areas: 'a a a' 'b c d';
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: minmax(0, 2fr) minmax(0, 1fr);
-    aspect-ratio: 1 / 1;
+    grid-template-rows: minmax(0, 9fr) minmax(0, 4fr);
+    aspect-ratio: 12 / 13;
   }
-  /* 세로 2:3 1칸과 가로 3:2 3칸의 높이가 같아지는 열 폭은 4:3이다. */
+  /* 세로형 1칸과 가로형 3칸의 높이가 같아지는 열 폭은 27:16이다. */
   .image-album[data-layout='4-d'] {
     grid-template-areas: 'a b' 'a c' 'a d';
-    grid-template-columns: minmax(0, 4fr) minmax(0, 3fr);
+    grid-template-columns: minmax(0, 27fr) minmax(0, 16fr);
     grid-template-rows: repeat(3, minmax(0, 1fr));
-    aspect-ratio: 7 / 6;
+    aspect-ratio: 43 / 36;
   }
   .image-album[data-layout='4-e'] {
     grid-template-areas: 'a b c d';
