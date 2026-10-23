@@ -8,7 +8,7 @@ import type { Metadata } from 'next';
 const SITE_URL = 'https://yooni.seoul.kr';
 const ABOUT_URL = `${SITE_URL}/about`;
 const OG_IMAGE =
-  'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png';
+  'https://yooni.seoul.kr/images/og-default.jpg';
 
 export const metadata: Metadata = {
   title: '소개 | 유니의 블로그',

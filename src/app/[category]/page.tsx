@@ -82,7 +82,7 @@ export async function generateMetadata({
       locale: 'ko_KR',
       images: [
         {
-          url: 'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png',
+          url: 'https://yooni.seoul.kr/images/og-default.jpg',
           width: 1200,
           height: 630,
           alt: info.title
@@ -94,7 +94,7 @@ export async function generateMetadata({
       description: info.description,
       card: 'summary_large_image',
       images: [
-        'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png'
+        'https://yooni.seoul.kr/images/og-default.jpg'
       ]
     },
     alternates: {

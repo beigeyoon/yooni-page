@@ -34,7 +34,7 @@ export async function generateStaticParams() {
 
 const SITE_URL = 'https://yooni.seoul.kr';
 const OG_IMAGE =
-  'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png';
+  'https://yooni.seoul.kr/images/og-default.jpg';
 
 const CATEGORY_LABELS: Record<string, string> = {
   dev: '개발',

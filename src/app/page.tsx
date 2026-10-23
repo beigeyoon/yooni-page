@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     images: [
       {
-        url: 'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png',
+        url: 'https://yooni.seoul.kr/images/og-default.jpg',
         width: 1200,
         height: 630,
         alt: '유니의 블로그'
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
       '프론트엔드 개발자 유니의 기술 블로그입니다. Next.js, React, 웹 개발, 여행, 이야기를 담은 공간입니다.',
     card: 'summary_large_image',
     images: [
-      'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_3.png'
+      'https://yooni.seoul.kr/images/og-default.jpg'
     ]
   },
   alternates: {
