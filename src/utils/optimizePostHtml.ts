@@ -25,6 +25,15 @@ function escapeAttr(value: string) {
   return value.replace(/&/g, '&amp;');
 }
 
+// 글 제목은 사용자가 쓴 텍스트라 따옴표나 꺾쇠가 속성을 깨뜨릴 수 있다.
+function escapeText(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 function readAttr(attrs: string, name: string): string {
   const match = attrs.match(
     new RegExp(`\\s${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i')
@@ -43,6 +52,7 @@ function attrPattern(name: string) {
 // alt가 없거나 비어 있으면 대체 문구를 넣는다.
 // (빈 alt는 "장식용 이미지"라는 뜻이지만, 에디터가 자동으로 넣은 빈 값이라
 //  의도된 장식 표시로 보기 어렵다. 기존 동작을 그대로 유지한다.)
+// 제목을 받으면 "제목 사진 N"으로 채워 이미지 검색에서도 의미가 통하게 한다.
 function hasMeaningfulAlt(attrs: string) {
   const match = attrs.match(/\salt\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
   if (!match) return false;
@@ -50,7 +60,10 @@ function hasMeaningfulAlt(attrs: string) {
   return value.trim().length > 0;
 }
 
-function optimizePostHtml(html: string) {
+function optimizePostHtml(html: string, title?: string) {
+  const fallbackAltPrefix = title?.trim()
+    ? `${escapeText(title.trim())} 사진`
+    : '본문 이미지';
   let index = 0;
 
   return html.replace(IMG_TAG, (_match, rawAttrs: string) => {
@@ -97,7 +110,7 @@ function optimizePostHtml(html: string) {
     }
 
     if (!keepAlt) {
-      added.push(`alt="본문 이미지 ${index}"`);
+      added.push(`alt="${fallbackAltPrefix} ${index}"`);
     }
 
     const normalized = attrs.replace(/\s+/g, ' ').trim();

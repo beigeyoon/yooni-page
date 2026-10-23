@@ -9,10 +9,15 @@ import type { CellRatio } from '@/utils/imageLayouts';
 export const SLOT_DRAG_TYPE = 'application/x-image-slot';
 
 export type SlotItem = {
+  // 사용자가 놓은 원본. 칸끼리 자리를 바꿔도 변환 결과를 제자리에 붙이는 기준이 된다.
   file: File;
-  status: 'idle' | 'uploading' | 'done' | 'error';
+  // 놓는 순간 만든 압축본(HEIC는 JPEG/WebP로 변환됨). 미리보기와 업로드에 같이 쓴다.
+  compressed?: File;
+  status: 'converting' | 'idle' | 'uploading' | 'done' | 'error';
   url?: string;
   error?: string;
+  // 이미지 설명(alt). 비워두면 상세 페이지에서 "글 제목 사진 N"으로 채운다.
+  alt?: string;
 };
 
 interface Props {
@@ -51,9 +56,10 @@ export default function SlotCell({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isOver, setIsOver] = useState(false);
   const [previewFailed, setPreviewFailed] = useState(false);
-  const previewUrl = useObjectUrl(item?.file);
+  // Chrome은 HEIC 원본을 그리지 못하므로 변환이 끝난 압축본만 미리보기로 쓴다.
+  const previewUrl = useObjectUrl(item?.compressed);
 
-  // Chrome은 HEIC를 미리보기로 그리지 못한다. 그때는 파일 이름을 보여준다.
+  // 변환에 실패해 미리보기를 못 그리면 파일 이름을 보여준다.
   useEffect(() => setPreviewFailed(false), [previewUrl]);
 
   const handleDrop = (event: React.DragEvent) => {
@@ -118,7 +124,7 @@ export default function SlotCell({
       ) : (
         <span>+ 사진 놓기</span>
       )}
-      {item?.status === 'uploading' && (
+      {(item?.status === 'uploading' || item?.status === 'converting') && (
         <span className="absolute inset-0 flex items-center justify-center bg-white/60">
           <Loader2 className="animate-spin text-neutral-600" />
         </span>

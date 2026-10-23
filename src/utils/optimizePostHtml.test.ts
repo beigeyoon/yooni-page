@@ -25,6 +25,20 @@ describe('optimizePostHtml', () => {
     );
   });
 
+  it('글 제목을 주면 alt를 "제목 사진 N"으로 채운다', () => {
+    const html = optimizePostHtml(
+      `<img src="${IMAGE}"><img src="${IMAGE}">`,
+      '발리 리조트 후기'
+    );
+    expect(html).toContain('alt="발리 리조트 후기 사진 1"');
+    expect(html).toContain('alt="발리 리조트 후기 사진 2"');
+  });
+
+  it('제목의 따옴표와 꺾쇠가 속성을 깨지 않게 이스케이프한다', () => {
+    const html = optimizePostHtml(`<img src="${IMAGE}">`, '"AI" <글> & 후기');
+    expect(html).toContain('alt="&quot;AI&quot; &lt;글&gt; &amp; 후기 사진 1"');
+  });
+
   it('의미 있는 alt는 보존한다', () => {
     const html = optimizePostHtml(`<img src="${IMAGE}" alt="톨레도 성당">`);
     expect(html).toContain('alt="톨레도 성당"');

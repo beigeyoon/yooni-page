@@ -362,7 +362,7 @@ const Post = async ({
         }}
       />
       <PostContent
-        content={optimizePostHtml(sanitizePostHtml(post.content))}
+        content={optimizePostHtml(sanitizePostHtml(post.content), post.title)}
         toc={toc}
         nav={nav}
       />

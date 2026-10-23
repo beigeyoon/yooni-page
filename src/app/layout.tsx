@@ -12,22 +12,22 @@ import { metaDataKeywords } from '@/constants/metadataKeywords';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: '유니 블로그',
+  title: '유니의 블로그',
   description: '프론트엔드 개발자 유니의 기록을 담은 공간',
   keywords: metaDataKeywords,
   openGraph: {
-    title: '유니 블로그',
+    title: '유니의 블로그',
     description: '프론트엔드 개발자 유니의 기록을 담은 공간',
     type: 'website',
     url: 'https://yooni.seoul.kr',
-    siteName: '유니 블로그',
+    siteName: '유니의 블로그',
     locale: 'ko_KR',
     images: [
       'https://pkcsbguvrcjetmuabppk.supabase.co/storage/v1/object/public/images//main_yooni_2.png'
     ]
   },
   twitter: {
-    title: '유니 블로그',
+    title: '유니의 블로그',
     description: '프론트엔드 개발자 유니의 기록을 담은 공간',
     card: 'summary_large_image',
     images: [
@@ -61,7 +61,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="flex min-h-screen flex-col">
+      {/* ColorZilla 같은 확장 프로그램이 body에 속성을 붙여 하이드레이션 경고가 난다.
+          body 자기 속성만 무시하고, 자식의 불일치는 그대로 잡힌다. */}
+      <body
+        className="flex min-h-screen flex-col"
+        suppressHydrationWarning>
         <QueryProvider>
           <GlobalLoading />
           <AuthProvider>
