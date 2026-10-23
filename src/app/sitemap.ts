@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getSupabasePublic } from '@/lib/supabasePublic';
-import { CATEGORIES, type Post } from '@/types';
+import { PUBLIC_CATEGORIES, type Post } from '@/types';
 import { parseDbTimestamp } from '@/utils/dbTimestamp';
 import { getPostDate } from '@/utils/postDate';
 import { orderByNewest } from '@/lib/api/postOrder';
@@ -18,8 +18,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .from('post')
         .select('slug, category, createdAt, publishedAt, seriesId')
         .eq('isPublished', true)
+        .in('category', [...PUBLIC_CATEGORIES])
     ),
-    supabasePublic.from('series').select('id, slug, category, createdAt')
+    supabasePublic
+      .from('series')
+      .select('id, slug, category, createdAt')
+      .in('category', [...PUBLIC_CATEGORIES])
   ]);
 
   // select 목록에서 컬럼이 빠지면 getPostDate가 조용히 createdAt으로 폴백하므로 타입으로 묶어둔다.
@@ -63,7 +67,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8
     },
-    ...CATEGORIES.map(category => ({
+    ...PUBLIC_CATEGORIES.map(category => ({
       url: `${SITE_URL}/${category}`,
       lastModified: latestPostDateByCategory.get(category),
       changeFrequency: 'daily' as const,
