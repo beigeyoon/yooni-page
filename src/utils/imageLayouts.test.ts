@@ -20,9 +20,9 @@ describe('IMAGE_LAYOUTS', () => {
     }
   });
 
-  it('장수별 레이아웃 개수는 1/3/5/5다', () => {
+  it('장수별 레이아웃 개수는 1/3/5/6이다', () => {
     expect(LAYOUT_COUNTS.map(count => getLayoutsByCount(count).length)).toEqual(
-      [1, 3, 5, 5]
+      [1, 3, 5, 6]
     );
   });
 

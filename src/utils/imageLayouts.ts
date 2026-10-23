@@ -28,6 +28,7 @@ export const IMAGE_LAYOUTS: ImageLayout[] = [
   { id: '3-d', count: 3, label: '가로2 + 세로1', cells: [L, L, P] },
   { id: '3-e', count: 3, label: '위 가로1 + 아래 정방형2', cells: [L, S, S] },
   { id: '4-a', count: 4, label: '정방형 2×2', cells: [S, S, S, S] },
+  { id: '4-f', count: 4, label: '가로형 2×2', cells: [L, L, L, L] },
   { id: '4-b', count: 4, label: '정방형 4열', cells: [S, S, S, S] },
   {
     id: '4-c',

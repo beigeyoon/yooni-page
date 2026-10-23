@@ -334,18 +334,26 @@ body {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     aspect-ratio: 4 / 1;
   }
+  .image-album[data-layout='4-f'] {
+    grid-template-areas: 'a b' 'c d';
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    aspect-ratio: 4 / 3;
+  }
+  /* 위 사진은 다른 가로형(4:3)보다 넓은 3:2로 둔다. */
   .image-album[data-layout='4-c'] {
     grid-template-areas: 'a a a' 'b c d';
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: minmax(0, 9fr) minmax(0, 4fr);
-    aspect-ratio: 12 / 13;
+    grid-template-rows: minmax(0, 2fr) minmax(0, 1fr);
+    aspect-ratio: 1 / 1;
   }
-  /* 세로형 1칸과 가로형 3칸의 높이가 같아지는 열 폭은 27:16이다. */
+  /* 왼쪽 큰 사진은 다른 세로형(3:4)보다 긴 2:3으로 둔다.
+     오른쪽 가로형(4:3) 3칸과 높이가 같아지는 열 폭은 3:2다. */
   .image-album[data-layout='4-d'] {
     grid-template-areas: 'a b' 'a c' 'a d';
-    grid-template-columns: minmax(0, 27fr) minmax(0, 16fr);
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
     grid-template-rows: repeat(3, minmax(0, 1fr));
-    aspect-ratio: 43 / 36;
+    aspect-ratio: 10 / 9;
   }
   .image-album[data-layout='4-e'] {
     grid-template-areas: 'a b c d';
