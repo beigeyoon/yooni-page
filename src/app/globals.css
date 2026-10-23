@@ -287,6 +287,11 @@ body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     aspect-ratio: 3 / 2;
   }
+  .image-album[data-layout='2-d'] {
+    grid-template-areas: 'a b';
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    aspect-ratio: 8 / 3;
+  }
   .image-album[data-layout='2-c'] {
     grid-template-areas: 'a' 'b';
     grid-template-columns: minmax(0, 1fr);

@@ -3,6 +3,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ImageLayoutDialog from '.';
+import { getLayoutsByCount } from '@/utils/imageLayouts';
 
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
@@ -114,7 +115,9 @@ describe('ImageLayoutDialog', () => {
   });
 
   it('1장은 레이아웃이 하나뿐이라 썸네일을 보여주지 않는다', async () => {
-    expect(document.querySelectorAll('[aria-pressed]')).toHaveLength(3);
+    expect(document.querySelectorAll('[aria-pressed]')).toHaveLength(
+      getLayoutsByCount(2).length
+    );
     await click(button('1장'));
     expect(document.querySelectorAll('[aria-pressed]')).toHaveLength(0);
     expect(slots()).toHaveLength(1);

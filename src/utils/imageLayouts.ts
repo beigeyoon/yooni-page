@@ -21,6 +21,7 @@ export const IMAGE_LAYOUTS: ImageLayout[] = [
   { id: '1-a', count: 1, label: '원본 비율', cells: ['original'] },
   { id: '2-a', count: 2, label: '정방형 나란히', cells: [S, S] },
   { id: '2-b', count: 2, label: '세로형 나란히', cells: [P, P] },
+  { id: '2-d', count: 2, label: '가로형 나란히', cells: [L, L] },
   { id: '2-c', count: 2, label: '가로형 위아래', cells: [L, L] },
   { id: '3-a', count: 3, label: '정방형 3열', cells: [S, S, S] },
   { id: '3-b', count: 3, label: '세로형 3열', cells: [P, P, P] },
