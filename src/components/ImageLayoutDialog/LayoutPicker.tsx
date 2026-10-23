@@ -14,6 +14,13 @@ interface Props {
   onLayoutChange: (id: string) => void;
 }
 
+// 카드는 모두 같은 정사각형이고, 썸네일은 그 안에 비율을 유지한 채 꽉 차게 넣는다.
+function fitInSquare(ratio: number) {
+  return ratio >= 1
+    ? { width: '100%', height: `${100 / ratio}%` }
+    : { width: `${100 * ratio}%`, height: '100%' };
+}
+
 export default function LayoutPicker({
   count,
   layoutId,
@@ -51,14 +58,15 @@ export default function LayoutPicker({
               disabled={disabled}
               onClick={() => onLayoutChange(layout.id)}
               className={cn(
-                'w-20 rounded border p-1',
+                'flex size-20 items-center justify-center rounded border p-1.5',
                 layout.id === layoutId
                   ? 'border-blue-500 ring-2 ring-blue-200'
                   : 'border-neutral-200 hover:border-neutral-400'
               )}>
               <div
                 className="image-album image-album--thumb"
-                data-layout={layout.id}>
+                data-layout={layout.id}
+                style={fitInSquare(layout.ratio)}>
                 {layout.cells.map((_, i) => (
                   <span
                     key={i}

@@ -370,7 +370,4 @@ body {
     gap: 2px;
     padding: 0;
   }
-  .image-album.image-album--thumb[data-layout='1-a'] {
-    aspect-ratio: 4 / 3;
-  }
 }

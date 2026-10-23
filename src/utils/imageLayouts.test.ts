@@ -61,3 +61,24 @@ describe('globals.css', () => {
     }
   });
 });
+
+describe('ratio', () => {
+  const css = readFileSync(
+    fileURLToPath(new URL('../app/globals.css', import.meta.url)),
+    'utf8'
+  );
+
+  // 1-a는 원본 비율이라 CSS에 aspect-ratio가 없다. ratio는 썸네일에만 쓴다.
+  it.each(IMAGE_LAYOUTS.filter(layout => layout.id !== '1-a'))(
+    '$id의 ratio가 globals.css의 aspect-ratio와 같다',
+    ({ id, ratio }) => {
+      const rule = css.match(
+        new RegExp(
+          `\\.image-album\\[data-layout='${id}'\\] \\{[^}]*aspect-ratio: (\\d+) / (\\d+)`
+        )
+      );
+      expect(rule, id).not.toBeNull();
+      expect(ratio).toBeCloseTo(Number(rule![1]) / Number(rule![2]), 5);
+    }
+  );
+});
