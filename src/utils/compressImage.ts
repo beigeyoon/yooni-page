@@ -27,18 +27,17 @@ function isHeic(file: File) {
   return /^image\/hei[cf]$/.test(file.type) || /\.hei[cf]$/i.test(file.name);
 }
 
-// Safari는 HEIC를 직접 디코딩하므로 실패할 때만 heic2any로 변환한다.
+// Safari는 HEIC를 직접 디코딩하므로 실패할 때만 heic-to로 디코딩한다.
+// heic2any는 2019년 libheif를 써서 iPhone 17 Pro 같은 최신 HEIC(24MP)를
+// ERR_LIBHEIF로 거부했다. heic-to는 최신 libheif라 이를 읽고, 바로 ImageBitmap을 줘서
+// JPEG로 한 번 더 인코딩하는 단계도 없다. 용량이 커서 HEIC일 때만 불러온다.
 async function decode(file: File) {
   try {
     return await createImageBitmap(file);
   } catch (error) {
     if (!isHeic(file)) throw error;
-    const { default: heic2any } = await import('heic2any');
-    const converted = (await heic2any({
-      blob: file,
-      toType: 'image/jpeg'
-    })) as Blob;
-    return createImageBitmap(converted);
+    const { heicTo } = await import('heic-to');
+    return heicTo({ blob: file, type: 'bitmap' });
   }
 }
 

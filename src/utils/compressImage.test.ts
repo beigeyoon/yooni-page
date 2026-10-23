@@ -2,8 +2,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import compressImage, { getTargetSize } from './compressImage';
 
-const heic2any = vi.hoisted(() => vi.fn());
-vi.mock('heic2any', () => ({ default: heic2any }));
+const heicTo = vi.hoisted(() => vi.fn());
+vi.mock('heic-to', () => ({ heicTo }));
 
 describe('getTargetSize', () => {
   it('가로 사진은 긴 변을 2048로 줄인다', () => {
@@ -53,7 +53,7 @@ describe('compressImage', () => {
     vi.restoreAllMocks();
     createImageBitmap.mockReset();
     drawImage.mockReset();
-    heic2any.mockReset();
+    heicTo.mockReset();
   });
 
   it('GIF와 SVG는 그대로 돌려준다', async () => {
@@ -82,19 +82,17 @@ describe('compressImage', () => {
     expect(out.name).toBe('a.jpg');
   });
 
-  it('HEIC를 직접 읽지 못하면 heic2any로 변환해 다시 읽는다', async () => {
-    const converted = new Blob(['jpeg'], { type: 'image/jpeg' });
-    createImageBitmap
-      .mockRejectedValueOnce(new Error('unsupported'))
-      .mockResolvedValueOnce({ width: 100, height: 100, close: vi.fn() });
-    heic2any.mockResolvedValue(converted);
+  it('HEIC를 직접 읽지 못하면 heic-to로 바로 디코딩한다', async () => {
+    const bitmap = { width: 5712, height: 4284, close: vi.fn() };
+    createImageBitmap.mockRejectedValueOnce(new Error('unsupported'));
+    heicTo.mockResolvedValue(bitmap);
+    const file = new File(['x'], 'IMG_2.HEIC', { type: '' });
 
-    const out = await compressImage(
-      new File(['x'], 'IMG_2.HEIC', { type: '' })
-    );
+    const out = await compressImage(file);
 
-    expect(heic2any).toHaveBeenCalledOnce();
-    expect(createImageBitmap).toHaveBeenLastCalledWith(converted);
+    expect(heicTo).toHaveBeenCalledWith({ blob: file, type: 'bitmap' });
+    expect(createImageBitmap).toHaveBeenCalledOnce();
+    expect(drawImage).toHaveBeenCalledWith(bitmap, 0, 0, 2048, 1536);
     expect(out.name).toBe('IMG_2.webp');
   });
 
@@ -103,6 +101,6 @@ describe('compressImage', () => {
     await expect(
       compressImage(new File(['x'], 'a.jpg', { type: 'image/jpeg' }))
     ).rejects.toThrow('broken');
-    expect(heic2any).not.toHaveBeenCalled();
+    expect(heicTo).not.toHaveBeenCalled();
   });
 });
