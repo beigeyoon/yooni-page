@@ -13,15 +13,27 @@ describe('resizeSlots', () => {
 
 describe('placeItems', () => {
   it('드롭한 칸부터 빈 칸에 차례로 채운다', () => {
-    expect(placeItems([null, null, null], 0, ['a', 'b'])).toEqual(['a', 'b', null]);
+    expect(placeItems([null, null, null], 0, ['a', 'b'])).toEqual([
+      'a',
+      'b',
+      null
+    ]);
   });
 
   it('드롭한 칸은 차 있어도 덮어쓰고, 뒤의 찬 칸은 건너뛴다', () => {
-    expect(placeItems(['x', 'y', null], 0, ['a', 'b'])).toEqual(['a', 'y', 'b']);
+    expect(placeItems(['x', 'y', null], 0, ['a', 'b'])).toEqual([
+      'a',
+      'y',
+      'b'
+    ]);
   });
 
   it('남는 항목은 버리고 앞쪽 빈 칸은 건드리지 않는다', () => {
-    expect(placeItems([null, null, null], 1, ['a', 'b', 'c'])).toEqual([null, 'a', 'b']);
+    expect(placeItems([null, null, null], 1, ['a', 'b', 'c'])).toEqual([
+      null,
+      'a',
+      'b'
+    ]);
   });
 });
 
@@ -33,7 +45,9 @@ describe('swapSlots', () => {
 
 describe('isImageFile', () => {
   it('이미지 MIME 타입을 받는다', () => {
-    expect(isImageFile(new File([], 'a.png', { type: 'image/png' }))).toBe(true);
+    expect(isImageFile(new File([], 'a.png', { type: 'image/png' }))).toBe(
+      true
+    );
   });
 
   it('타입이 비어 있는 HEIC를 확장자로 받는다', () => {
@@ -41,6 +55,8 @@ describe('isImageFile', () => {
   });
 
   it('이미지가 아닌 파일은 거른다', () => {
-    expect(isImageFile(new File([], 'a.pdf', { type: 'application/pdf' }))).toBe(false);
+    expect(
+      isImageFile(new File([], 'a.pdf', { type: 'application/pdf' }))
+    ).toBe(false);
   });
 });

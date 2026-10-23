@@ -7,7 +7,11 @@ export function resizeSlots<T>(slots: Slots<T>, count: number): Slots<T> {
 }
 
 // 드롭한 칸은 차 있어도 덮어쓰고, 나머지 항목은 그 뒤의 빈 칸에 순서대로 채운다.
-export function placeItems<T>(slots: Slots<T>, startIndex: number, items: T[]): Slots<T> {
+export function placeItems<T>(
+  slots: Slots<T>,
+  startIndex: number,
+  items: T[]
+): Slots<T> {
   const next = [...slots];
   let itemIndex = 0;
   for (let i = startIndex; i < next.length && itemIndex < items.length; i++) {
@@ -16,7 +20,11 @@ export function placeItems<T>(slots: Slots<T>, startIndex: number, items: T[]): 
   return next;
 }
 
-export function swapSlots<T>(slots: Slots<T>, from: number, to: number): Slots<T> {
+export function swapSlots<T>(
+  slots: Slots<T>,
+  from: number,
+  to: number
+): Slots<T> {
   const next = [...slots];
   [next[from], next[to]] = [next[to], next[from]];
   return next;

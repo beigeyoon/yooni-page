@@ -34,24 +34,34 @@ describe('uploadImage', () => {
   it('압축에 실패하면 올리지 않는다', async () => {
     compressImage.mockRejectedValue(new Error('broken'));
 
-    expect(await uploadImage(original)).toEqual({ error: '이미지를 읽을 수 없습니다.' });
+    expect(await uploadImage(original)).toEqual({
+      error: '이미지를 읽을 수 없습니다.'
+    });
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('압축 후에도 4MB를 넘으면 올리지 않는다', async () => {
     compressImage.mockResolvedValue(
-      new File([new Uint8Array(4 * 1024 * 1024 + 1)], 'big.webp', { type: 'image/webp' })
+      new File([new Uint8Array(4 * 1024 * 1024 + 1)], 'big.webp', {
+        type: 'image/webp'
+      })
     );
 
-    expect(await uploadImage(original)).toEqual({ error: '용량이 너무 큽니다.' });
+    expect(await uploadImage(original)).toEqual({
+      error: '용량이 너무 큽니다.'
+    });
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('JSON이 아닌 413 응답을 용량 초과로 처리한다', async () => {
     compressImage.mockResolvedValue(compressed);
-    fetchMock.mockResolvedValue(new Response('Request Entity Too Large', { status: 413 }));
+    fetchMock.mockResolvedValue(
+      new Response('Request Entity Too Large', { status: 413 })
+    );
 
-    expect(await uploadImage(original)).toEqual({ error: '용량이 너무 큽니다.' });
+    expect(await uploadImage(original)).toEqual({
+      error: '용량이 너무 큽니다.'
+    });
   });
 
   it('API 에러 메시지를 그대로 돌려준다', async () => {
@@ -60,7 +70,9 @@ describe('uploadImage', () => {
       Response.json({ error: '파일 업로드에 실패했습니다.' }, { status: 500 })
     );
 
-    expect(await uploadImage(original)).toEqual({ error: '파일 업로드에 실패했습니다.' });
+    expect(await uploadImage(original)).toEqual({
+      error: '파일 업로드에 실패했습니다.'
+    });
   });
 
   it('네트워크 오류를 처리한다', async () => {

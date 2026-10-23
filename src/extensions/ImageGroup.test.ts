@@ -6,7 +6,10 @@ import { describe, expect, it } from 'vitest';
 import ImageGroup from './ImageGroup';
 
 function render(content: Content) {
-  const editor = new Editor({ extensions: [StarterKit, Image, ImageGroup], content });
+  const editor = new Editor({
+    extensions: [StarterKit, Image, ImageGroup],
+    content
+  });
   const html = editor.getHTML();
   editor.destroy();
   return html;
@@ -22,7 +25,9 @@ describe('ImageGroup', () => {
   });
 
   it('data-layout이 없는 예전 묶음에는 속성을 붙이지 않는다', () => {
-    const html = render('<div class="image-album"><img src="a"><img src="b"></div>');
+    const html = render(
+      '<div class="image-album"><img src="a"><img src="b"></div>'
+    );
     expect(html).not.toContain('data-layout');
     expect(html).toContain('data-count="2"');
   });

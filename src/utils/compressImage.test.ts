@@ -30,20 +30,22 @@ describe('compressImage', () => {
 
   beforeEach(() => {
     encodable = ['image/webp', 'image/jpeg'];
-    createImageBitmap.mockResolvedValue({ width: 4032, height: 3024, close: vi.fn() });
+    createImageBitmap.mockResolvedValue({
+      width: 4032,
+      height: 3024,
+      close: vi.fn()
+    });
     vi.stubGlobal('createImageBitmap', createImageBitmap);
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({
       drawImage
     } as unknown as CanvasRenderingContext2D);
     // 인코딩을 지원하지 않는 타입을 요청하면 브라우저처럼 PNG를 돌려준다.
-    vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(function (
-      this: HTMLCanvasElement,
-      callback,
-      type
-    ) {
-      const actual = type && encodable.includes(type) ? type : 'image/png';
-      callback(new Blob([`${this.width}x${this.height}`], { type: actual }));
-    });
+    vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(
+      function (this: HTMLCanvasElement, callback, type) {
+        const actual = type && encodable.includes(type) ? type : 'image/png';
+        callback(new Blob([`${this.width}x${this.height}`], { type: actual }));
+      }
+    );
   });
 
   afterEach(() => {
@@ -63,7 +65,9 @@ describe('compressImage', () => {
   });
 
   it('줄인 크기로 그려 WebP로 저장한다', async () => {
-    const out = await compressImage(new File(['x'], 'IMG_1.JPG', { type: 'image/jpeg' }));
+    const out = await compressImage(
+      new File(['x'], 'IMG_1.JPG', { type: 'image/jpeg' })
+    );
     expect(drawImage).toHaveBeenCalledWith(expect.anything(), 0, 0, 2048, 1536);
     expect(out.type).toBe('image/webp');
     expect(out.name).toBe('IMG_1.webp');
@@ -71,7 +75,9 @@ describe('compressImage', () => {
 
   it('WebP 인코딩이 안 되면 JPEG로 저장한다', async () => {
     encodable = ['image/jpeg'];
-    const out = await compressImage(new File(['x'], 'a.png', { type: 'image/png' }));
+    const out = await compressImage(
+      new File(['x'], 'a.png', { type: 'image/png' })
+    );
     expect(out.type).toBe('image/jpeg');
     expect(out.name).toBe('a.jpg');
   });
@@ -83,7 +89,9 @@ describe('compressImage', () => {
       .mockResolvedValueOnce({ width: 100, height: 100, close: vi.fn() });
     heic2any.mockResolvedValue(converted);
 
-    const out = await compressImage(new File(['x'], 'IMG_2.HEIC', { type: '' }));
+    const out = await compressImage(
+      new File(['x'], 'IMG_2.HEIC', { type: '' })
+    );
 
     expect(heic2any).toHaveBeenCalledOnce();
     expect(createImageBitmap).toHaveBeenLastCalledWith(converted);

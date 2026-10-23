@@ -8,12 +8,19 @@ const JPEG_QUALITY = 0.85;
 // 재인코딩하면 애니메이션과 벡터가 깨진다.
 const PASSTHROUGH_TYPES = ['image/gif', 'image/svg+xml'];
 
-export function getTargetSize(width: number, height: number, maxEdge = MAX_EDGE) {
+export function getTargetSize(
+  width: number,
+  height: number,
+  maxEdge = MAX_EDGE
+) {
   const longEdge = Math.max(width, height);
   if (longEdge <= maxEdge) return { width, height };
 
   const scale = maxEdge / longEdge;
-  return { width: Math.round(width * scale), height: Math.round(height * scale) };
+  return {
+    width: Math.round(width * scale),
+    height: Math.round(height * scale)
+  };
 }
 
 function isHeic(file: File) {
@@ -27,13 +34,18 @@ async function decode(file: File) {
   } catch (error) {
     if (!isHeic(file)) throw error;
     const { default: heic2any } = await import('heic2any');
-    const converted = (await heic2any({ blob: file, toType: 'image/jpeg' })) as Blob;
+    const converted = (await heic2any({
+      blob: file,
+      toType: 'image/jpeg'
+    })) as Blob;
     return createImageBitmap(converted);
   }
 }
 
 function toBlob(canvas: HTMLCanvasElement, type: string, quality: number) {
-  return new Promise<Blob | null>(resolve => canvas.toBlob(resolve, type, quality));
+  return new Promise<Blob | null>(resolve =>
+    canvas.toBlob(resolve, type, quality)
+  );
 }
 
 async function compressImage(file: File): Promise<File> {
