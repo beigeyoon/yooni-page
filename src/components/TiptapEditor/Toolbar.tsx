@@ -20,58 +20,20 @@ import {
   Link,
   MapPinned
 } from 'lucide-react';
-import { useRef } from 'react';
-import uploadImage from '@/utils/uploadImage';
-import heic2any from 'heic2any';
+import { useState } from 'react';
+import ImageLayoutDialog from '../ImageLayoutDialog';
 
 export default function Toolbar({ editor }: { editor: Editor }) {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
 
-  const handleMultipleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const files = event.target.files;
-    if (!files) return;
-
-    const uploadedUrls: string[] = [];
-
-    for (const file of files) {
-      let blob: Blob | File = file;
-      if (
-        file.type === 'image/heic' ||
-        file.name.toLowerCase().endsWith('.heic')
-      ) {
-        try {
-          const convertedBlob = (await heic2any({
-            blob: file,
-            toType: 'image/jpeg'
-          })) as Blob;
-          blob = new File(
-            [convertedBlob],
-            file.name.replace(/\.heic$/i, '.jpg'),
-            { type: 'image/jpeg', lastModified: Date.now() }
-          );
-        } catch (error) {
-          console.error('❌ HEIC 변환 실패:', error);
-          continue;
-        }
-      }
-
-      const url = await uploadImage(blob as File);
-      if (url) uploadedUrls.push(url);
-    }
-
-    if (uploadedUrls.length === 0) return;
-
+  const handleInsertImages = (urls: string[], layout: string) => {
     editor
       .chain()
       .focus()
       .insertContent({
         type: 'imageGroup',
-        content: uploadedUrls.map(url => ({
-          type: 'image',
-          attrs: { src: url }
-        }))
+        attrs: { layout },
+        content: urls.map(src => ({ type: 'image', attrs: { src } }))
       })
       .run();
   };
@@ -166,7 +128,7 @@ export default function Toolbar({ editor }: { editor: Editor }) {
     {
       type: 'image',
       icon: Image,
-      onClick: () => fileInputRef.current?.click()
+      onClick: () => setIsImageDialogOpen(true)
     },
     {
       type: 'link',
@@ -203,28 +165,25 @@ export default function Toolbar({ editor }: { editor: Editor }) {
   ];
 
   return (
-    <div className="border-neutral-500-100 mb-1 border-b border-neutral-400 pb-2">
-      {buttons.map(({ type, icon: Icon, onClick }) => (
-        <Button
-          key={type}
-          onClick={onClick}
-          variant="ghost"
-          size="sm"
-          type="button"
-          className={`px-2 ${editor.isActive(type) && 'bg-slate-200'}`}>
-          <Icon />
-          {type === 'image' && (
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              ref={fileInputRef}
-              onChange={handleMultipleImageUpload}
-              style={{ display: 'none' }}
-            />
-          )}
-        </Button>
-      ))}
-    </div>
+    <>
+      <div className="border-neutral-500-100 mb-1 border-b border-neutral-400 pb-2">
+        {buttons.map(({ type, icon: Icon, onClick }) => (
+          <Button
+            key={type}
+            onClick={onClick}
+            variant="ghost"
+            size="sm"
+            type="button"
+            className={`px-2 ${editor.isActive(type) && 'bg-slate-200'}`}>
+            <Icon />
+          </Button>
+        ))}
+      </div>
+      <ImageLayoutDialog
+        open={isImageDialogOpen}
+        onOpenChange={setIsImageDialogOpen}
+        onInsert={handleInsertImages}
+      />
+    </>
   );
 }
