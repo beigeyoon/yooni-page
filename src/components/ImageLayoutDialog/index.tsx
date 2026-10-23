@@ -32,7 +32,7 @@ interface Props {
   onInsert: (urls: string[], layoutId: string) => void;
 }
 
-const DEFAULT_COUNT: LayoutCount = 2;
+const DEFAULT_COUNT: LayoutCount = 1;
 const firstLayoutId = (count: LayoutCount) => getLayoutsByCount(count)[0].id;
 
 export default function ImageLayoutDialog({

@@ -75,8 +75,27 @@ async function click(target: HTMLElement) {
 }
 
 describe('ImageLayoutDialog', () => {
-  it('기본은 2장 정방형 나란히이고, 칸이 다 차야 삽입할 수 있다', () => {
+  it('기본은 1장이고, 레이아웃이 하나뿐이라 썸네일을 보여주지 않는다', async () => {
+    expect(slots()).toHaveLength(1);
+    expect(document.querySelectorAll('[aria-pressed]')).toHaveLength(0);
+
+    drop(slots()[0], { files: [image('a.jpg')] });
+    await click(button('삽입'));
+
+    expect(onInsert).toHaveBeenCalledWith(['https://x/a.jpg'], '1-a');
+  });
+});
+
+describe('ImageLayoutDialog 2장', () => {
+  beforeEach(async () => {
+    await click(button('2장'));
+  });
+
+  it('정방형 나란히가 먼저 골라져 있고, 칸이 다 차야 삽입할 수 있다', () => {
     expect(slots()).toHaveLength(2);
+    expect(document.querySelectorAll('[aria-pressed]')).toHaveLength(
+      getLayoutsByCount(2).length
+    );
     expect(button('삽입').disabled).toBe(true);
 
     drop(slots()[0], { files: [image('a.jpg')] });
@@ -112,15 +131,6 @@ describe('ImageLayoutDialog', () => {
       ['https://x/b.jpg', 'https://x/a.jpg'],
       '2-a'
     );
-  });
-
-  it('1장은 레이아웃이 하나뿐이라 썸네일을 보여주지 않는다', async () => {
-    expect(document.querySelectorAll('[aria-pressed]')).toHaveLength(
-      getLayoutsByCount(2).length
-    );
-    await click(button('1장'));
-    expect(document.querySelectorAll('[aria-pressed]')).toHaveLength(0);
-    expect(slots()).toHaveLength(1);
   });
 
   it('장수와 레이아웃을 바꿔도 넣어 둔 사진은 순서대로 남는다', async () => {
