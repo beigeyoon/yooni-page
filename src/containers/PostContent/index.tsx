@@ -14,6 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useEffect, type ReactNode } from 'react';
 import Comment from '@/components/Comment';
 import { DeleteButton } from '@/components/DeleteButton';
+import { ShareButton } from '@/components/ShareButton';
 import Link from '@/components/AppLink';
 import { useRouteWithLoading } from '@/hooks/useRouteWithLoading';
 import decodeSlugParam from '@/utils/decodeSlugParam';
@@ -102,17 +103,20 @@ const PostContent = ({
             </Link>
           )}
         </div>
-        {isAdmin && (
-          <div>
-            <Button
-              variant="ghost"
-              className="h-fit cursor-pointer px-2 py-1 text-neutral-500 hover:text-neutral-700"
-              onClick={onClickEdit}>
-              <SquarePen width={18} />
-            </Button>
-            <DeleteButton confirmDelete={onDeletePost} />
-          </div>
-        )}
+        <div className="flex items-center">
+          {isAdmin && (
+            <>
+              <Button
+                variant="ghost"
+                className="h-fit cursor-pointer px-2 py-1 text-neutral-500 hover:text-neutral-700"
+                onClick={onClickEdit}>
+                <SquarePen width={18} />
+              </Button>
+              <DeleteButton confirmDelete={onDeletePost} />
+            </>
+          )}
+          <ShareButton />
+        </div>
       </div>
 
       <div className="border-b border-neutral-400 pb-10">
