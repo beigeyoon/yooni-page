@@ -303,24 +303,26 @@ body {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     aspect-ratio: 9 / 4;
   }
-  /* 세로형(3:4) 1칸과 가로형(4:3) 2칸의 높이가 같아지는 열 폭은 9:8이다. */
+  /* 세로형과 가로형이 섞인 레이아웃은 큰 세로 사진을 2:3, 가로 사진을 3:2로 두어
+     형태 차이를 분명히 한다. 세로 1칸과 가로 2칸의 높이가 같아지는 열 폭은 8:9다. */
   .image-album[data-layout='3-c'] {
     grid-template-areas: 'a b' 'a c';
-    grid-template-columns: minmax(0, 9fr) minmax(0, 8fr);
+    grid-template-columns: minmax(0, 8fr) minmax(0, 9fr);
     grid-template-rows: repeat(2, minmax(0, 1fr));
     aspect-ratio: 17 / 12;
   }
   .image-album[data-layout='3-d'] {
     grid-template-areas: 'a c' 'b c';
-    grid-template-columns: minmax(0, 8fr) minmax(0, 9fr);
+    grid-template-columns: minmax(0, 9fr) minmax(0, 8fr);
     grid-template-rows: repeat(2, minmax(0, 1fr));
     aspect-ratio: 17 / 12;
   }
+  /* 위 사진은 3:2. */
   .image-album[data-layout='3-e'] {
     grid-template-areas: 'a a' 'b c';
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: minmax(0, 3fr) minmax(0, 2fr);
-    aspect-ratio: 4 / 5;
+    grid-template-rows: minmax(0, 4fr) minmax(0, 3fr);
+    aspect-ratio: 6 / 7;
   }
 
   .image-album[data-layout='4-a'] {
@@ -340,20 +342,19 @@ body {
     grid-template-rows: repeat(2, minmax(0, 1fr));
     aspect-ratio: 4 / 3;
   }
-  /* 위 사진은 다른 가로형(4:3)보다 넓은 3:2로 둔다. */
+  /* 위 사진은 3:2. */
   .image-album[data-layout='4-c'] {
     grid-template-areas: 'a a a' 'b c d';
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-rows: minmax(0, 2fr) minmax(0, 1fr);
     aspect-ratio: 1 / 1;
   }
-  /* 왼쪽 큰 사진은 다른 세로형(3:4)보다 긴 2:3으로 둔다.
-     오른쪽 가로형(4:3) 3칸과 높이가 같아지는 열 폭은 3:2다. */
+  /* 세로 2:3 1칸과 가로 3:2 3칸의 높이가 같아지는 열 폭은 4:3이다. */
   .image-album[data-layout='4-d'] {
     grid-template-areas: 'a b' 'a c' 'a d';
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    grid-template-columns: minmax(0, 4fr) minmax(0, 3fr);
     grid-template-rows: repeat(3, minmax(0, 1fr));
-    aspect-ratio: 10 / 9;
+    aspect-ratio: 7 / 6;
   }
   .image-album[data-layout='4-e'] {
     grid-template-areas: 'a b c d';
