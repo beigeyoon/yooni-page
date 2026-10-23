@@ -11,6 +11,7 @@ import { PostFormValues } from '@/types';
 import Link from '@tiptap/extension-link';
 import Iframe from '../../extensions/Iframe';
 import ImageGroup from '@/extensions/ImageGroup';
+import PostHeading from '@/extensions/PostHeading';
 import Underline from '@tiptap/extension-underline';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -42,11 +43,10 @@ const TiptapEditor = forwardRef((props: Props, ref) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: {
-          levels: [1, 2, 3]
-        },
+        heading: false,
         codeBlock: false
       }),
+      PostHeading,
       Underline,
       Image.configure({
         inline: false

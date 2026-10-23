@@ -15,7 +15,7 @@ import PageReady from '@/components/Loading/PageReady';
 import SeriesToc from '@/components/SeriesToc';
 import SeriesNav from '@/components/SeriesNav';
 import { Metadata } from 'next';
-import { isValidCategory, type Post } from '@/types';
+import { isPublicCategory, PUBLIC_CATEGORIES, type Post } from '@/types';
 import { notFound, permanentRedirect } from 'next/navigation';
 import sanitizePostHtml from '@/utils/sanitizePostHtml';
 import optimizePostHtml from '@/utils/optimizePostHtml';
@@ -35,7 +35,8 @@ export async function generateStaticParams() {
   const { data } = await supabasePublic
     .from('post')
     .select('slug, category')
-    .eq('isPublished', true);
+    .eq('isPublished', true)
+    .in('category', [...PUBLIC_CATEGORIES]);
 
   return (data ?? []).map(post => ({
     category: post.category,
@@ -91,7 +92,7 @@ export async function generateMetadata({
   const { category, slug: rawSlug } = await params;
   const slug = decodeSlugParam(rawSlug);
 
-  if (!isValidCategory(category)) {
+  if (!isPublicCategory(category)) {
     return { title: '페이지를 찾을 수 없음' };
   }
 
@@ -251,7 +252,7 @@ const Post = async ({
   const { category, slug: rawSlug } = await params;
   const slug = decodeSlugParam(rawSlug);
 
-  if (!isValidCategory(category)) {
+  if (!isPublicCategory(category)) {
     notFound();
   }
 

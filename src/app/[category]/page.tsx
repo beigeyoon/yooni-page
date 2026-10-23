@@ -4,7 +4,7 @@ import {
   getAllSeriesForServer,
   getPostsForServer
 } from '@/lib/api/posts.server';
-import { Category, CATEGORIES, isValidCategory } from '@/types';
+import { Category, isPublicCategory, PUBLIC_CATEGORIES } from '@/types';
 import {
   dehydrate,
   HydrationBoundary,
@@ -18,7 +18,7 @@ import { notFound } from 'next/navigation';
 export const revalidate = 3600;
 
 export function generateStaticParams() {
-  return CATEGORIES.map(category => ({ category }));
+  return PUBLIC_CATEGORIES.map(category => ({ category }));
 }
 
 const CATEGORY_HEADINGS: Record<Category, string> = {
@@ -36,7 +36,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { category } = await params;
 
-  if (!isValidCategory(category)) {
+  if (!isPublicCategory(category)) {
     return { title: '페이지를 찾을 수 없음' };
   }
 
@@ -123,7 +123,7 @@ const Posts = async ({
 }) => {
   const { category } = await params;
 
-  if (!isValidCategory(category)) {
+  if (!isPublicCategory(category)) {
     notFound();
   }
 

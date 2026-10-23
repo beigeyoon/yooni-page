@@ -2,7 +2,6 @@ import { Editor } from '@tiptap/react';
 import { Button } from '../ui/button';
 import {
   LucideIcon,
-  Heading1,
   Heading2,
   Heading3,
   Bold,
@@ -43,11 +42,6 @@ export default function Toolbar({ editor }: { editor: Editor }) {
   };
 
   const buttons: { type: string; icon: LucideIcon; onClick: () => void }[] = [
-    {
-      type: 'heading1',
-      icon: Heading1,
-      onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run()
-    },
     {
       type: 'heading2',
       icon: Heading2,

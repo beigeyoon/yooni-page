@@ -4,7 +4,12 @@ import {
   getSeriesBySlugForServer,
   getSeriesForServer
 } from '@/lib/api/posts.server';
-import { Category, isValidCategory, type Post } from '@/types';
+import {
+  Category,
+  isPublicCategory,
+  PUBLIC_CATEGORIES,
+  type Post
+} from '@/types';
 import {
   dehydrate,
   HydrationBoundary,
@@ -24,7 +29,8 @@ export async function generateStaticParams() {
   const supabasePublic = getSupabasePublic();
   const { data } = await supabasePublic
     .from('series')
-    .select('slug, category');
+    .select('slug, category')
+    .in('category', [...PUBLIC_CATEGORIES]);
 
   return (data ?? []).map(series => ({
     category: series.category,
@@ -154,7 +160,7 @@ const SeriesPosts = async ({
   const { category, seriesSlug: rawSeriesSlug } = await params;
   const seriesSlug = decodeSlugParam(rawSeriesSlug);
 
-  if (!isValidCategory(category)) {
+  if (!isPublicCategory(category)) {
     notFound();
   }
 

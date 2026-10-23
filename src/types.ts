@@ -18,6 +18,21 @@ export function isValidCategory(value: unknown): value is Category {
   );
 }
 
+// 사이트에 공개하는 카테고리. photo는 메뉴를 닫으면서 페이지와 sitemap에서도 뺐다.
+// 글은 DB에 그대로 있으므로, 다시 열 때는 여기에 되돌리고 메뉴 주석을 풀면 된다.
+export const PUBLIC_CATEGORIES = [
+  'travel',
+  'dev',
+  'talk'
+] as const satisfies readonly Category[];
+
+export function isPublicCategory(value: unknown): value is Category {
+  return (
+    typeof value === 'string' &&
+    (PUBLIC_CATEGORIES as readonly string[]).includes(value)
+  );
+}
+
 export interface PostFormValues {
   title?: string;
   subtitle?: string;

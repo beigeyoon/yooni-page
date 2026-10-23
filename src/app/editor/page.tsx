@@ -185,7 +185,8 @@ const Editor = () => {
                     <SelectItem value="dev">dev</SelectItem>
                     <SelectItem value="travel">travel</SelectItem>
                     <SelectItem value="talk">talk</SelectItem>
-                    <SelectItem value="photo">photo</SelectItem>
+                    {/* photo는 닫아둔 카테고리라 고르지 못하게 한다 (types.ts의 PUBLIC_CATEGORIES 참고) */}
+                    {/* <SelectItem value="photo">photo</SelectItem> */}
                   </SelectGroup>
                 </SelectContent>
               </Select>
