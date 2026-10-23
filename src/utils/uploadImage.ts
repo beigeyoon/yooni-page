@@ -1,23 +1,17 @@
 import { MAX_UPLOAD_BYTES } from '@/constants/upload';
-import compressImage from './compressImage';
+
+// 압축(HEIC 변환 포함)은 배치 창이 사진을 놓을 때 이미 끝낸다.
+// 미리보기와 업로드가 같은 변환 결과를 쓰도록, 여기서는 받은 파일을 그대로 올린다.
 
 export type UploadResult = { url: string } | { error: string };
 
 const TOO_LARGE = '용량이 너무 큽니다.';
 
 async function uploadImage(file: File): Promise<UploadResult> {
-  let compressed: File;
-  try {
-    compressed = await compressImage(file);
-  } catch (error) {
-    console.error('❌ 이미지 압축 실패:', error);
-    return { error: '이미지를 읽을 수 없습니다.' };
-  }
-
-  if (compressed.size > MAX_UPLOAD_BYTES) return { error: TOO_LARGE };
+  if (file.size > MAX_UPLOAD_BYTES) return { error: TOO_LARGE };
 
   const formData = new FormData();
-  formData.append('file', compressed);
+  formData.append('file', file);
 
   let res: Response;
   try {

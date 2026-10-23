@@ -21,19 +21,23 @@ import {
   MapPinned
 } from 'lucide-react';
 import { useState } from 'react';
-import ImageLayoutDialog from '../ImageLayoutDialog';
+import ImageLayoutDialog, { type InsertedImage } from '../ImageLayoutDialog';
 
 export default function Toolbar({ editor }: { editor: Editor }) {
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
 
-  const handleInsertImages = (urls: string[], layout: string) => {
+  const handleInsertImages = (images: InsertedImage[], layout: string) => {
     editor
       .chain()
       .focus()
       .insertContent({
         type: 'imageGroup',
         attrs: { layout },
-        content: urls.map(src => ({ type: 'image', attrs: { src } }))
+        // 빈 설명은 alt를 아예 빼서 상세 페이지의 자동 문구가 들어가게 한다
+        content: images.map(({ src, alt }) => ({
+          type: 'image',
+          attrs: alt ? { src, alt } : { src }
+        }))
       })
       .run();
   };
