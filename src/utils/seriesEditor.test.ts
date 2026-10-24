@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   appendItem,
   isSameOrder,
+  nextSeriesOrder,
   moveItem,
   removeItem,
   sortSeriesPosts
@@ -108,5 +109,33 @@ describe('isSameOrder', () => {
 
   it('길이가 다르면 false', () => {
     expect(isSameOrder(['a'], ['a', 'b'])).toBe(false);
+  });
+});
+
+describe('nextSeriesOrder', () => {
+  it('시리즈에 글이 없으면 1편이다', () => {
+    expect(nextSeriesOrder([])).toBe(1);
+  });
+
+  it('가장 큰 순번에 1을 더한다', () => {
+    expect(
+      nextSeriesOrder([{ id: 'a', seriesOrder: 1 }, { id: 'b', seriesOrder: 3 }])
+    ).toBe(4);
+  });
+
+  it('순번이 없는 글은 세지 않는다', () => {
+    expect(
+      nextSeriesOrder([{ id: 'a', seriesOrder: null }, { id: 'b', seriesOrder: 2 }])
+    ).toBe(3);
+    expect(nextSeriesOrder([{ id: 'a', seriesOrder: null }])).toBe(1);
+  });
+
+  it('지금 편집 중인 글은 빼고 계산한다', () => {
+    expect(
+      nextSeriesOrder(
+        [{ id: 'a', seriesOrder: 1 }, { id: 'self', seriesOrder: 5 }],
+        'self'
+      )
+    ).toBe(2);
   });
 });

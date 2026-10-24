@@ -57,3 +57,10 @@ export async function getPostsBySeries(seriesId: string): Promise<{ data: Post[]
     method: 'GET',
   });
 }
+
+// 에디터용: 초안까지 포함해 시리즈의 글을 가져온다(관리자만).
+export async function getPostsBySeriesForPreview(seriesId: string): Promise<{ data: Post[] }> {
+  return await apiFetch(`/api/posts?seriesId=${seriesId}&preview=true`, {
+    method: 'GET',
+  });
+}

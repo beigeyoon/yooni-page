@@ -50,6 +50,7 @@ vi.mock('next/dynamic', async () => {
 
 vi.mock('@/lib/api/posts', () => ({
   getPostForPreview: mocks.getPostForPreview,
+  getPostsBySeriesForPreview: vi.fn(async () => ({ data: [] })),
   createPost: vi.fn(),
   updatePost: vi.fn()
 }));
