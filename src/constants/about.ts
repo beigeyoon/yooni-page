@@ -1,7 +1,7 @@
 export const PROFILE: { name: string, value: string }[] = [
   { name: 'name', value: 'Yoon Yeokyung' },
   { name: 'job', value: 'Frontend Developer' },
-  { name: 'sideJob', value: 'Amateur photographer' },
+  { name: 'sideJob', value: 'Amateur Photographer' },
   { name: 'wannaBe', value: 'Traveler' },
   { name: 'city', value: 'Seoul, Korea' },
   { name: 'email', value: 'beige.yoon@gmail.com' },
