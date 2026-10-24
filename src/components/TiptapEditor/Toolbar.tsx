@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import ImageLayoutDialog, { type InsertedImage } from '../ImageLayoutDialog';
+import extractEmbedSrc from '@/utils/extractEmbedSrc';
 
 export default function Toolbar({ editor }: { editor: Editor }) {
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
@@ -147,9 +148,10 @@ export default function Toolbar({ editor }: { editor: Editor }) {
       type: 'map',
       icon: MapPinned,
       onClick: () => {
-        const src = prompt(
-          '구글맵 embed src 주소를 입력하세요 (iframe src 속성)'
+        const input = prompt(
+          '구글맵 퍼가기 코드(<iframe ...>)나 embed src 주소를 붙여넣으세요'
         );
+        const src = input ? extractEmbedSrc(input) : null;
         if (src) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (editor.chain() as any)

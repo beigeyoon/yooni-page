@@ -48,3 +48,16 @@ export function removeItem(ids: string[], id: string): string[] {
 export function isSameOrder(a: string[], b: string[]): boolean {
   return a.length === b.length && a.every((id, index) => id === b[index]);
 }
+
+// 에디터에서 시리즈를 고르면 채워 넣을 순번. 순번 없는 글은 세지 않고,
+// 편집 중인 글 자신은 빼야 이미 그 시리즈에 있던 글이 제 순번을 밀어내지 않는다.
+export function nextSeriesOrder(
+  posts: { id: string; seriesOrder?: number | null }[],
+  excludeId?: string
+): number {
+  const orders = posts
+    .filter(post => post.id !== excludeId)
+    .map(post => post.seriesOrder)
+    .filter((order): order is number => typeof order === 'number');
+  return orders.length > 0 ? Math.max(...orders) + 1 : 1;
+}

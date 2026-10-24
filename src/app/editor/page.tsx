@@ -16,7 +16,13 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { createPost, getPostForPreview, updatePost } from '@/lib/api/posts';
+import {
+  createPost,
+  getPostForPreview,
+  getPostsBySeriesForPreview,
+  updatePost
+} from '@/lib/api/posts';
+import { nextSeriesOrder } from '@/utils/seriesEditor';
 import { PostFormValues as FormValues } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { getSeries } from '@/lib/api/series';
@@ -60,6 +66,8 @@ const Editor = () => {
     clearErrors,
     reset,
     watch,
+    getValues,
+    setValue,
     formState: { errors }
   } = useForm<FormValues>({
     defaultValues: {
@@ -83,6 +91,18 @@ const Editor = () => {
   const filteredSeriesList = Array.isArray(seriesData?.data) 
     ? seriesData.data.filter((series: Series) => series.category === selectedCategory)
     : [];
+
+  // 시리즈를 고르면 그 시리즈의 마지막 순번 + 1을 채워 둔다. 직접 고쳐 쓸 수 있다.
+  // 응답이 오기 전에 다른 시리즈로 바꿨다면 늦게 온 결과는 버린다.
+  const fillSeriesOrder = async (seriesId: string) => {
+    try {
+      const { data } = await getPostsBySeriesForPreview(seriesId);
+      if (getValues('seriesId') !== seriesId) return;
+      setValue('seriesOrder', nextSeriesOrder(data ?? [], post?.id));
+    } catch {
+      // 못 불러오면 순번 칸을 그대로 두고 직접 입력하게 한다.
+    }
+  };
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -199,7 +219,10 @@ const Editor = () => {
               <div className="space-y-2">
                 <Select
                   key={field.value}
-                  onValueChange={field.onChange}
+                  onValueChange={value => {
+                    field.onChange(value);
+                    fillSeriesOrder(value);
+                  }}
                   value={field.value || ""}>
                   <SelectTrigger className="w-[140px]">
                     <SelectValue placeholder="Series" />
@@ -248,7 +271,7 @@ const Editor = () => {
                 type="number"
                 min={1}
                 step={1}
-                placeholder="1"
+                placeholder="-"
                 className="w-[140px]"
                 {...register('seriesOrder', {
                   setValueAs: value => {
